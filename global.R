@@ -195,8 +195,9 @@ final_data <- final_data %>%
 
 
 # Estimate variance from budget
-final_data <- final_data %>% mutate(Variance.From.Budget =  Actual - Budget)
-
+final_data <- final_data %>%
+  mutate(Variance.From.Budget =  round(Actual - Budget, 2))
+  
 
 # add the new data to the repo file
 new_repo <- rbind(repo, final_data) %>%
@@ -219,6 +220,7 @@ new_repo <- new_repo %>%
   mutate(month= ifelse(nchar(month) < 2, paste0("0", month), month),
          date = paste0(year, "-", month),
          month= as.numeric(month)) %>%
+  arrange(month, year)%>%
   filter(!is.na(Actual)) 
 
 # Color Theme -----------------------------------------------------------
