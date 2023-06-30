@@ -1,18 +1,26 @@
 
 # Metric Trends Dashboard
 
-# Import Libraries
+# Import Libraries -------------------------------------------------
+suppressMessages({
 library(tidyverse)
 library(readxl)
-
+library(plotly)
+library(zoo)
+library(shiny)
+library(shinythemes)
+library(shinydashboard)
+library(shinycssloaders)
+library(shinyWidgets)
+})
 
 # Work directory
-dir <- "C:/Users/aghaer01/Downloads/Metrics Trends Data/"
+dir <- "C:/Users/aghaer01/Downloads/Metric_Trends_data/"
 
 
 # Import data --------------------------------------------------------
 # Import the latest aggregated file
-repo <- file.info(list.files(path = paste0(dir,"/Repo"), full.names = T))
+repo <- file.info(list.files(path = paste0(dir,"Repo/"), full.names = T))
 repo_file <- rownames(repo)[which.max(repo$ctime)]
 repo <- read.csv(repo_file)
 
@@ -25,23 +33,34 @@ raw_data_list <- file.info(list.files(path = paste0(dir,"Raw Data/"), full.names
 new_metric_data <- basename(rownames(raw_data_list))[!(basename(rownames(raw_data_list)) 
                                                                      %in% repo$Filename)]
 
+if (length(new_metric_data) > 0) {
+  
 #Read files in the folder
-raw_data_files <- lapply(new_metric_data, function(x) {
+raw_data_files <- lapply(paste0(dir, "Raw Data/", new_metric_data), function(x) {
                  data <- read_excel(x, sheet = "Hospital Financials") %>%
-                                 mutate(Filename = basename(x))%>%
-                                 rename(Metrics = "...1")
+                                 mutate(Filename = basename(x))
                              })
 
 data <- do.call(rbind.data.frame, raw_data_files )
 
+
 # Extract the date from file name
-data <- data %>% mutate(date = sub(".*Trends ", "", Filename),
-                                date = sub(".xlsm.*", "", date))
+data <- data %>% 
+  rename(Metrics = colnames(data[,1]))   %>%
+  mutate(month = month(mdy(Filename)), year = year(mdy(Filename))) %>%
+  arrange(month, year)
 
 # Remove columns with no information
 data <- data %>% select(-c("...4", "...5", "...8", "...9", "...12", "...13",
                            "...16", "...17", "...20", "...21", "...24", "...25",
                            "...28", "...29", "...32", "...33", "...36" ))
+
+
+colnames(data) <- c("Metrics", "MSHS-ActualCM", "MSHS-BudgetCM", "MSH-ActualCM", "MSH-BudgetCM",
+                    "MSQ-ActualCM", "MSQ-BudgetCM", "MSBI-ActualCM", "MSBI-BudgetCM", "MSB-ActualCM",
+                    "MSB-BudgetCM", "MSM-ActualCM", "MSM-BudgetCM", "MSW-ActualCM", "MSW-BudgetCM",
+                    "NYEE-ActualCM", "NYEE-BudgetCM", "MSSN-ActualCM", "MSSN-BudgetCM",
+                    "Filename", "month", "year" )
 
 # define the first rows with useful info
 var <- which(data$Metrics == "Hospital Beds in Use")
@@ -70,36 +89,96 @@ data$count_na <- rowSums(is.na(data))
 #remove rows with all missing values
 data <- data %>% filter(count_na !=19)
 
+data$count_na <- NULL
+
 # replace all - with NA
 data[data == "-"] <- NA
 
 
+# Convert olumns to numeric
+data <- data %>% mutate_at(colnames(data[,2:19]), as.numeric)
+
+
+# Create Expense to Revenue Ratio
+exp_rev <- data %>%
+  filter(Metrics %in% c("Total Hospital Expenses", "Total Hospital Revenue"))%>%
+  select(-c("Filename", "month", "year"))
+
+exp_rev <- data.frame(t(exp_rev))
+exp_rev <- janitor::row_to_names(exp_rev, 1, remove_rows_above = F)
+
+exp_rev <- exp_rev %>% 
+  mutate( `Total Hospital Expenses`= as.numeric(`Total Hospital Expenses`),
+          `Total Hospital Revenue` = as.numeric(`Total Hospital Revenue`),
+          `Expense to Revenue Ratio` = round(`Total Hospital Expenses`/`Total Hospital Revenue`, 2))%>%
+  mutate(Site = row.names(exp_rev))
+
+exp_rev <- exp_rev %>% 
+  select(Site, `Expense to Revenue Ratio`)%>%
+  spread(key = Site, value = `Expense to Revenue Ratio`)
+
+exp_rev <- exp_rev %>%
+  mutate(Metrics= "Expense to Revenue Ratio",
+         Filename = unique(data$Filename), 
+         month = unique(data$month),
+         year = unique(data$year))
+
+# Bind data and exp_rev        
+data <- rbind(data, exp_rev)
+
+
+# Create Salaries and Benefits
+salary <- data %>%
+  filter(Metrics %in% c("Salaries & Wages", "Contractual & Other Benefits"))%>%
+  select(-c("Filename", "month", "year"))
+
+salary <- data.frame(t(salary))
+salary <- janitor::row_to_names(salary, 1, remove_rows_above = F)
+
+salary <- salary %>% 
+  mutate( `Salaries & Wages`= as.numeric(`Salaries & Wages`),
+          `Contractual & Other Benefits` = as.numeric(`Contractual & Other Benefits`),
+          `Salaries and Benefits` = `Contractual & Other Benefits`+ `Salaries & Wages`)%>%
+  mutate(Site = row.names(salary))
+
+salary <- salary %>% 
+  select(Site, `Salaries and Benefits`)%>%
+  spread(key = Site, value = `Salaries and Benefits`) %>%
+  mutate(Metrics= "Salaries and Benefits",
+         Filename = unique(data$Filename), 
+         month = unique(data$month),
+         year = unique(data$year))
+
+# Bind data and exp_rev        
+data <- rbind(data, salary)
+
+
+
 # Select required Metrics
 data <- data %>% 
-  filter(Metrics %in% c("Total Hospital Revenue", "Total Hospital Expenses",
-                      "Discharges", "Average Length of Stay", "Outpatient",
-                      "Other Operating",  "Salaries & Wages", "CARTS", "CMI",
-                      "Nursing Agency Costs", "Contractual & Other Benefits",
-                      "Supplies & Expenses"))
+  filter(Metrics %in% c("Expense to Revenue Ratio", "Total Hospital Revenue", 
+                        "Total Hospital Expenses", "Salaries and Benefits",
+                        "Discharges", "Average Length of Stay", "Outpatient",
+                      "Other Operating", "CARTS", "CMI", "Nursing Agency Costs", 
+                                      "Supplies & Expenses"))
 
 data <- data %>%
-mutate(Metrics = ifelse(Metrics == "Outpatient", "Outpatient Revenue", Metrics),
-       Metrics = ifelse(Metrics == "Average Length of Stay", "ALOS", Metrics),
-       Metrics = ifelse(Metrics == "Other Operating",
-                        "340B/Other Operating Revenue", Metrics))
-
+  mutate(Metrics = ifelse(Metrics == "Outpatient", "Outpatient Revenue", Metrics),
+         Metrics = ifelse(Metrics == "Average Length of Stay", "ALOS", Metrics),
+         Metrics = ifelse(Metrics == "Other Operating",
+                          "340B/Other Operating Revenue", Metrics))
 
 # subset actual data
 actual <- data %>%
-  select("Metrics", "Filename", "date", matches("ActualCM"))%>%
-  gather(-c("Metrics", "Filename", "date"), key = Site, value = Actual) %>%
+  select("Metrics", "Filename", "month", "year", matches("ActualCM"))%>%
+  gather(-c("Metrics", "Filename", "month", "year"), key = Site, value = Actual) %>%
   mutate(Site = gsub("\\-.*","", Site)) %>%
   mutate(Actual = round(as.numeric(Actual), 2))
 
 # subset budget data
 budget <- data %>%
-  select("Metrics", "Filename", "date", matches("BudgetCM"))%>%
-  gather(-c("Metrics", "Filename", "date"), key = Site, value = Budget) %>%
+  select("Metrics", "Filename", "month", "year", matches("BudgetCM"))%>%
+  gather(-c("Metrics", "Filename", "month", "year"), key = Site, value = Budget) %>%
   mutate(Site = gsub("\\-.*","", Site)) %>%
   mutate(Budget = as.numeric(Budget))
 
@@ -113,20 +192,104 @@ final_data <- final_data %>%
   mutate(Actual = ifelse(is.na(Actual) & !is.na(Budget), 0, Actual),
          Budget = ifelse(!is.na(Actual) & is.na(Budget), 0, Budget))
 
+
+
 # Estimate variance from budget
-final_data <- final_data %>% mutate(`Variance From Budget` =  Actual - Budget)
+final_data <- final_data %>% mutate(Variance.From.Budget =  Actual - Budget)
 
 
 # add the new data to the repo file
-repo <- rbind(repo, final_data) %>%
+new_repo <- rbind(repo, final_data) %>%
   distinct()
 
-rm(actual, budget, final_data, data)
+rm(actual, budget, final_data, data, salary, exp_rev)
 
 # Save the data
 updated_date <- Sys.Date()
 
-write.csv(repo, paste0(dir, "Repo/Metric_Trends_Data_updated_", 
+write.csv(new_repo, paste0(dir, "Repo/Metric_Trends_Data_updated_", 
                        updated_date, ".csv"), row.names = FALSE  )
 
+} else {
+  new_repo <- repo
+}
 
+
+new_repo <- new_repo %>%
+  mutate(month= ifelse(nchar(month) < 2, paste0("0", month), month),
+         date = paste0(year, "-", month),
+         month= as.numeric(month)) %>%
+  filter(!is.na(Actual)) 
+
+# Color Theme -----------------------------------------------------------
+
+# Mount Sinai corporate colors
+mount_sinai_colors <- c(
+  `light pink`   = "#fcc9e9",
+  `med pink`     = "#fa93d4",
+  `dark pink`    = "#DC298D",
+  `light purple` = "#c7c6ef",
+  `med purple`   = "#8f8ce0",
+  `light blue`   = "#5cd3ff",
+  `med blue`     = "#06ABEB",
+  `dark blue`    = "#212070",
+  `light grey`   = "#b2b3b2",
+  `dark grey`    = "#686868",
+  `yellow`       = "#E69F00"
+)
+
+# Function to extract Mount Sinai colors as hex codes
+# Use Character names of mount_sinai_colors
+
+mount_sinai_cols <- function(...) {
+  cols <- c(...)
+  
+  if (is.null(cols)) {
+    return(mount_sinai_colors)
+  }
+  
+  mount_sinai_colors[cols]
+}
+
+
+#Create palettes
+mount_sinai_palettes <- list(
+  `all` = mount_sinai_cols(
+    "med blue", "dark pink", "dark blue", "light grey",
+    "light blue", "light pink", "light purple",
+    "med pink", "med purple", "yellow"
+  ),
+  `main` = mount_sinai_cols(
+   "dark blue", "med blue", "dark pink", "dark grey"
+  ),
+  `pink` = mount_sinai_cols("light pink", "dark pink"),
+  `blue` = mount_sinai_cols("light blue", "dark blue"),
+  `grey` = mount_sinai_cols("light grey", "med blue")
+)
+
+mount_sinai_pal <- function(palette = "main", reverse = FALSE, ...) {
+  pal <- mount_sinai_palettes[[palette]]
+  
+  if (reverse) pal <- rev(pal)
+  
+  colorRampPalette(pal, interpolate = "spline", ...)
+}
+
+#Scale Function for ggplot can be used instead of scale_color_manual
+scale_color_mount_sinai <- function(palette = "all", discrete = TRUE, reverse = FALSE, ...) {
+  pal <- mount_sinai_pal(palette = palette, reverse = reverse)
+  
+  if (discrete) {
+    discrete_scale("colour", mount_sinai_palettes, palette = pal, ...)
+  } else {
+    scale_color_gradientn(colours = pal(256), ...)
+  }
+}
+
+
+
+
+# Filter choices -----------------------------------------------
+hospital_choices <- sort(unique(new_repo$Site))
+metric_choices <- sort(unique(new_repo$Metrics))
+date_options <- unique(new_repo$date)
