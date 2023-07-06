@@ -87,12 +87,12 @@ ui <- dashboardPage(
                                pickerInput("mshs_metrics", label = NULL, multiple = FALSE,
                                            options = pickerOptions(actionsBox = TRUE), 
                                            choices = mshs_metric_choices,
-                                           selected = mshs_metric_choices[1])),
+                                           selected = mshs_metric_choices[11])),
                            box(width = 4, height = "100px",
                                title = "Select Date:",  solidHeader = FALSE,
                                pickerInput("mshs_date_range", label = NULL, multiple = TRUE,
                                            options = pickerOptions(
-                                             actionsBox = TRUE,
+                                            actionsBox = TRUE,
                                              dropupAuto = FALSE),
                                            choices = mshs_date_options, 
                                            selected = mshs_date_options)),
@@ -108,7 +108,7 @@ ui <- dashboardPage(
                 
                 
               ) # close fluidRow
-      ),
+      ),   # close tab MSHS  
       
       
       
@@ -139,7 +139,7 @@ ui <- dashboardPage(
                                pickerInput("all_metrics", label = NULL, multiple = FALSE,
                                            options = pickerOptions(actionsBox = TRUE), 
                                            choices = metric_choices,
-                                           selected = metric_choices[1])),
+                                           selected = metric_choices[11])),
                            box(width = 4, height = "100px",
                                title = "Select Date:",  solidHeader = FALSE,
                                pickerInput("all_date_range", label = NULL, multiple = TRUE,
