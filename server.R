@@ -50,13 +50,13 @@ server <- function(input, output, session) {
     mshs_test <<- data
     #data <- data%>% filter(Site %in% "MSHS")
     
-    validate(need(nrow(data) > 0, paste0(input$mshs_metrics, " is not available for MSHS")))
+    validate(need(nrow(data) > 0, paste0(isolate(input$mshs_metrics), " is not available for MSHS")))
     
     data <- data %>%
       mutate(date= as.yearmon(date, "%Y-%m"))
     
     
-    if (isolate(input$mshs_metrics %in% c("Expense to Revenue Ratio"))) {
+    if (isolate(input$mshs_metrics) %in% c("Expense to Revenue Ratio")) {
       
       # data <- new_repo %>%
       #     filter(Site == "MSHS" & Metrics == "Expense to Revenue Ratio") 
@@ -135,13 +135,13 @@ server <- function(input, output, session) {
     test <<- data
     #data <- data%>% filter(Site %in% "MSHS")
     
-    validate(need(nrow(data)>0, paste0(input$all_metrics, " is not available for ", input$all_hospital)))
+    validate(need(nrow(data)>0, paste0(isolate(input$all_metrics), " is not available for ", input$all_hospital)))
     
     data <- data %>%
       mutate(date= as.yearmon(date, "%Y-%m"))
    
     
-   if (isolate(input$all_metrics %in% c("Expense to Revenue Ratio"))) {
+   if (isolate(input$all_metrics) %in% c("Expense to Revenue Ratio")) {
      
      # data <- new_repo %>%
      #     filter(Site == "MSHS" & Metrics == "Expense to Revenue Ratio") 
