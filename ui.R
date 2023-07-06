@@ -27,7 +27,7 @@ ui <- dashboardPage(
                               }"
                    ))),
                    sidebarMenu(menuItem("Home", tabName = "home", icon = icon("home")),
-                               menuItem("ALL Hospitals", tabName = "all", icon = icon("hospital")),
+                               #menuItem("ALL Hospitals", tabName = "all", icon = icon("hospital")),
                                menuItem("MSHS", tabName = "mshs", icon = icon("hospital")),
                                menuItem("Hospital", tabName = "site", icon = icon("hospital"))
                    )),
@@ -62,12 +62,63 @@ ui <- dashboardPage(
                               h3("Data Notes"),
                               h5("We can explain the data and any notes here.")))),
       
+      
+      
+      
       ## tab MSHS --------------------------------------------
-      tabItem(tabName = "all",
+      tabItem(tabName = "mshs",
               div("MSHS Metrics Trends Dashboard", style = paste("color:	#221f72; font-family:Calibri; font-weight:bold;",
-                                                             "font-size:25px; margin-left: 20px")),
+                                                                 "font-size:25px; margin-left: 20px")),
               textOutput("mshs_date_show"),
               tags$head(tags$style(paste("#mshs_date_show{color:#7f7f7f; font-family:Calibri; font-style: italic;",
+                                         "font-size: 18px; margin-top: -0.2em; margin-bottom: 0.5em; margin-left:",
+                                         "20px}"))), hr(),
+              tags$head(tags$style(HTML(paste("#mshs_filters_update {background-color: #d80b8c;color: #FFFFFF;",
+                                              "font-size: 18px}")))),
+              fluidRow(
+                tags$style(HTML(".box.box-solid.box-primary>.box-header {background:#221f72; color:#fff}")),
+                column(11,
+                       box(
+                         title = NULL, width = 12, status = "primary",
+                         solidHeader = TRUE, collapsible = TRUE, closable = TRUE, br(),
+                         fluidRow(
+                        
+                           box(width = 4, height = "100px", title = "Select Metrics:", solidHeader = FALSE,
+                               pickerInput("mshs_metrics", label = NULL, multiple = FALSE,
+                                           options = pickerOptions(actionsBox = TRUE), 
+                                           choices = mshs_metric_choices,
+                                           selected = mshs_metric_choices[1])),
+                           box(width = 4, height = "100px",
+                               title = "Select Date:",  solidHeader = FALSE,
+                               pickerInput("mshs_date_range", label = NULL, multiple = TRUE,
+                                           options = pickerOptions(
+                                             actionsBox = TRUE,
+                                             dropupAuto = FALSE),
+                                           choices = mshs_date_options, 
+                                           selected = mshs_date_options)),
+                           
+                           column(width = 4,
+                                  actionButton("mshs_filters_update", "CLICK TO UPDATE", width = "75%"),
+                                  br(),
+                                  br())))),
+                column(11,
+                       box(title = NULL, status = "primary",
+                           solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
+                           plotOutput("mshs_plot"),  width = 12))
+                
+                
+              ) # close fluidRow
+      ),
+      
+      
+      
+      
+      ## tab Site --------------------------------------------
+      tabItem(tabName = "site",
+              div("Hospitals Metrics Trends Dashboard", style = paste("color:	#221f72; font-family:Calibri; font-weight:bold;",
+                                                             "font-size:25px; margin-left: 20px")),
+              textOutput("all_date_show"),
+              tags$head(tags$style(paste("#all_date_show{color:#7f7f7f; font-family:Calibri; font-style: italic;",
                                          "font-size: 18px; margin-top: -0.2em; margin-bottom: 0.5em; margin-left:",
                                          "20px}"))), hr(),
               tags$head(tags$style(HTML(paste("#all_filters_update {background-color: #d80b8c;color: #FFFFFF;",
@@ -105,11 +156,11 @@ ui <- dashboardPage(
                 column(11,
                        box(title = NULL, status = "primary",
                            solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
-                           plotOutput("mshs_plot"),  width = 12))
+                           plotOutput("site_plot"),  width = 12))
                 
 
                 ) # close fluidRow
-              ) # close tabname All
+              ) # close tabname Site
       
       
-      
+    ))  )

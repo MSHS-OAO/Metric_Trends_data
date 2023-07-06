@@ -34,7 +34,7 @@ server <- function(input, output, session) {
   
   # All sites visualization ------------------------------
   
-  output$mshs_plot <- renderPlot({
+  output$site_plot <- renderPlot({
     data <- all_data()  
     test <<- data
     #data <- data%>% filter(Site %in% "MSHS")
@@ -92,15 +92,21 @@ server <- function(input, output, session) {
        min_value <- (min(data$Variance.From.Budget, na.rm = TRUE))*1.5
      }
      
-     ggplot(data, aes(x = date, y = Variance.From.Budget))+
-       geom_bar(position = "stack", stat="identity" , fill ="#212070")+
+     ggplot(data)  + 
+       geom_bar(aes(x=date, y= Variance.From.Budget), stat="identity", fill= "#06ABEB")+
+       geom_line(aes(x=date, y= Variance.From.Budget.YTD*50, group = 1, color = "#212070"), stat="identity")+
        labs(x = NULL, y = NULL, 
-           #title = isolate(paste0(input$all_hospital, " ", input$all_metrics , " Monthly Variance to Budget" )),
+            # title = isolate(paste0("MSHS ", input$mshs_metrics , " Monthly Variance to Budget" )),
             subtitle = paste0("($ in Thousands)"))+
-         scale_y_continuous(limits=c(min_value, max_value))+
        theme(plot.title = element_text(hjust = 0.5, size = 30),
              plot.subtitle = element_text(hjust = 0.5, size = 20),
-             axis.text.x = element_text(angle = 0, hjust = 0.5))
+             axis.text.x = element_text(angle = 0, hjust = 0.5))+
+       geom_text(aes(label= paste0(`Variance.From.Budget.YTD`, "%"), x=date, y= Variance.From.Budget.YTD*50), 
+                 colour= "black")+
+       geom_text(aes(label= `Variance.From.Budget`, x=date, y= Variance.From.Budget), color = "black")+
+       scale_y_continuous(limits=c(min_value, max_value))+
+       scale_colour_manual(values=c("#DC298D", "#212070"))+
+       theme(legend.position = "none")
    }
  
   })
