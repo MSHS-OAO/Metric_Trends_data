@@ -196,7 +196,8 @@ final_data <- final_data %>%
 
 # Estimate variance from budget
 final_data <- final_data %>%
-  mutate(Variance.From.Budget =  round(Actual - Budget, 2))
+  group_by(Site, Metrics) %>%
+  mutate(Variance.From.Budget =  round(Budget - Actual, 2))
   
 
 # add the new data to the repo file
@@ -222,6 +223,17 @@ new_repo <- new_repo %>%
          month= as.numeric(month)) %>%
   arrange(month, year)%>%
   filter(!is.na(Actual)) 
+
+
+# define YTD variables
+new_repo <- new_repo %>% filter(year %in% max(year)) %>%
+  group_by(Site, Metrics) %>%
+  mutate( Actual_YTD = cumsum(Actual),
+          Budget_YTD = cumsum(Budget), 
+          Variance.From.Budget.YTD = round(100*(Budget_YTD- Actual_YTD )/Budget_YTD, 0))
+
+
+
 
 # Color Theme -----------------------------------------------------------
 
@@ -292,6 +304,8 @@ scale_color_mount_sinai <- function(palette = "all", discrete = TRUE, reverse = 
 
 
 # Filter choices -----------------------------------------------
-hospital_choices <- sort(unique(new_repo$Site))
+hospital_choices <- c("MSB", "MSBI", "MSH", "MSM", "MSQ", "MSSN", "MSW", "NYEE")
 metric_choices <- sort(unique(new_repo$Metrics))
 date_options <- unique(new_repo$date)
+mshs_date_options <- unique(new_repo$date)
+mshs_metric_choices <- sort(unique(new_repo$Metrics[new_repo$Site == "MSHS"]))
