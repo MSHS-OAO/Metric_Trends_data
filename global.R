@@ -7,6 +7,7 @@ library(tidyverse)
 library(readxl)
 library(plotly)
 library(zoo)
+library(gridExtra)
 library(shiny)
 library(shinythemes)
 library(shinydashboard)
@@ -51,15 +52,19 @@ data <- data %>%
   arrange(month, year)
 
 # Remove columns with no information
-data <- data %>% select(-c("...4", "...5", "...8", "...9", "...12", "...13",
-                           "...16", "...17", "...20", "...21", "...24", "...25",
-                           "...28", "...29", "...32", "...33", "...36" ))
+data <- data %>% select(-c("...5", "...9", "...13","...17", 
+                           "...21",  "...25","...29", "...33" ))
 
 
-colnames(data) <- c("Metrics", "MSHS-ActualCM", "MSHS-BudgetCM", "MSH-ActualCM", "MSH-BudgetCM",
-                    "MSQ-ActualCM", "MSQ-BudgetCM", "MSBI-ActualCM", "MSBI-BudgetCM", "MSB-ActualCM",
-                    "MSB-BudgetCM", "MSM-ActualCM", "MSM-BudgetCM", "MSW-ActualCM", "MSW-BudgetCM",
-                    "NYEE-ActualCM", "NYEE-BudgetCM", "MSSN-ActualCM", "MSSN-BudgetCM",
+colnames(data) <- c("Metrics", "MSHS-ActualCM", "MSHS-BudgetCM", "MSHS-Variance", 
+                    "MSH-ActualCM", "MSH-BudgetCM", "MSH-Variance",
+                    "MSQ-ActualCM", "MSQ-BudgetCM", "MSQ-Variance",
+                    "MSBI-ActualCM", "MSBI-BudgetCM", "MSBI-Variance",
+                    "MSB-ActualCM", "MSB-BudgetCM", "MSB-Variance",
+                    "MSM-ActualCM", "MSM-BudgetCM", "MSM-Variance",
+                    "MSW-ActualCM", "MSW-BudgetCM", "MSW-Variance",
+                    "NYEE-ActualCM", "NYEE-BudgetCM", "NYEE-Variance",
+                    "MSSN-ActualCM", "MSSN-BudgetCM", "MSSN-Variance",
                     "Filename", "month", "year" )
 
 # define the first rows with useful info
@@ -96,7 +101,7 @@ data[data == "-"] <- NA
 
 
 # Convert olumns to numeric
-data <- data %>% mutate_at(colnames(data[,2:19]), as.numeric)
+data <- data %>% mutate_at(colnames(data[,2:28]), as.numeric)
 
 
 # Create Expense to Revenue Ratio
@@ -182,29 +187,28 @@ budget <- data %>%
   mutate(Site = gsub("\\-.*","", Site)) %>%
   mutate(Budget = as.numeric(Budget))
 
+# subset variance data
+Variance <- data %>%
+  select("Metrics", "Filename", "month", "year", matches("Variance"))%>%
+  gather(-c("Metrics", "Filename", "month", "year"), key = Site, value = Variance) %>%
+  mutate(Site = gsub("\\-.*","", Site)) %>%
+  mutate(Variance = round(as.numeric(Variance), 2))
 
 # merge actual and budget data
 final_data <- left_join(actual, budget %>%
               select("Metrics", "Site", "Budget"), by = c("Metrics", "Site"))
 
+# merge actual and final data and variance
+final_data <- left_join(final_data , Variance %>%
+                          select("Metrics", "Site", "Variance"), by = c("Metrics", "Site"))
 
-final_data <- final_data %>%
-  mutate(Actual = ifelse(is.na(Actual) & !is.na(Budget), 0, Actual),
-         Budget = ifelse(!is.na(Actual) & is.na(Budget), 0, Budget))
-
-
-
-# Estimate variance from budget
-final_data <- final_data %>%
-  group_by(Site, Metrics) %>%
-  mutate(Variance.From.Budget =  round(Budget - Actual, 2))
-  
+final_data <- final_data %>% mutate(Variance= ifelse(is.na(Variance), Budget - Actual , Variance))
 
 # add the new data to the repo file
 new_repo <- rbind(repo, final_data) %>%
   distinct()
 
-rm(actual, budget, final_data, data, salary, exp_rev)
+rm(actual, budget, Variance, final_data, data, salary, exp_rev)
 
 # Save the data
 updated_date <- Sys.Date()
@@ -233,7 +237,13 @@ new_repo <- new_repo %>% filter(year %in% max(year)) %>%
           Variance.From.Budget.YTD = round(100*(Budget_YTD- Actual_YTD )/Budget_YTD, 0))
 
 
+new_repo <- new_repo %>%
+  mutate(Variance.From.Budget.YTD = ifelse(Variance.From.Budget.YTD == "-Inf", NA, Variance.From.Budget.YTD))
 
+
+new_repo <- new_repo %>% 
+  group_by(Site, Metrics) %>%
+  mutate(Variance.From.Budget= round(Budget - Actual, 2))
 
 # Color Theme -----------------------------------------------------------
 
@@ -304,8 +314,12 @@ scale_color_mount_sinai <- function(palette = "all", discrete = TRUE, reverse = 
 
 
 # Filter choices -----------------------------------------------
-hospital_choices <- c("MSB", "MSBI", "MSH", "MSM", "MSQ", "MSSN", "MSW", "NYEE")
-metric_choices <- sort(unique(new_repo$Metrics))
-date_options <- unique(new_repo$date)
+hospital_choices <- sort(unique(new_repo$Site))
 mshs_date_options <- unique(new_repo$date)
-mshs_metric_choices <- sort(unique(new_repo$Metrics[new_repo$Site == "MSHS"]))
+mshs_metric_choices <- sort(unique(new_repo$Metrics))
+
+metric_choices <- sort(unique(new_repo$Metrics))
+index <- which(metric_choices == "Expense to Revenue Ratio")
+metric_choices <- metric_choices[- index]
+date_options <- unique(new_repo$date)
+

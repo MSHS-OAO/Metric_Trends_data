@@ -27,9 +27,8 @@ ui <- dashboardPage(
                               }"
                    ))),
                    sidebarMenu(menuItem("Home", tabName = "home", icon = icon("home")),
-                               #menuItem("ALL Hospitals", tabName = "all", icon = icon("hospital")),
-                               menuItem("MSHS", tabName = "mshs", icon = icon("hospital")),
-                               menuItem("Hospital", tabName = "site", icon = icon("hospital"))
+                               menuItem("Metrics", tabName = "mshs", icon = icon("hospital")),
+                               menuItem("Hospitals", tabName = "site", icon = icon("hospital"))
                    )),
   dashboardBody(
     tabItems(
@@ -73,11 +72,19 @@ ui <- dashboardPage(
               tags$head(tags$style(paste("#mshs_date_show{color:#7f7f7f; font-family:Calibri; font-style: italic;",
                                          "font-size: 18px; margin-top: -0.2em; margin-bottom: 0.5em; margin-left:",
                                          "20px}"))), hr(),
+              
               tags$head(tags$style(HTML(paste("#mshs_filters_update {background-color: #d80b8c;color: #FFFFFF;",
                                               "font-size: 18px}")))),
+              
+              tags$head(tags$style(HTML(paste("#mshs_filters_update_ytd {background-color: #d80b8c;color: #FFFFFF;",
+                                              "font-size: 18px}")))),
+              
               fluidRow(
                 tags$style(HTML(".box.box-solid.box-primary>.box-header {background:#221f72; color:#fff}")),
                 column(11,
+                       tabBox(title = NULL, id = "tabset7", width = "100%", type = 'pills', 
+                              
+                       tabPanel(title = "Variance to Budget",
                        box(
                          title = NULL, width = 12, status = "primary",
                          solidHeader = TRUE, collapsible = TRUE, closable = TRUE, br(),
@@ -100,12 +107,98 @@ ui <- dashboardPage(
                            column(width = 4,
                                   actionButton("mshs_filters_update", "CLICK TO UPDATE", width = "75%"),
                                   br(),
-                                  br())))),
-                column(11,
+                                  br()))
+                         ),
+              
+                    fluidRow(
                        box(title = NULL, status = "primary",
                            solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
-                           plotOutput("mshs_plot"),  width = 12))
+                           plotOutput("mshs_plot"),  width = 12),
+                       box(title = NULL, status = "primary",
+                           solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
+                           plotOutput("msb_plot"),  width = 6),
+                       box(title = NULL, status = "primary",
+                           solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
+                           plotOutput("msbi_plot"),  width = 6),
+                       box(title = NULL, status = "primary",
+                           solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
+                           plotOutput("msh_plot"),  width = 6),
+                       box(title = NULL, status = "primary",
+                           solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
+                           plotOutput("msm_plot"),  width = 6),
+                       box(title = NULL, status = "primary",
+                           solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
+                           plotOutput("msq_plot"),  width = 6),
+                       box(title = NULL, status = "primary",
+                           solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
+                           plotOutput("mssn_plot"),  width = 6),
+                       box(title = NULL, status = "primary",
+                           solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
+                           plotOutput("msw_plot"),  width = 6),
+                       box(title = NULL, status = "primary",
+                           solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
+                           plotOutput("nyee_plot"),  width = 6)
+                )),
                 
+                
+                tabPanel(title = "YTD Variance to Budget Ratio",
+                         box(
+                           title = NULL, width = 12, status = "primary",
+                           solidHeader = TRUE, collapsible = TRUE, closable = TRUE, br(),
+                           fluidRow(
+                             
+                             box(width = 4, height = "100px", title = "Select Metrics:", solidHeader = FALSE,
+                                 pickerInput("mshs_metrics_ytd", label = NULL, multiple = FALSE,
+                                             options = pickerOptions(actionsBox = TRUE), 
+                                             choices = metric_choices,
+                                             selected = metric_choices[10])),
+                             box(width = 4, height = "100px",
+                                 title = "Select Date:",  solidHeader = FALSE,
+                                 pickerInput("mshs_date_range_ytd", label = NULL, multiple = TRUE,
+                                             options = pickerOptions(
+                                               actionsBox = TRUE,
+                                               dropupAuto = FALSE),
+                                             choices = mshs_date_options, 
+                                             selected = mshs_date_options)),
+                             
+                             column(width = 4,
+                                    actionButton("mshs_filters_update_ytd", "CLICK TO UPDATE", width = "75%"),
+                                    br(),
+                                    br()))
+                         ),
+                         
+                        fluidRow(
+                                box(title = NULL, status = "primary",
+                                    solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
+                                    plotOutput("mshs_plot_ytd"),  width = 12),
+                                box(title = NULL, status = "primary",
+                                    solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
+                                    plotOutput("msb_plot_ytd"),  width = 6),
+                                box(title = NULL, status = "primary",
+                                    solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
+                                    plotOutput("msbi_plot_ytd"),  width = 6),
+                                box(title = NULL, status = "primary",
+                                    solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
+                                    plotOutput("msh_plot_ytd"),  width = 6),
+                                box(title = NULL, status = "primary",
+                                    solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
+                                    plotOutput("msm_plot_ytd"),  width = 6),
+                                box(title = NULL, status = "primary",
+                                    solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
+                                    plotOutput("msq_plot_ytd"),  width = 6),
+                                box(title = NULL, status = "primary",
+                                    solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
+                                    plotOutput("mssn_plot_ytd"),  width = 6),
+                                box(title = NULL, status = "primary",
+                                    solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
+                                    plotOutput("msw_plot_ytd"),  width = 6),
+                                box(title = NULL, status = "primary",
+                                    solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
+                                    plotOutput("nyee_plot_ytd"),  width = 6),
+                                
+                         )) # close tabPanel
+                      )
+                  )
                 
               ) # close fluidRow
       ),   # close tab MSHS  
@@ -156,7 +249,13 @@ ui <- dashboardPage(
                 column(11,
                        box(title = NULL, status = "primary",
                            solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
-                           plotOutput("site_plot"),  width = 12))
+                           plotlyOutput("ratio_plot"),  width = 12),
+                       
+                       box(title = NULL, status = "primary", 
+                           solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
+                           plotOutput("site_plot", height = "700px"),  width = 12)
+  
+                       )
                 
 
                 ) # close fluidRow
