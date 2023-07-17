@@ -221,6 +221,11 @@ write.csv(new_repo, paste0(dir, "Repo/Metric_Trends_Data_updated_",
 }
 
 
+new_repo <- new_repo %>% mutate(Actual = ifelse(!is.na(Budget) & is.na(Actual), 0, Actual),
+                                Budget = ifelse(is.na(Budget) & !is.na(Actual), 0, Budget))
+                                
+
+
 new_repo <- new_repo %>%
   mutate(month= ifelse(nchar(month) < 2, paste0("0", month), month),
          date = paste0(year, "-", month),
@@ -229,21 +234,29 @@ new_repo <- new_repo %>%
   filter(!is.na(Actual)) 
 
 
+# for these metrics YTD variance = (budget - Actual)/budget
+metrics_dif <- c("CARTS", "Nursing Agency Costs", "Salaries and Benefits", 
+                 "Supplies & Expenses", "Total Hospital Expenses", "ALOS" )
+
+
 # define YTD variables
-new_repo <- new_repo %>% filter(year %in% max(year)) %>%
-  group_by(Site, Metrics) %>%
+new_repo <- new_repo %>% 
+  group_by(Site, Metrics, year) %>%
   mutate( Actual_YTD = cumsum(Actual),
           Budget_YTD = cumsum(Budget), 
-          Variance.From.Budget.YTD = round(100*(Budget_YTD- Actual_YTD )/Budget_YTD, 0))
-
+          Variance.From.Budget.YTD = ifelse(Metrics %in% metrics_dif, 
+                                            round((Budget_YTD - Actual_YTD )/Budget_YTD, 2),
+                                            round((Actual_YTD - Budget_YTD)/Budget_YTD, 2)))
 
 new_repo <- new_repo %>%
-  mutate(Variance.From.Budget.YTD = ifelse(Variance.From.Budget.YTD == "-Inf", NA, Variance.From.Budget.YTD))
+  mutate(Variance.From.Budget.YTD = 
+           ifelse(Variance.From.Budget.YTD %in% c("Inf", "-Inf", "NaN"), 0, Variance.From.Budget.YTD))
+  
 
 
-new_repo <- new_repo %>% 
-  group_by(Site, Metrics) %>%
-  mutate(Variance.From.Budget= round(Budget - Actual, 2))
+# new_repo <- new_repo %>% 
+#   group_by(Site, Metrics) %>%
+#   mutate(Variance.From.Budget= round(Actual - Budget, 2))
 
 # Color Theme -----------------------------------------------------------
 
