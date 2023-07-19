@@ -6,7 +6,7 @@ server <- function(input, output, session) {
     end_date <- isolate(max(input$mshs_date_range))
     start_date <- isolate(min(input$mshs_date_range))
     metric <- isolate(input$mshs_metrics)
-    paste0("Based on data from ", start_date, " to ", end_date)
+    paste0("Based on data from ", start_date, " to ", end_date, " for ", metric)
   }, ignoreNULL = FALSE)
   
   output$mshs_date_show  <- renderText({
@@ -24,6 +24,20 @@ server <- function(input, output, session) {
   output$ all_date_show  <- renderText({
    all_mshs_text()
   })
+  
+  
+  all_hosp_text <- eventReactive(input$all_filters_update, {
+    end_date <- isolate(max(input$all_date_range))
+    start_date <- isolate(min(input$all_date_range))
+    hospitals <- isolate(input$all_hospital)
+    paste0("Based on data from ", start_date, " to ", end_date, " for ", hospitals)
+  }, ignoreNULL = FALSE)
+  
+  output$all_date_show  <- renderText({
+    all_hosp_text()
+  })
+  
+ 
   
  
   
@@ -103,65 +117,68 @@ server <- function(input, output, session) {
               legend.text = element_text(size = 6)) 
     } else {
       
-      # data <- new_repo %>%
-      #     filter(Site == "MSHS" & Metrics == "CMI")
+      # data <- new_repo %>% filter(Site == "MSHS" & Metrics == "CMI")
+ 
+      #define a scale for second axis
+      ratio <- max(abs(data$Variance), na.rm = TRUE)/ max(abs(data$Variance.From.Budget.YTD), na.rm = TRUE)
       
-      
-      # Define a variable for to balance the sec axis
-      data <- data %>% mutate(char = nchar(floor(max(abs(Variance)))),
-                             balance_value = ifelse(char> 1, 10^(char), char),
-                             balance = Variance.From.Budget.YTD * balance_value, 
-                             balance_value = ifelse(nchar(floor(abs(balance)))> char, 
-                                                balance_value/(10^(nchar(floor(abs(balance))) - char)), 
-                                                balance_value),
-                             balance = Variance.From.Budget.YTD * balance_value) %>% 
-        fill(balance_value, .direction = "downup")
-      
-      
-      
-      if((max(data$Variance, data$balance, na.rm = TRUE))*1.5 < 0){
-        max_value <- 0
-      } else {
-        max_value <- (max(data$Variance, data$balance, na.rm = TRUE))*1.5
+      if (ratio %in% c("Inf", "-Inf", "NaN")) {
+        ratio <- 0
       }
       
-      if((min(data$Variance, data$balance, na.rm = TRUE))*1.5 > 0){
+      data <- data %>% mutate(Variance_scaled = Variance.From.Budget.YTD * ratio)
+      
+      
+      if((max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5 < 0){
+        max_value <- 0
+      } else {
+        max_value <- (max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5
+      }
+      
+      if((min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5 > 0){
         min_value <- 0
       } else {
-        min_value <- (min(data$Variance, data$balance, na.rm = TRUE))*1.5
+        min_value <- (min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5
       }
       
       
       p1 <- ggplot(data)  + 
         geom_bar(aes(x=date, y= Variance), stat="identity", fill= "#06ABEB")+
         labs(x = "Date", y = "Variance to Budget $", 
-             #title = isolate(paste0("MSHS ", input$mshs_metrics , " Monthly Variance to Budget")),
+             title = isolate(paste0("MSH ", input$mshs_metrics , " Monthly Variance to Budget")),
              subtitle = paste0("($ in Thousands)"))+
         theme(plot.title = element_text(hjust = 0.5, size = 20),
               plot.subtitle = element_text(hjust = 0.5, size = 10),
               axis.text.x = element_text(angle = 0, hjust = 0.5))+
-        geom_text(aes(label= `Variance`, x=date, y= Variance, color = sign),
-                  position = position_dodge(width = 1),
-                  vjust = 0.5 - sign(data$Variance)/2, size = 3.5)+
+        geom_text(aes(label= paste0("$", `Variance`),
+                      x=date, y= Variance, color = sign),
+                  position = position_dodge(width = 1), fontface = "bold",
+                  vjust = 0.5 - sign(data$Variance), size = 3.5)+
         scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
-        theme(legend.position = "non")
-      
-      
+        theme(plot.title = element_text(hjust = 0.5, size = 20),
+              plot.subtitle = element_text(hjust = 0.5, size = 10),
+              axis.title = element_text(face='bold'),
+              legend.text = element_text(size = 6),
+              legend.position = "non")+
+        geom_hline(aes(yintercept = 0)) 
       
       p1 <- p1 +
-        geom_line(mapping = aes(date, Variance.From.Budget.YTD * balance_value, group = 1),
-                  colour = "#212070", linewidth = 1.2) +
-        geom_point(mapping = aes(date, Variance.From.Budget.YTD * balance_value),
-                   colour = "#212070", size = 2) +
+        geom_line(mapping = aes(date, Variance_scaled, group = 1),
+                  colour = "#212070", linewidth = 1.25) +
+        geom_point(mapping = aes(date, Variance_scaled),
+                   colour = "#212070", size = 2.6) +
         scale_y_continuous(limits=c(min_value, max_value), 
-                           sec.axis = ggplot2::sec_axis(~. / data$balance_value,
-                               name = "YTD Variance To Budget Ratio"
-        ))+
-        geom_text(aes(label= paste0(`Variance.From.Budget.YTD`*100, "%"), x=date, y= Variance.From.Budget.YTD, color = sign.YTD),
-                  position = position_dodge(width = 1),
-                  vjust = 0.5 - sign(data$Variance.From.Budget.YTD), size = 3.5)
+                           sec.axis = ggplot2::sec_axis(~. / ratio , 
+                                                        labels = scales::label_percent(scale = 1),
+                                                        name = "YTD Variance To Budget Ratio %"))+
+        geom_text_repel(aes(label= paste0(`Variance.From.Budget.YTD`, "%"), 
+                            x=date, y= Variance_scaled , color = sign.YTD),
+                        position = position_dodge(width = 1), fontface='bold',
+                        vjust = 0.5 - sign(data$Variance.From.Budget.YTD), size = 3.5 )
       
       p1
+      
+      
       
     }
     
@@ -202,38 +219,34 @@ server <- function(input, output, session) {
         labs(x = "Date", y = "Expense to Revenue Ratio", 
              title = paste0("MSB Expense to Revenue Ratio" ),
              subtitle = paste0("(Cost to earn $1 of revenue)"))+
-        scale_y_continuous(limits = c(0, max(data$Actual) * 1.2)) +
+        scale_y_continuous(limits = c(min_value, max_value * 1.2)) +
         theme(plot.title = element_text(hjust = 0.5, size = 20),
               plot.subtitle = element_text(hjust = 0.5, size = 10),
               axis.title = element_text(face = "bold"),
               legend.text = element_text(size = 6)) 
     } else {
       
-      # data <- new_repo %>%
-      #     filter(Site == "MSHS" & Metrics == "CMI")
       
-      # Define a variable for to balance the sec axis
-      data <- data %>% mutate(char = nchar(floor(max(abs(Variance)))),
-                             balance_value = ifelse(char> 1, 10^(char), char),
-                             balance = Variance.From.Budget.YTD * balance_value, 
-                             balance_value = ifelse(nchar(floor(abs(balance)))> char, 
-                                                    balance_value/(10^(nchar(floor(abs(balance))) - char)), 
-                                                    balance_value),
-                             balance = Variance.From.Budget.YTD * balance_value) %>% 
-        fill(balance_value, .direction = "downup")
+      #define a scale for second axis
+      ratio <- max(abs(data$Variance), na.rm = TRUE)/ max(abs(data$Variance.From.Budget.YTD), na.rm = TRUE)
       
-      
-      
-      if((max(data$Variance, data$balance, na.rm = TRUE))*1.5 < 0){
-        max_value <- 0
-      } else {
-        max_value <- (max(data$Variance, data$balance, na.rm = TRUE))*1.5
+      if (ratio %in% c("Inf", "-Inf", "NaN")) {
+        ratio <- 0
       }
       
-      if((min(data$Variance, data$balance, na.rm = TRUE))*1.5 > 0){
+      data <- data %>% mutate(Variance_scaled = Variance.From.Budget.YTD * ratio)
+      
+      
+      if((max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5 < 0){
+        max_value <- 0
+      } else {
+        max_value <- (max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5
+      }
+      
+      if((min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5 > 0){
         min_value <- 0
       } else {
-        min_value <- (min(data$Variance, data$balance, na.rm = TRUE))*1.5
+        min_value <- (min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5
       }
       
       
@@ -245,27 +258,36 @@ server <- function(input, output, session) {
         theme(plot.title = element_text(hjust = 0.5, size = 20),
               plot.subtitle = element_text(hjust = 0.5, size = 10),
               axis.text.x = element_text(angle = 0, hjust = 0.5))+
-        geom_text(aes(label= `Variance`, x=date, y= Variance, color = sign),
-                  position = position_dodge(width = 1),
-                  vjust = 0.5 - sign(data$Variance)/2, size = 3.5)+
+        geom_text(aes(label= paste0("$", `Variance`),
+                      x=date, y= Variance, color = sign),
+                  position = position_dodge(width = 1), fontface = "bold",
+                  vjust = 0.5 - sign(data$Variance), size = 3.5)+
         scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
-        theme(legend.position = "non")
-      
+        theme(plot.title = element_text(hjust = 0.5, size = 20),
+              plot.subtitle = element_text(hjust = 0.5, size = 10),
+              axis.title = element_text(face='bold'),
+              legend.text = element_text(size = 6),
+              legend.position = "non")+
+        geom_hline(aes(yintercept = 0)) 
       
       
       p1 <- p1 +
-        geom_line(mapping = aes(date, Variance.From.Budget.YTD *balance_value , group = 1),
-                  colour = "#212070", linewidth = 1.2) +
-        geom_point(mapping = aes(date, Variance.From.Budget.YTD * balance_value),
-                   colour = "#212070", size = 2) +
+        geom_line(mapping = aes(date, Variance_scaled, group = 1),
+                  colour = "#212070", linewidth = 1.25) +
+        geom_point(mapping = aes(date, Variance_scaled),
+                   colour = "#212070", size = 2.6) +
         scale_y_continuous(limits=c(min_value, max_value), 
-                             sec.axis = ggplot2::sec_axis(~. / data$balance_value,
-                                name = "YTD Variance To Budget Ratio"))+
-        geom_text(aes(label= paste0(`Variance.From.Budget.YTD`, "%"), x=date, y= Variance.From.Budget.YTD, color = sign.YTD),
-                  position = position_dodge(width = 1),
-                  vjust = 0.5 - sign(data$Variance.From.Budget.YTD), size = 3.5)
+                           sec.axis = ggplot2::sec_axis(~. / ratio , 
+                                                        labels = scales::label_percent(scale = 1),
+                                                        name = "YTD Variance To Budget Ratio %"))+
+        geom_text_repel(aes(label= paste0(`Variance.From.Budget.YTD`, "%"), 
+                            x=date, y= Variance_scaled , color = sign.YTD),
+                        position = position_dodge(width = 1), fontface='bold',
+                        vjust = 0.5 - sign(data$Variance.From.Budget.YTD), size = 3.5 )
       
       p1
+      
+      
       
     }
     
@@ -315,36 +337,27 @@ server <- function(input, output, session) {
               legend.text = element_text(size = 6)) 
     } else {
       
-      # data <- new_repo %>%
-      #     filter(Site == "MSHS" & Metrics == "CMI")
+      #define a scale for second axis
+      ratio <- max(abs(data$Variance), na.rm = TRUE)/ max(abs(data$Variance.From.Budget.YTD), na.rm = TRUE)
       
-      # Define a variable for to balance the sec axis
-      data <- data %>% mutate(char = nchar(floor(max(abs(Variance)))),
-                              balance_value = ifelse(char> 1, 10^(char), char),
-                              balance = Variance.From.Budget.YTD * balance_value, 
-                              balance_value = ifelse(nchar(floor(abs(balance)))> char, 
-                                                     balance_value/(10^(nchar(floor(abs(balance))) - char)), 
-                                                     balance_value),
-                              balance = Variance.From.Budget.YTD * balance_value) %>% 
-        fill(balance_value, .direction = "downup")
+      if (ratio %in% c("Inf", "-Inf", "NaN")) {
+        ratio <- 0
+      }
+      
+      data <- data %>% mutate(Variance_scaled = Variance.From.Budget.YTD * ratio)
       
       
-      
-      
-      if((max(data$Variance, data$balance, na.rm = TRUE))*1.5 < 0){
+      if((max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5 < 0){
         max_value <- 0
       } else {
-        max_value <- (max(data$Variance, data$balance, na.rm = TRUE))*1.5
+        max_value <- (max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5
       }
       
-      if((min(data$Variance, data$balance, na.rm = TRUE))*1.5 > 0){
+      if((min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5 > 0){
         min_value <- 0
       } else {
-        min_value <- (min(data$Variance, data$balance, na.rm = TRUE))*1.5
+        min_value <- (min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5
       }
-      
-      
-      
       
       
       p1 <- ggplot(data)  + 
@@ -355,25 +368,32 @@ server <- function(input, output, session) {
         theme(plot.title = element_text(hjust = 0.5, size = 20),
               plot.subtitle = element_text(hjust = 0.5, size = 10),
               axis.text.x = element_text(angle = 0, hjust = 0.5))+
-        geom_text(aes(label= `Variance`, x=date, y= Variance, color = sign),
-                  position = position_dodge(width = 1),
-                  vjust = 0.5 - sign(data$Variance)/2, size = 3.5)+
+        geom_text(aes(label= paste0("$", `Variance`),
+                      x=date, y= Variance, color = sign),
+                  position = position_dodge(width = 1), fontface = "bold",
+                  vjust = 0.5 - sign(data$Variance), size = 3.5)+
         scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
-        theme(legend.position = "non")
-      
+        theme(plot.title = element_text(hjust = 0.5, size = 20),
+              plot.subtitle = element_text(hjust = 0.5, size = 10),
+              axis.title = element_text(face='bold'),
+              legend.text = element_text(size = 6),
+              legend.position = "non")+
+        geom_hline(aes(yintercept = 0)) 
       
       
       p1 <- p1 +
-        geom_line(mapping = aes(date, Variance.From.Budget.YTD *balance_value, group = 1),
-                  colour = "#212070", linewidth = 1.2) +
-        geom_point(mapping = aes(date, Variance.From.Budget.YTD * balance_value),
-                   colour = "#212070", size = 2) +
-        scale_y_continuous(limits=c(min_value, max_value), sec.axis = ggplot2::sec_axis(~. / data$balance_value,
-                                                                                        name = "YTD Variance To Budget Ratio"
-        ))+
-        geom_text(aes(label= paste0(`Variance.From.Budget.YTD`, "%"), x=date, y= Variance.From.Budget.YTD, color = sign.YTD),
-                  position = position_dodge(width = 1),
-                  vjust = 0.5 - sign(data$Variance.From.Budget.YTD), size = 3.5)
+        geom_line(mapping = aes(date, Variance_scaled, group = 1),
+                  colour = "#212070", linewidth = 1.25) +
+        geom_point(mapping = aes(date, Variance_scaled),
+                   colour = "#212070", size = 2.6) +
+        scale_y_continuous(limits=c(min_value, max_value), 
+                           sec.axis = ggplot2::sec_axis(~. / ratio , 
+                                                        labels = scales::label_percent(scale = 1),
+                                                        name = "YTD Variance To Budget Ratio %"))+
+        geom_text_repel(aes(label= paste0(`Variance.From.Budget.YTD`, "%"), 
+                            x=date, y= Variance_scaled , color = sign.YTD),
+                        position = position_dodge(width = 1), fontface='bold',
+                        vjust = 0.5 - sign(data$Variance.From.Budget.YTD), size = 3.5 )
       
       p1
       
@@ -423,31 +443,26 @@ server <- function(input, output, session) {
               legend.text = element_text(size = 6)) 
     } else {
       
-      # data <- new_repo %>%
-      #     filter(Site == "MSHS" & Metrics == "CMI")
+      #define a scale for second axis
+      ratio <- max(abs(data$Variance), na.rm = TRUE)/ max(abs(data$Variance.From.Budget.YTD), na.rm = TRUE)
       
-      # Define a variable for to balance the sec axis
-      data <- data %>% mutate(char = nchar(floor(max(abs(Variance)))),
-                              balance_value = ifelse(char> 1, 10^(char), char),
-                              balance = Variance.From.Budget.YTD * balance_value, 
-                              balance_value = ifelse(nchar(floor(abs(balance)))> char, 
-                                                     balance_value/(10^(nchar(floor(abs(balance))) - char)), 
-                                                     balance_value),
-                              balance = Variance.From.Budget.YTD * balance_value) %>% 
-        fill(balance_value, .direction = "downup")
-      
-      
-      
-      if((max(data$Variance, data$balance, na.rm = TRUE))*1.5 < 0){
-        max_value <- 0
-      } else {
-        max_value <- (max(data$Variance, data$balance, na.rm = TRUE))*1.5
+      if (ratio %in% c("Inf", "-Inf", "NaN")) {
+        ratio <- 0
       }
       
-      if((min(data$Variance, data$balance, na.rm = TRUE))*1.5 > 0){
+      data <- data %>% mutate(Variance_scaled = Variance.From.Budget.YTD * ratio)
+      
+      
+      if((max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5 < 0){
+        max_value <- 0
+      } else {
+        max_value <- (max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5
+      }
+      
+      if((min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5 > 0){
         min_value <- 0
       } else {
-        min_value <- (min(data$Variance, data$balance, na.rm = TRUE))*1.5
+        min_value <- (min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5
       }
       
       
@@ -459,27 +474,35 @@ server <- function(input, output, session) {
         theme(plot.title = element_text(hjust = 0.5, size = 20),
               plot.subtitle = element_text(hjust = 0.5, size = 10),
               axis.text.x = element_text(angle = 0, hjust = 0.5))+
-        geom_text(aes(label= `Variance`, x=date, y= Variance, color = sign),
-                  position = position_dodge(width = 1),
-                  vjust = 0.5 - sign(data$Variance)/2, size = 3.5)+
+        geom_text(aes(label= paste0("$", `Variance`),
+                      x=date, y= Variance, color = sign),
+                  position = position_dodge(width = 1), fontface = "bold",
+                  vjust = 0.5 - sign(data$Variance), size = 3.5)+
         scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
-        theme(legend.position = "non")
-      
+        theme(plot.title = element_text(hjust = 0.5, size = 20),
+              plot.subtitle = element_text(hjust = 0.5, size = 10),
+              axis.title = element_text(face='bold'),
+              legend.text = element_text(size = 6),
+              legend.position = "non")+
+        geom_hline(aes(yintercept = 0)) 
       
       
       p1 <- p1 +
-        geom_line(mapping = aes(date, Variance.From.Budget.YTD * balance_value, group = 1),
-                  colour = "#212070", linewidth = 1.2) +
-        geom_point(mapping = aes(date, Variance.From.Budget.YTD * balance_value),
-                   colour = "#212070", size = 2) +
+        geom_line(mapping = aes(date, Variance_scaled, group = 1),
+                  colour = "#212070", linewidth = 1.25) +
+        geom_point(mapping = aes(date, Variance_scaled),
+                   colour = "#212070", size = 2.6) +
         scale_y_continuous(limits=c(min_value, max_value), 
-                           sec.axis = ggplot2::sec_axis(~. / data$balance_value,
-                                                        name = "YTD Variance To Budget Ratio"))+
-        geom_text(aes(label= paste0(`Variance.From.Budget.YTD`, "%"), x=date, y= Variance.From.Budget.YTD, color = sign.YTD),
-                  position = position_dodge(width = 1),
-                  vjust = 0.5 - sign(data$Variance.From.Budget.YTD), size = 3.5)
+                           sec.axis = ggplot2::sec_axis(~. / ratio , 
+                                                        labels = scales::label_percent(scale = 1),
+                                                        name = "YTD Variance To Budget Ratio %"))+
+        geom_text_repel(aes(label= paste0(`Variance.From.Budget.YTD`, "%"), 
+                            x=date, y= Variance_scaled , color = sign.YTD),
+                        position = position_dodge(width = 1), fontface='bold',
+                        vjust = 0.5 - sign(data$Variance.From.Budget.YTD), size = 3.5 )
       
       p1
+      
       
     }
     
@@ -527,32 +550,26 @@ server <- function(input, output, session) {
               legend.text = element_text(size = 6)) 
     } else {
       
-      # data <- new_repo %>%
-      #     filter(Site == "MSHS" & Metrics == "CMI")
+      #define a scale for second axis
+      ratio <- max(abs(data$Variance), na.rm = TRUE)/ max(abs(data$Variance.From.Budget.YTD), na.rm = TRUE)
       
-      # Define a variable for to balance the sec axis
-      data <- data %>% mutate(char = nchar(floor(max(abs(Variance)))),
-                              balance_value = ifelse(char> 1, 10^(char), char),
-                              balance = Variance.From.Budget.YTD * balance_value, 
-                              balance_value = ifelse(nchar(floor(abs(balance)))> char, 
-                                                     balance_value/(10^(nchar(floor(abs(balance))) - char)), 
-                                                     balance_value),
-                              balance = Variance.From.Budget.YTD * balance_value) %>% 
-        fill(balance_value, .direction = "downup")
-      
-      
-      
-      
-      if((max(data$Variance, data$balance, na.rm = TRUE))*1.5 < 0){
-        max_value <- 0
-      } else {
-        max_value <- (max(data$Variance, data$balance, na.rm = TRUE))*1.5
+      if (ratio %in% c("Inf", "-Inf", "NaN")) {
+        ratio <- 0
       }
       
-      if((min(data$Variance, data$balance, na.rm = TRUE))*1.5 > 0){
+      data <- data %>% mutate(Variance_scaled = Variance.From.Budget.YTD * ratio)
+      
+      
+      if((max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5 < 0){
+        max_value <- 0
+      } else {
+        max_value <- (max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5
+      }
+      
+      if((min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5 > 0){
         min_value <- 0
       } else {
-        min_value <- (min(data$Variance, data$balance, na.rm = TRUE))*1.5
+        min_value <- (min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5
       }
       
       
@@ -564,27 +581,35 @@ server <- function(input, output, session) {
         theme(plot.title = element_text(hjust = 0.5, size = 20),
               plot.subtitle = element_text(hjust = 0.5, size = 10),
               axis.text.x = element_text(angle = 0, hjust = 0.5))+
-        geom_text(aes(label= `Variance`, x=date, y= Variance, color = sign),
-                  position = position_dodge(width = 1),
-                  vjust = 0.5 - sign(data$Variance)/2, size = 3.5)+
+        geom_text(aes(label= paste0("$", `Variance`),
+                      x=date, y= Variance, color = sign),
+                  position = position_dodge(width = 1), fontface = "bold",
+                  vjust = 0.5 - sign(data$Variance), size = 3.5)+
         scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
-        theme(legend.position = "non")
-      
+        theme(plot.title = element_text(hjust = 0.5, size = 20),
+              plot.subtitle = element_text(hjust = 0.5, size = 10),
+              axis.title = element_text(face='bold'),
+              legend.text = element_text(size = 6),
+              legend.position = "non")+
+        geom_hline(aes(yintercept = 0)) 
       
       
       p1 <- p1 +
-        geom_line(mapping = aes(date, Variance.From.Budget.YTD * balance_value, group = 1),
-                  colour = "#212070", linewidth = 1.2) +
-        geom_point(mapping = aes(date, Variance.From.Budget.YTD * balance_value),
-                   colour = "#212070", size = 2) +
+        geom_line(mapping = aes(date, Variance_scaled, group = 1),
+                  colour = "#212070", linewidth = 1.25) +
+        geom_point(mapping = aes(date, Variance_scaled),
+                   colour = "#212070", size = 2.6) +
         scale_y_continuous(limits=c(min_value, max_value), 
-                           sec.axis = ggplot2::sec_axis(~. / data$balance_value,
-                                                        name = "YTD Variance To Budget Ratio"))+
-        geom_text(aes(label= paste0(`Variance.From.Budget.YTD`, "%"), x=date, y= Variance.From.Budget.YTD, color = sign.YTD),
-                  position = position_dodge(width = 1),
-                  vjust = 0.5 - sign(data$Variance.From.Budget.YTD), size = 3.5)
+                           sec.axis = ggplot2::sec_axis(~. / ratio , 
+                                                        labels = scales::label_percent(scale = 1),
+                                                        name = "YTD Variance To Budget Ratio %"))+
+        geom_text_repel(aes(label= paste0(`Variance.From.Budget.YTD`, "%"), 
+                            x=date, y= Variance_scaled , color = sign.YTD),
+                        position = position_dodge(width = 1), fontface='bold',
+                        vjust = 0.5 - sign(data$Variance.From.Budget.YTD), size = 3.5 )
       
       p1
+      
       
     }
     
@@ -633,32 +658,26 @@ server <- function(input, output, session) {
               legend.text = element_text(size = 6)) 
     } else {
       
-      # data <- new_repo %>%
-      #     filter(Site == "MSHS" & Metrics == "CMI")
+      #define a scale for second axis
+      ratio <- max(abs(data$Variance), na.rm = TRUE)/ max(abs(data$Variance.From.Budget.YTD), na.rm = TRUE)
       
-      # Define a variable for to balance the sec axis
-      data <- data %>% mutate(char = nchar(floor(max(abs(Variance)))),
-                              balance_value = ifelse(char> 1, 10^(char), char),
-                              balance = Variance.From.Budget.YTD * balance_value, 
-                              balance_value = ifelse(nchar(floor(abs(balance)))> char, 
-                                                     balance_value/(10^(nchar(floor(abs(balance))) - char)), 
-                                                     balance_value),
-                              balance = Variance.From.Budget.YTD * balance_value) %>% 
-        fill(balance_value, .direction = "downup")
-      
-      
-      
-      
-      if((max(data$Variance, data$balance, na.rm = TRUE))*1.5 < 0){
-        max_value <- 0
-      } else {
-        max_value <- (max(data$Variance, data$balance, na.rm = TRUE))*1.5
+      if (ratio %in% c("Inf", "-Inf", "NaN")) {
+        ratio <- 0
       }
       
-      if((min(data$Variance, data$balance, na.rm = TRUE))*1.5 > 0){
+      data <- data %>% mutate(Variance_scaled = Variance.From.Budget.YTD * ratio)
+      
+      
+      if((max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5 < 0){
+        max_value <- 0
+      } else {
+        max_value <- (max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5
+      }
+      
+      if((min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5 > 0){
         min_value <- 0
       } else {
-        min_value <- (min(data$Variance, data$balance, na.rm = TRUE))*1.5
+        min_value <- (min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5
       }
       
       
@@ -670,25 +689,32 @@ server <- function(input, output, session) {
         theme(plot.title = element_text(hjust = 0.5, size = 20),
               plot.subtitle = element_text(hjust = 0.5, size = 10),
               axis.text.x = element_text(angle = 0, hjust = 0.5))+
-        geom_text(aes(label= `Variance`, x=date, y= Variance, color = sign),
-                  position = position_dodge(width = 1),
-                  vjust = 0.5 - sign(data$Variance)/2, size = 3.5)+
+        geom_text(aes(label= paste0("$", `Variance`),
+                      x=date, y= Variance, color = sign),
+                  position = position_dodge(width = 1), fontface = "bold",
+                  vjust = 0.5 - sign(data$Variance), size = 3.5)+
         scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
-        theme(legend.position = "non")
-      
+        theme(plot.title = element_text(hjust = 0.5, size = 20),
+              plot.subtitle = element_text(hjust = 0.5, size = 10),
+              axis.title = element_text(face='bold'),
+              legend.text = element_text(size = 6),
+              legend.position = "non")+
+        geom_hline(aes(yintercept = 0)) 
       
       
       p1 <- p1 +
-        geom_line(mapping = aes(date, Variance.From.Budget.YTD * balance_value, group = 1),
-                  colour = "#212070", linewidth = 1.2) +
-        geom_point(mapping = aes(date, Variance.From.Budget.YTD * balance_value),
-                   colour = "#212070", size = 2) +
+        geom_line(mapping = aes(date, Variance_scaled, group = 1),
+                  colour = "#212070", linewidth = 1.25) +
+        geom_point(mapping = aes(date, Variance_scaled),
+                   colour = "#212070", size = 2.6) +
         scale_y_continuous(limits=c(min_value, max_value), 
-                           sec.axis = ggplot2::sec_axis(~. / data$balance_value,
-                                                        name = "YTD Variance To Budget Ratio"))+
-        geom_text(aes(label= paste0(`Variance.From.Budget.YTD`, "%"), x=date, y= Variance.From.Budget.YTD, color = sign.YTD),
-                  position = position_dodge(width = 1),
-                  vjust = 0.5 - sign(data$Variance.From.Budget.YTD), size = 3.5)
+                           sec.axis = ggplot2::sec_axis(~. / ratio , 
+                                                        labels = scales::label_percent(scale = 1),
+                                                        name = "YTD Variance To Budget Ratio %"))+
+        geom_text_repel(aes(label= paste0(`Variance.From.Budget.YTD`, "%"), 
+                            x=date, y= Variance_scaled , color = sign.YTD),
+                        position = position_dodge(width = 1), fontface='bold',
+                        vjust = 0.5 - sign(data$Variance.From.Budget.YTD), size = 3.5 )
       
       p1
       
@@ -738,32 +764,26 @@ server <- function(input, output, session) {
               legend.text = element_text(size = 6)) 
     } else {
       
-      # data <- new_repo %>%
-      #     filter(Site == "MSHS" & Metrics == "CMI")
+      #define a scale for second axis
+      ratio <- max(abs(data$Variance), na.rm = TRUE)/ max(abs(data$Variance.From.Budget.YTD), na.rm = TRUE)
       
-      # Define a variable for to balance the sec axis
-      data <- data %>% mutate(char = nchar(floor(max(abs(Variance)))),
-                              balance_value = ifelse(char> 1, 10^(char), char),
-                              balance = Variance.From.Budget.YTD * balance_value, 
-                              balance_value = ifelse(nchar(floor(abs(balance)))> char, 
-                                                     balance_value/(10^(nchar(floor(abs(balance))) - char)), 
-                                                     balance_value),
-                              balance = Variance.From.Budget.YTD * balance_value) %>% 
-        fill(balance_value, .direction = "downup")
-      
-      
-      
-      
-      if((max(data$Variance, data$balance, na.rm = TRUE))*1.5 < 0){
-        max_value <- 0
-      } else {
-        max_value <- (max(data$Variance, data$balance, na.rm = TRUE))*1.5
+      if (ratio %in% c("Inf", "-Inf", "NaN")) {
+        ratio <- 0
       }
       
-      if((min(data$Variance, data$balance, na.rm = TRUE))*1.5 > 0){
+      data <- data %>% mutate(Variance_scaled = Variance.From.Budget.YTD * ratio)
+      
+      
+      if((max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5 < 0){
+        max_value <- 0
+      } else {
+        max_value <- (max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5
+      }
+      
+      if((min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5 > 0){
         min_value <- 0
       } else {
-        min_value <- (min(data$Variance, data$balance, na.rm = TRUE))*1.5
+        min_value <- (min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5
       }
       
       
@@ -775,27 +795,35 @@ server <- function(input, output, session) {
         theme(plot.title = element_text(hjust = 0.5, size = 20),
               plot.subtitle = element_text(hjust = 0.5, size = 10),
               axis.text.x = element_text(angle = 0, hjust = 0.5))+
-        geom_text(aes(label= `Variance`, x=date, y= Variance, color = sign),
-                  position = position_dodge(width = 1),
-                  vjust = 0.5 - sign(data$Variance)/2, size = 3.5)+
+        geom_text(aes(label= paste0("$", `Variance`),
+                      x=date, y= Variance, color = sign),
+                  position = position_dodge(width = 1), fontface = "bold",
+                  vjust = 0.5 - sign(data$Variance), size = 3.5)+
         scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
-        theme(legend.position = "non")
-      
+        theme(plot.title = element_text(hjust = 0.5, size = 20),
+              plot.subtitle = element_text(hjust = 0.5, size = 10),
+              axis.title = element_text(face='bold'),
+              legend.text = element_text(size = 6),
+              legend.position = "non")+
+        geom_hline(aes(yintercept = 0)) 
       
       
       p1 <- p1 +
-        geom_line(mapping = aes(date, Variance.From.Budget.YTD * balance_value, group = 1),
-                  colour = "#212070", linewidth = 1.2) +
-        geom_point(mapping = aes(date, Variance.From.Budget.YTD * balance_value),
-                   colour = "#212070", size = 2) +
+        geom_line(mapping = aes(date, Variance_scaled, group = 1),
+                  colour = "#212070", linewidth = 1.25) +
+        geom_point(mapping = aes(date, Variance_scaled),
+                   colour = "#212070", size = 2.6) +
         scale_y_continuous(limits=c(min_value, max_value), 
-                           sec.axis = ggplot2::sec_axis(~. / data$balance_value,
-                                                        name = "YTD Variance To Budget Ratio"))+
-        geom_text(aes(label= paste0(`Variance.From.Budget.YTD`, "%"), x=date, y= Variance.From.Budget.YTD, color = sign.YTD),
-                  position = position_dodge(width = 1),
-                  vjust = 0.5 - sign(data$Variance.From.Budget.YTD), size = 3.5)
+                           sec.axis = ggplot2::sec_axis(~. / ratio , 
+                                                        labels = scales::label_percent(scale = 1),
+                                                        name = "YTD Variance To Budget Ratio %"))+
+        geom_text_repel(aes(label= paste0(`Variance.From.Budget.YTD`, "%"), 
+                            x=date, y= Variance_scaled , color = sign.YTD),
+                        position = position_dodge(width = 1), fontface='bold',
+                        vjust = 0.5 - sign(data$Variance.From.Budget.YTD), size = 3.5 )
       
       p1
+      
       
     }
     
@@ -843,32 +871,26 @@ server <- function(input, output, session) {
               legend.text = element_text(size = 6)) 
     } else {
       
-      # data <- new_repo %>%
-      #     filter(Site == "MSHS" & Metrics == "CMI")
+      #define a scale for second axis
+      ratio <- max(abs(data$Variance), na.rm = TRUE)/ max(abs(data$Variance.From.Budget.YTD), na.rm = TRUE)
       
-      # Define a variable for to balance the sec axis
-      data <- data %>% mutate(char = nchar(floor(max(abs(Variance)))),
-                              balance_value = ifelse(char> 1, 10^(char), char),
-                              balance = Variance.From.Budget.YTD * balance_value, 
-                              balance_value = ifelse(nchar(floor(abs(balance)))> char, 
-                                                     balance_value/(10^(nchar(floor(abs(balance))) - char)), 
-                                                     balance_value),
-                              balance = Variance.From.Budget.YTD * balance_value) %>% 
-        fill(balance_value, .direction = "downup")
-      
-      
-      
-      
-      if((max(data$Variance, data$balance, na.rm = TRUE))*1.5 < 0){
-        max_value <- 0
-      } else {
-        max_value <- (max(data$Variance, data$balance, na.rm = TRUE))*1.5
+      if (ratio %in% c("Inf", "-Inf", "NaN")) {
+        ratio <- 0
       }
       
-      if((min(data$Variance, data$balance, na.rm = TRUE))*1.5 > 0){
+      data <- data %>% mutate(Variance_scaled = Variance.From.Budget.YTD * ratio)
+      
+      
+      if((max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5 < 0){
+        max_value <- 0
+      } else {
+        max_value <- (max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5
+      }
+      
+      if((min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5 > 0){
         min_value <- 0
       } else {
-        min_value <- (min(data$Variance, data$balance, na.rm = TRUE))*1.5
+        min_value <- (min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5
       }
       
       
@@ -880,27 +902,35 @@ server <- function(input, output, session) {
         theme(plot.title = element_text(hjust = 0.5, size = 20),
               plot.subtitle = element_text(hjust = 0.5, size = 10),
               axis.text.x = element_text(angle = 0, hjust = 0.5))+
-        geom_text(aes(label= `Variance`, x=date, y= Variance, color = sign),
-                  position = position_dodge(width = 1),
-                  vjust = 0.5 - sign(data$Variance)/2, size = 3.5)+
+        geom_text(aes(label= paste0("$", `Variance`),
+                      x=date, y= Variance, color = sign),
+                  position = position_dodge(width = 1), fontface = "bold",
+                  vjust = 0.5 - sign(data$Variance), size = 3.5)+
         scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
-        theme(legend.position = "non")
-      
+        theme(plot.title = element_text(hjust = 0.5, size = 20),
+              plot.subtitle = element_text(hjust = 0.5, size = 10),
+              axis.title = element_text(face='bold'),
+              legend.text = element_text(size = 6),
+              legend.position = "non")+
+        geom_hline(aes(yintercept = 0)) 
       
       
       p1 <- p1 +
-        geom_line(mapping = aes(date, Variance.From.Budget.YTD * balance_value, group = 1),
-                  colour = "#212070", linewidth = 1.2) +
-        geom_point(mapping = aes(date, Variance.From.Budget.YTD * balance_value),
-                   colour = "#212070", size = 2) +
+        geom_line(mapping = aes(date, Variance_scaled, group = 1),
+                  colour = "#212070", linewidth = 1.25) +
+        geom_point(mapping = aes(date, Variance_scaled),
+                   colour = "#212070", size = 2.6) +
         scale_y_continuous(limits=c(min_value, max_value), 
-                           sec.axis = ggplot2::sec_axis(~. / data$balance_value,
-                                                        name = "YTD Variance To Budget Ratio"))+
-        geom_text(aes(label= paste0(`Variance.From.Budget.YTD`, "%"), x=date, y= Variance.From.Budget.YTD, color = sign.YTD),
-                  position = position_dodge(width = 1),
-                  vjust = 0.5 - sign(data$Variance.From.Budget.YTD), size = 3.5)
+                           sec.axis = ggplot2::sec_axis(~. / ratio , 
+                                                        labels = scales::label_percent(scale = 1),
+                                                        name = "YTD Variance To Budget Ratio %"))+
+        geom_text_repel(aes(label= paste0(`Variance.From.Budget.YTD`, "%"), 
+                            x=date, y= Variance_scaled , color = sign.YTD),
+                        position = position_dodge(width = 1), fontface='bold',
+                        vjust = 0.5 - sign(data$Variance.From.Budget.YTD), size = 3.5 )
       
       p1
+      
       
     }
     
@@ -948,62 +978,63 @@ server <- function(input, output, session) {
               legend.text = element_text(size = 6)) 
     } else {
       
-      # data <- new_repo %>%
-      #     filter(Site == "MSHS" & Metrics == "CMI")
+      #define a scale for second axis
+      ratio <- max(abs(data$Variance), na.rm = TRUE)/ max(abs(data$Variance.From.Budget.YTD), na.rm = TRUE)
       
-      # Define a variable for to balance the sec axis
-      data <- data %>% mutate(char = nchar(floor(max(abs(Variance)))),
-                              balance_value = ifelse(char> 1, 10^(char), char),
-                              balance = Variance.From.Budget.YTD * balance_value, 
-                              balance_value = ifelse(nchar(floor(abs(balance)))> char, 
-                                                     balance_value/(10^(nchar(floor(abs(balance))) - char)), 
-                                                     balance_value),
-                              balance = Variance.From.Budget.YTD * balance_value) %>% 
-        fill(balance_value, .direction = "downup")
-      
-      
-      
-      
-      if((max(data$Variance, data$balance, na.rm = TRUE))*1.5 < 0){
-        max_value <- 0
-      } else {
-        max_value <- (max(data$Variance, data$balance, na.rm = TRUE))*1.5
+      if (ratio %in% c("Inf", "-Inf", "NaN")) {
+        ratio <- 0
       }
       
-      if((min(data$Variance, data$balance, na.rm = TRUE))*1.5 > 0){
+      data <- data %>% mutate(Variance_scaled = Variance.From.Budget.YTD * ratio)
+      
+      
+      if((max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5 < 0){
+        max_value <- 0
+      } else {
+        max_value <- (max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5
+      }
+      
+      if((min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5 > 0){
         min_value <- 0
       } else {
-        min_value <- (min(data$Variance, data$balance, na.rm = TRUE))*1.5
+        min_value <- (min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5
       }
       
       
       p1 <- ggplot(data)  + 
         geom_bar(aes(x=date, y= Variance), stat="identity", fill= "#06ABEB")+
         labs(x = "Date", y = "Variance to Budget $", 
-             #title = isolate(paste0("NYEE ", input$mshs_metrics , " Monthly Variance to Budget")),
+             title = isolate(paste0("NYEE ", input$mshs_metrics , " Monthly Variance to Budget")),
              subtitle = paste0("($ in Thousands)"))+
         theme(plot.title = element_text(hjust = 0.5, size = 20),
               plot.subtitle = element_text(hjust = 0.5, size = 10),
               axis.text.x = element_text(angle = 0, hjust = 0.5))+
-        geom_text(aes(label= `Variance`, x=date, y= Variance, color = sign),
-                  position = position_dodge(width = 1),
-                  vjust = 0.5 - sign(data$Variance)/2, size = 3.5)+
+        geom_text(aes(label= paste0("$", `Variance`),
+                      x=date, y= Variance, color = sign),
+                  position = position_dodge(width = 1), fontface = "bold",
+                  vjust = 0.5 - sign(data$Variance), size = 3.5)+
         scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
-        theme(legend.position = "non")
+        theme(plot.title = element_text(hjust = 0.5, size = 20),
+              plot.subtitle = element_text(hjust = 0.5, size = 10),
+              axis.title = element_text(face='bold'),
+              legend.text = element_text(size = 6),
+              legend.position = "non")+
+        geom_hline(aes(yintercept = 0)) 
       
-  
+      
       p1 <- p1 +
-        geom_line(mapping = aes(date, Variance.From.Budget.YTD * balance_value, group = 1),
-                  colour = "#212070", linewidth = 1.2) +
-        geom_point(mapping = aes(date, Variance.From.Budget.YTD * balance_value),
-                   colour = "#212070", size = 2) +
+        geom_line(mapping = aes(date, Variance_scaled, group = 1),
+                  colour = "#212070", linewidth = 1.25) +
+        geom_point(mapping = aes(date, Variance_scaled),
+                   colour = "#212070", size = 2.6) +
         scale_y_continuous(limits=c(min_value, max_value), 
-                           sec.axis = ggplot2::sec_axis(~. / data$balance_value,
-                                                        #breaks = seq(min.value.YTD, max.value.YTD, by = 0.05),
-                                                        name = "YTD Variance To Budget Ratio"))+
-        geom_text(aes(label= paste0(`Variance.From.Budget.YTD`, "%"), x=date, y= Variance.From.Budget.YTD, color = sign.YTD),
-                  position = position_dodge(width = 1),
-                  vjust = 0.5 - sign(data$Variance.From.Budget.YTD), size = 3.5)
+                           sec.axis = ggplot2::sec_axis(~. / ratio , 
+                                                        labels = scales::label_percent(scale = 1),
+                                                        name = "YTD Variance To Budget Ratio %"))+
+        geom_text_repel(aes(label= paste0(`Variance.From.Budget.YTD`, "%"), 
+                            x=date, y= Variance_scaled , color = sign.YTD),
+                        position = position_dodge(width = 1), fontface='bold',
+                        vjust = 0.5 - sign(data$Variance.From.Budget.YTD), size = 3.5 )
       
       p1
       

@@ -8,6 +8,7 @@ library(readxl)
 library(plotly)
 library(zoo)
 library(gridExtra)
+library(ggrepel) 
 library(shiny)
 library(shinythemes)
 library(shinydashboard)
@@ -221,11 +222,12 @@ write.csv(new_repo, paste0(dir, "Repo/Metric_Trends_Data_updated_",
 }
 
 
+# fill na with zero if one of the Actual or Budget is available 
 new_repo <- new_repo %>% mutate(Actual = ifelse(!is.na(Budget) & is.na(Actual), 0, Actual),
                                 Budget = ifelse(is.na(Budget) & !is.na(Actual), 0, Budget))
                                 
 
-
+# Define date variable
 new_repo <- new_repo %>%
   mutate(month= ifelse(nchar(month) < 2, paste0("0", month), month),
          date = paste0(year, "-", month),
@@ -239,24 +241,30 @@ metrics_dif <- c("CARTS", "Nursing Agency Costs", "Salaries and Benefits",
                  "Supplies & Expenses", "Total Hospital Expenses", "ALOS" )
 
 
+#define Variance
+new_repo <- new_repo %>%
+  group_by(Site, Metrics, year) %>%
+  mutate(Variance.From.Budget= ifelse(Metrics %in% metrics_dif, 
+                                      round(Budget - Actual, 2),
+                                      round(Actual - Budget, 2)))
+
+
 # define YTD variables
 new_repo <- new_repo %>% 
   group_by(Site, Metrics, year) %>%
-  mutate( Actual_YTD = cumsum(Actual),
+  mutate(Actual_YTD = cumsum(Actual),
           Budget_YTD = cumsum(Budget), 
           Variance.From.Budget.YTD = ifelse(Metrics %in% metrics_dif, 
-                                            round((Budget_YTD - Actual_YTD )/Budget_YTD, 2),
-                                            round((Actual_YTD - Budget_YTD)/Budget_YTD, 2)))
-
-new_repo <- new_repo %>%
+                                       round((Budget_YTD - Actual_YTD)/Budget_YTD, 2),
+                                         round((Actual_YTD - Budget_YTD)/Budget_YTD, 2)))
+   
+                                            
+ new_repo <- new_repo %>%
   mutate(Variance.From.Budget.YTD = 
            ifelse(Variance.From.Budget.YTD %in% c("Inf", "-Inf", "NaN"), 0, Variance.From.Budget.YTD))
   
 
 
-# new_repo <- new_repo %>% 
-#   group_by(Site, Metrics) %>%
-#   mutate(Variance.From.Budget= round(Actual - Budget, 2))
 
 # Color Theme -----------------------------------------------------------
 
