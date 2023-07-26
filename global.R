@@ -6,6 +6,7 @@ suppressMessages({
 library(tidyverse)
 library(readxl)
 library(plotly)
+library(reshape2)
 library(zoo)
 library(gridExtra)
 library(ggrepel) 
@@ -17,112 +18,100 @@ library(shinyWidgets)
 })
 
 # Work directory
-dir <- "C:/Users/aghaer01/Downloads/Metric_Trends_data/"
+#dir <- "C:/Users/aghaer01/Downloads/Metric_Trends_data/"
+dir <- "J:/deans/Presidents/HSPI-PM/Operations Planning/Financials/Metric Trends/"
 
 
 # Import data --------------------------------------------------------
 # Import the latest aggregated file
-repo <- file.info(list.files(path = paste0(dir,"Repo/"), full.names = T))
+repo <- file.info(list.files(path = paste0(dir,"REPO/"), full.names = T))
 repo_file <- rownames(repo)[which.max(repo$ctime)]
 repo <- read.csv(repo_file)
 
 
 # Get file names in raw data folder
-raw_data_list <- file.info(list.files(path = paste0(dir,"Raw Data/"), full.names = T)) %>%
+raw_data_list <- file.info(list.files(path = paste0(dir,"Monthly Financial Data/"), full.names = T)) %>%
                                 arrange(mtime)
 
 # Select new data
 new_metric_data <- basename(rownames(raw_data_list))[!(basename(rownames(raw_data_list)) 
                                                                      %in% repo$Filename)]
 
+
 if (length(new_metric_data) > 0) {
   
 #Read files in the folder
-raw_data_files <- lapply(paste0(dir, "Raw Data/", new_metric_data), function(x) {
-                 data <- read_excel(x, sheet = "Hospital Financials") %>%
+raw_data_files <- lapply(paste0(dir, "Monthly Financial Data/", new_metric_data), function(x) {
+                 data <- read_excel(x, sheet = "Current month") %>%
                                  mutate(Filename = basename(x))
                              })
 
 data <- do.call(rbind.data.frame, raw_data_files )
 
 
+
 # Extract the date from file name
 data <- data %>% 
-  rename(Metrics = colnames(data[,1]))   %>%
-  mutate(month = month(mdy(Filename)), year = year(mdy(Filename))) %>%
+  mutate(Filename_v2 = gsub( "v+\\d", "", Filename),
+         month = month(mdy(Filename_v2)), year = year(mdy(Filename_v2))) %>%
   arrange(month, year)
 
+data$Filename_v2 <- NULL
+
 # Remove columns with no information
-data <- data %>% select(-c("...5", "...9", "...13","...17", 
-                           "...21",  "...25","...29", "...33" ))
+data <- data %>% select(-c("...4", "...5", "...8" , "...9", "...12", "...13",
+                           "...16", "...17", "...20", "...21", "...24", "...25",   
+                           "...28", "...29",  "...32", "...33", "...36"))
 
 
-colnames(data) <- c("Metrics", "MSHS-ActualCM", "MSHS-BudgetCM", "MSHS-Variance", 
-                    "MSH-ActualCM", "MSH-BudgetCM", "MSH-Variance",
-                    "MSQ-ActualCM", "MSQ-BudgetCM", "MSQ-Variance",
-                    "MSBI-ActualCM", "MSBI-BudgetCM", "MSBI-Variance",
-                    "MSB-ActualCM", "MSB-BudgetCM", "MSB-Variance",
-                    "MSM-ActualCM", "MSM-BudgetCM", "MSM-Variance",
-                    "MSW-ActualCM", "MSW-BudgetCM", "MSW-Variance",
-                    "NYEE-ActualCM", "NYEE-BudgetCM", "NYEE-Variance",
-                    "MSSN-ActualCM", "MSSN-BudgetCM", "MSSN-Variance",
+colnames(data) <- c("Metrics", "MSHS-Actual", "MSHS-Budget",  
+                    "MSH-Actual", "MSH-Budget", 
+                    "MSQ-Actual", "MSQ-Budget",
+                    "MSBI-Actual", "MSBI-Budget", 
+                    "MSB-Actual", "MSB-Budget", 
+                    "MSM-Actual", "MSM-Budget", 
+                    "MSW-Actual", "MSW-Budget", 
+                    "NYEE-Actual", "NYEE-Budget", 
+                    "MSSN-Actual", "MSSN-Budget", 
                     "Filename", "month", "year" )
 
-# define the first rows with useful info
-var <- which(data$Metrics == "Hospital Beds in Use")
-data <- data[var: nrow(data), ]
 
-# keep the first CMI
-cmi <- which(data$Metrics == "CMI")
+# Selects required metrics
+data <- data %>% 
+  filter(Metrics %in% c("Total Hospital Revenue", "Total Hospital Expenses", 
+                        "Salaries & Wages", "Contractual & Other Benefits",
+                        "Discharges", "Average Length of Stay", "Outpatient",
+                        "Other Operating", "CARTS", "CMI", "Nursing Agency Costs", 
+                        "Supplies & Expenses"))
 
-if (length(cmi)> 1){
-  index <- cmi[-1]
-  data <- data[-c(index),]
-}
-
-
-# keep the first ALOS
-los <- which(data$Metrics == "Average Length of Stay")
-
-if (length(los)> 1){
-    index <- los[-1]
-     data <- data[-c(index),]
-}
-
-# remove rows with all na
-data$count_na <- rowSums(is.na(data))
-
-#remove rows with all missing values
-data <- data %>% filter(count_na !=19)
-
-data$count_na <- NULL
 
 # replace all - with NA
 data[data == "-"] <- NA
 
 
 # Convert olumns to numeric
-data <- data %>% mutate_at(colnames(data[,2:28]), as.numeric)
-
+data <- data %>% mutate_at(colnames(data[,2:19]), as.numeric)
+  
 
 # Create Expense to Revenue Ratio
 exp_rev <- data %>%
   filter(Metrics %in% c("Total Hospital Expenses", "Total Hospital Revenue"))%>%
   select(-c("Filename", "month", "year"))
 
-exp_rev <- data.frame(t(exp_rev))
-exp_rev <- janitor::row_to_names(exp_rev, 1, remove_rows_above = F)
+# change th data from long to wide
+exp_rev <-  dcast(melt(exp_rev, id.vars=c("Metrics")), variable ~ Metrics )
 
 exp_rev <- exp_rev %>% 
   mutate( `Total Hospital Expenses`= as.numeric(`Total Hospital Expenses`),
           `Total Hospital Revenue` = as.numeric(`Total Hospital Revenue`),
-          `Expense to Revenue Ratio` = round(`Total Hospital Expenses`/`Total Hospital Revenue`, 2))%>%
-  mutate(Site = row.names(exp_rev))
+          `Expense to Revenue Ratio` = round(`Total Hospital Expenses`/`Total Hospital Revenue`, 2))
 
+# change th data from wide to long
 exp_rev <- exp_rev %>% 
-  select(Site, `Expense to Revenue Ratio`)%>%
-  spread(key = Site, value = `Expense to Revenue Ratio`)
+  select(variable, `Expense to Revenue Ratio`)%>%
+  spread(key = variable, value = `Expense to Revenue Ratio`)
 
+# Add other metrics
 exp_rev <- exp_rev %>%
   mutate(Metrics= "Expense to Revenue Ratio",
          Filename = unique(data$Filename), 
@@ -138,35 +127,31 @@ salary <- data %>%
   filter(Metrics %in% c("Salaries & Wages", "Contractual & Other Benefits"))%>%
   select(-c("Filename", "month", "year"))
 
-salary <- data.frame(t(salary))
-salary <- janitor::row_to_names(salary, 1, remove_rows_above = F)
+# change th data from long to wide
+salary <- dcast(melt(salary, id.vars=c("Metrics")), variable ~ Metrics )
 
+# estimate salaries and benefit
 salary <- salary %>% 
   mutate( `Salaries & Wages`= as.numeric(`Salaries & Wages`),
           `Contractual & Other Benefits` = as.numeric(`Contractual & Other Benefits`),
-          `Salaries and Benefits` = `Contractual & Other Benefits`+ `Salaries & Wages`)%>%
-  mutate(Site = row.names(salary))
+          `Salaries and Benefits` = `Contractual & Other Benefits`+ `Salaries & Wages`)
 
+# change th data from wide to long
 salary <- salary %>% 
-  select(Site, `Salaries and Benefits`)%>%
-  spread(key = Site, value = `Salaries and Benefits`) %>%
+  select(variable, `Salaries and Benefits`)%>%
+  spread(key = variable, value = `Salaries and Benefits`) %>%
   mutate(Metrics= "Salaries and Benefits",
          Filename = unique(data$Filename), 
          month = unique(data$month),
          year = unique(data$year))
 
-# Bind data and exp_rev        
+# Bind data and salary
 data <- rbind(data, salary)
 
 
-
-# Select required Metrics
+# Removed unnecessary Metrics
 data <- data %>% 
-  filter(Metrics %in% c("Expense to Revenue Ratio", "Total Hospital Revenue", 
-                        "Total Hospital Expenses", "Salaries and Benefits",
-                        "Discharges", "Average Length of Stay", "Outpatient",
-                      "Other Operating", "CARTS", "CMI", "Nursing Agency Costs", 
-                                      "Supplies & Expenses"))
+  filter(Metrics != c("Salaries & Wages", "Contractual & Other Benefits"))
 
 data <- data %>%
   mutate(Metrics = ifelse(Metrics == "Outpatient", "Outpatient Revenue", Metrics),
@@ -176,45 +161,36 @@ data <- data %>%
 
 # subset actual data
 actual <- data %>%
-  select("Metrics", "Filename", "month", "year", matches("ActualCM"))%>%
+  select("Metrics", "Filename", "month", "year", matches("Actual"))%>%
   gather(-c("Metrics", "Filename", "month", "year"), key = Site, value = Actual) %>%
   mutate(Site = gsub("\\-.*","", Site)) %>%
   mutate(Actual = round(as.numeric(Actual), 2))
 
 # subset budget data
 budget <- data %>%
-  select("Metrics", "Filename", "month", "year", matches("BudgetCM"))%>%
+  select("Metrics", "Filename", "month", "year", matches("Budget"))%>%
   gather(-c("Metrics", "Filename", "month", "year"), key = Site, value = Budget) %>%
   mutate(Site = gsub("\\-.*","", Site)) %>%
   mutate(Budget = as.numeric(Budget))
 
-# subset variance data
-Variance <- data %>%
-  select("Metrics", "Filename", "month", "year", matches("Variance"))%>%
-  gather(-c("Metrics", "Filename", "month", "year"), key = Site, value = Variance) %>%
-  mutate(Site = gsub("\\-.*","", Site)) %>%
-  mutate(Variance = round(as.numeric(Variance), 2))
 
 # merge actual and budget data
 final_data <- left_join(actual, budget %>%
               select("Metrics", "Site", "Budget"), by = c("Metrics", "Site"))
 
-# merge actual and final data and variance
-final_data <- left_join(final_data , Variance %>%
-                          select("Metrics", "Site", "Variance"), by = c("Metrics", "Site"))
 
-final_data <- final_data %>% mutate(Variance= ifelse(is.na(Variance), Budget - Actual , Variance))
 
 # add the new data to the repo file
 new_repo <- rbind(repo, final_data) %>%
   distinct()
 
-rm(actual, budget, Variance, final_data, data, salary, exp_rev)
+rm(actual, budget, final_data, data, salary, exp_rev)
+
 
 # Save the data
 updated_date <- Sys.Date()
 
-write.csv(new_repo, paste0(dir, "Repo/Metric_Trends_Data_updated_", 
+write.csv(new_repo, paste0(dir, "REPO/Metric_Trends_Data_updated_", 
                        updated_date, ".csv"), row.names = FALSE  )
 
 } else {
@@ -222,18 +198,17 @@ write.csv(new_repo, paste0(dir, "Repo/Metric_Trends_Data_updated_",
 }
 
 
-# fill na with zero if one of the Actual or Budget is available 
-new_repo <- new_repo %>% mutate(Actual = ifelse(!is.na(Budget) & is.na(Actual), 0, Actual),
-                                Budget = ifelse(is.na(Budget) & !is.na(Actual), 0, Budget))
-                                
-
 # Define date variable
 new_repo <- new_repo %>%
   mutate(month= ifelse(nchar(month) < 2, paste0("0", month), month),
          date = paste0(year, "-", month),
          month= as.numeric(month)) %>%
-  arrange(month, year)%>%
-  filter(!is.na(Actual)) 
+  arrange(month, year)
+
+# fill na with zero if one of the Actual or Budget is available 
+new_repo <- new_repo %>% mutate(Actual = ifelse(!is.na(Budget) & is.na(Actual), 0, Actual),
+                                     Budget = ifelse(is.na(Budget) & !is.na(Actual), 0, Budget))
+
 
 
 # for these metrics YTD variance = (budget - Actual)/budget
@@ -244,25 +219,24 @@ metrics_dif <- c("CARTS", "Nursing Agency Costs", "Salaries and Benefits",
 #define Variance
 new_repo <- new_repo %>%
   group_by(Site, Metrics, year) %>%
-  mutate(Variance.From.Budget= ifelse(Metrics %in% metrics_dif, 
+  mutate(Variance = ifelse(Metrics %in% metrics_dif, 
                                       round(Budget - Actual, 2),
                                       round(Actual - Budget, 2)))
 
 
 # define YTD variables
-new_repo <- new_repo %>% 
+new_repo <- new_repo %>%
   group_by(Site, Metrics, year) %>%
   mutate(Actual_YTD = cumsum(Actual),
-          Budget_YTD = cumsum(Budget), 
-          Variance.From.Budget.YTD = ifelse(Metrics %in% metrics_dif, 
-                                       round((Budget_YTD - Actual_YTD)/Budget_YTD, 2),
-                                         round((Actual_YTD - Budget_YTD)/Budget_YTD, 2)))
-   
-                                            
- new_repo <- new_repo %>%
+         Budget_YTD = cumsum(Budget), 
+         Variance.From.Budget.YTD = ifelse(Metrics %in% metrics_dif, 
+                                           round((Budget_YTD - Actual_YTD)/Budget_YTD, 2),
+                                           round((Actual_YTD - Budget_YTD)/Budget_YTD, 2)))
+
+
+new_repo <- new_repo %>%
   mutate(Variance.From.Budget.YTD = 
            ifelse(Variance.From.Budget.YTD %in% c("Inf", "-Inf", "NaN"), 0, Variance.From.Budget.YTD))
-  
 
 
 
@@ -336,11 +310,11 @@ scale_color_mount_sinai <- function(palette = "all", discrete = TRUE, reverse = 
 
 # Filter choices -----------------------------------------------
 hospital_choices <- sort(unique(new_repo$Site))
-mshs_date_options <- unique(new_repo$date)
+date_options <- unique(new_repo$date)
 mshs_metric_choices <- sort(unique(new_repo$Metrics))
 
 metric_choices <- sort(unique(new_repo$Metrics))
 index <- which(metric_choices == "Expense to Revenue Ratio")
 metric_choices <- metric_choices[- index]
-date_options <- unique(new_repo$date)
+
 

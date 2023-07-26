@@ -79,30 +79,33 @@ ui <- dashboardPage(
               tags$head(tags$style(HTML(paste("#mshs_filters_update_ytd {background-color: #d80b8c;color: #FFFFFF;",
                                               "font-size: 18px}")))),
               
+              tags$head(tags$style(HTML(paste("#mshs_filters_update_var {background-color: #d80b8c;color: #FFFFFF;",
+                                              "font-size: 18px}")))),
+              
+              
               fluidRow(
                 tags$style(HTML(".box.box-solid.box-primary>.box-header {background:#221f72; color:#fff}")),
                 column(11,
                        tabBox(title = NULL, id = "tabset7", width = "100%", type = 'pills', 
                               
-                       tabPanel(title = "Variance to Budget",
+                       tabPanel(title = "Health System Summary",
                        box(
                          title = NULL, width = 12, status = "primary",
                          solidHeader = TRUE, collapsible = TRUE, closable = TRUE, br(),
                          fluidRow(
-                        
                            box(width = 4, height = "100px", title = "Select Metrics:", solidHeader = FALSE,
                                pickerInput("mshs_metrics", label = NULL, multiple = FALSE,
                                            options = pickerOptions(actionsBox = TRUE), 
                                            choices = mshs_metric_choices,
-                                           selected = mshs_metric_choices[11])),
+                                           selected = "Total Hospital Expenses")),
                            box(width = 4, height = "100px",
                                title = "Select Date:",  solidHeader = FALSE,
                                pickerInput("mshs_date_range", label = NULL, multiple = TRUE,
                                            options = pickerOptions(
-                                            actionsBox = TRUE,
-                                             dropupAuto = FALSE),
-                                           choices = mshs_date_options, 
-                                           selected = mshs_date_options)),
+                                           actionsBox = TRUE,
+                                           dropupAuto = FALSE),
+                                           choices = date_options, 
+                                           selected = date_options)),
                            
                            column(width = 4,
                                   actionButton("mshs_filters_update", "CLICK TO UPDATE", width = "75%"),
@@ -137,8 +140,67 @@ ui <- dashboardPage(
                            plotOutput("msw_plot"),  width = 6),
                        box(title = NULL, status = "primary",
                            solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
-                           plotOutput("nyee_plot"),  width = 6)
-                )),
+                           plotOutput("nyee_plot"),  width = 6))),
+                
+                
+                tabPanel(title = "Variance to Budget",
+                         box(
+                           title = NULL, width = 12, status = "primary",
+                           solidHeader = TRUE, collapsible = TRUE, closable = TRUE, br(),
+                           fluidRow(
+                             
+                             box(width = 4, height = "100px", title = "Select Metrics:", solidHeader = FALSE,
+                                 pickerInput("var_metrics", label = NULL, multiple = FALSE,
+                                             options = pickerOptions(actionsBox = TRUE), 
+                                             choices = metric_choices,
+                                             selected = "Total Hospital Expenses")),
+                             box(width = 4, height = "100px",
+                                 title = "Select Date:",  solidHeader = FALSE,
+                                 pickerInput("var_date_range", label = NULL, multiple = TRUE,
+                                             options = pickerOptions(
+                                             actionsBox = TRUE,
+                                             dropupAuto = FALSE),
+                                             choices = date_options, 
+                                             selected = date_options)),
+                             
+                             column(width = 4,
+                                    actionButton("mshs_filters_update_var", "CLICK TO UPDATE", width = "75%"),
+                                    br(),
+                                    br()))
+                         ),
+                         
+                         fluidRow(
+                           box(title = NULL, status = "primary",
+                               solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
+                               plotOutput("mshs_var"),  width = 12),
+                           box(title = NULL, status = "primary",
+                               solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
+                               plotOutput("msb_var"),  width = 6),
+                           box(title = NULL, status = "primary",
+                               solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
+                               plotOutput("msbi_var"),  width = 6),
+                           box(title = NULL, status = "primary",
+                               solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
+                               plotOutput("msh_var"),  width = 6),
+                           box(title = NULL, status = "primary",
+                               solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
+                               plotOutput("msm_var"),  width = 6),
+                           box(title = NULL, status = "primary",
+                               solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
+                               plotOutput("msq_var"),  width = 6),
+                           box(title = NULL, status = "primary",
+                               solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
+                               plotOutput("mssn_var"),  width = 6),
+                           box(title = NULL, status = "primary",
+                               solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
+                               plotOutput("msw_var"),  width = 6),
+                           box(title = NULL, status = "primary",
+                               solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
+                               plotOutput("nyee_var"),  width = 6)
+                         )),
+                
+                
+                
                 
                 
                 tabPanel(title = "YTD Variance to Budget Ratio",
@@ -158,8 +220,8 @@ ui <- dashboardPage(
                                              options = pickerOptions(
                                                actionsBox = TRUE,
                                                dropupAuto = FALSE),
-                                             choices = mshs_date_options, 
-                                             selected = mshs_date_options)),
+                                             choices = date_options, 
+                                             selected = date_options)),
                              
                              column(width = 4,
                                     actionButton("mshs_filters_update_ytd", "CLICK TO UPDATE", width = "75%"),
@@ -245,7 +307,7 @@ ui <- dashboardPage(
                 column(11,
                        box(title = NULL, status = "primary",
                            solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
-                           plotlyOutput("ratio_plot"),  width = 6),
+                           plotOutput("ratio_plot"),  width = 6),
                        
                        box(title = NULL, status = "primary", 
                            solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
