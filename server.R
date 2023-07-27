@@ -86,7 +86,19 @@ server <- function(input, output, session) {
     
     if (isolate(input$mshs_metrics) %in% c("Expense to Revenue Ratio")) {
       
-      # data <- new_repo %>% filter(Site == "MSHS" & Metrics == "Expense to Revenue Ratio") 
+      # data <- new_repo %>% filter(Site == "MSHS" & Metrics == "Expense to Revenue Ratio")
+      
+      data <- data %>% 
+      select("month", "year", "Site", "Actual", "Metrics", "date")
+
+      history <- Exp_Rev_Ratio %>% filter(Site== "MSHS")
+      
+      
+      data <- rbind(history, data) %>%
+        mutate(Actual = round(Actual, 2))%>%
+        arrange(date) %>%
+        slice(tail(row_number(), 24))
+      
       
       if((max(data$Actual, na.rm = TRUE))*1.5 < 0){
         max_value <- 0
@@ -108,14 +120,14 @@ server <- function(input, output, session) {
         labs(x = "Date", y = "Expense to Revenue Ratio" , 
              title = isolate(paste0("MSHS Expense to Revenue Ratio" ))
         )+
-        geom_rect(xmin= 0, xmax= Inf , ymin = 1, ymax= Inf, fill= "#8f8ce0", alpha=0.05)+
+        geom_rect(xmin= 0, xmax= Inf , ymin = 1, ymax= Inf, fill= "#8f8ce0", alpha=0.02)+
         geom_hline(aes(yintercept= 1), colour="#990000", linetype="dashed")+
         geom_hline(aes(yintercept = 0))+
         theme(plot.title = element_text(hjust = 0.5, size = 20),
               plot.subtitle = element_text(hjust = 0.5, size = 10),
               axis.title = element_text(face = "bold"),
               legend.text = element_text(size = 6),
-              axis.text.x = element_text(angle = 0, hjust = 0.5),
+              axis.text.x = element_text(angle = 45, hjust = 0.5),
               legend.position = "none")+
         geom_text(aes(label= Actual, 
                       x=date, y= Actual),
@@ -203,6 +215,18 @@ server <- function(input, output, session) {
       
       # data <- new_repo %>% filter(Site == "MSB" & Metrics == "Expense to Revenue Ratio") 
       
+      data <- data %>% 
+        select("month", "year", "Site", "Actual", "Metrics", "date")
+      
+      history <- Exp_Rev_Ratio %>% filter(Site== "MSB")
+      
+      
+      data <- rbind(history, data) %>%
+        mutate(Actual = round(Actual, 2))%>%
+        arrange(date) %>%
+        slice(tail(row_number(), 24))
+      
+      
       if((max(data$Actual, na.rm = TRUE))*1.5 < 0){
         max_value <- 0
       } else {
@@ -223,14 +247,14 @@ server <- function(input, output, session) {
         labs(x = "Date", y = "Expense to Revenue Ratio" , 
              title = isolate(paste0("MSB Expense to Revenue Ratio" ))
         )+
-        geom_rect(xmin= 0, xmax= Inf , ymin = 1, ymax= Inf, fill= "#8f8ce0", alpha=0.05)+
+        geom_rect(xmin= 0, xmax= Inf , ymin = 1, ymax= Inf, fill= "#8f8ce0", alpha=0.02)+
         geom_hline(aes(yintercept= 1), colour="#990000", linetype="dashed")+
         geom_hline(aes(yintercept = 0))+
         theme(plot.title = element_text(hjust = 0.5, size = 20),
               plot.subtitle = element_text(hjust = 0.5, size = 10),
               axis.title = element_text(face = "bold"),
               legend.text = element_text(size = 6),
-              axis.text.x = element_text(angle = 0, hjust = 0.5),
+              axis.text.x = element_text(angle = 45, hjust = 0.5),
               legend.position = "none")+
         geom_text(aes(label= Actual, 
                       x=date, y= Actual),
@@ -318,6 +342,17 @@ server <- function(input, output, session) {
       
       # data <- new_repo %>% filter(Site == "MSB" & Metrics == "Expense to Revenue Ratio") 
       
+      data <- data %>% 
+        select("month", "year", "Site", "Actual", "Metrics", "date")
+      
+      history <- Exp_Rev_Ratio %>% filter(Site== "MSBI")
+      
+      
+      data <- rbind(history, data) %>%
+        mutate(Actual = round(Actual, 2))%>%
+        arrange(date) %>%
+        slice(tail(row_number(), 24))
+      
       if((max(data$Actual, na.rm = TRUE))*1.5 < 0){
         max_value <- 0
       } else {
@@ -338,14 +373,14 @@ server <- function(input, output, session) {
         labs(x = "Date", y = "Expense to Revenue Ratio" , 
              title = isolate(paste0("MSBI Expense to Revenue Ratio" ))
         )+
-        geom_rect(xmin= 0, xmax= Inf , ymin = 1, ymax= Inf, fill= "#8f8ce0", alpha=0.05)+
+        geom_rect(xmin= 0, xmax= Inf , ymin = 1, ymax= Inf, fill= "#8f8ce0", alpha=0.02)+
         geom_hline(aes(yintercept= 1), colour="#990000", linetype="dashed")+
         geom_hline(aes(yintercept = 0))+
         theme(plot.title = element_text(hjust = 0.5, size = 20),
               plot.subtitle = element_text(hjust = 0.5, size = 10),
               axis.title = element_text(face = "bold"),
               legend.text = element_text(size = 6),
-              axis.text.x = element_text(angle = 0, hjust = 0.5),
+              axis.text.x = element_text(angle = 45, hjust = 0.5),
               legend.position = "none")+
         geom_text(aes(label= Actual, 
                       x=date, y= Actual),
@@ -432,6 +467,18 @@ server <- function(input, output, session) {
       
       # data <- new_repo %>% filter(Site == "MSB" & Metrics == "Expense to Revenue Ratio") 
       
+      data <- data %>% 
+        select("month", "year", "Site", "Actual", "Metrics", "date")
+      
+      history <- Exp_Rev_Ratio %>% filter(Site== "MSH")
+      
+      
+      data <- rbind(history, data) %>%
+        mutate(Actual = round(Actual, 2))%>%
+        arrange(date) %>%
+        slice(tail(row_number(), 24))
+      
+      
       if((max(data$Actual, na.rm = TRUE))*1.5 < 0){
         max_value <- 0
       } else {
@@ -452,14 +499,14 @@ server <- function(input, output, session) {
         labs(x = "Date", y = "Expense to Revenue Ratio" , 
              title = isolate(paste0("MSH Expense to Revenue Ratio" ))
         )+
-        geom_rect(xmin= 0, xmax= Inf , ymin = 1, ymax= Inf, fill= "#8f8ce0", alpha=0.05)+
+        geom_rect(xmin= 0, xmax= Inf , ymin = 1, ymax= Inf, fill= "#8f8ce0", alpha=0.02)+
         geom_hline(aes(yintercept= 1), colour="#990000", linetype="dashed")+
         geom_hline(aes(yintercept = 0))+
         theme(plot.title = element_text(hjust = 0.5, size = 20),
               plot.subtitle = element_text(hjust = 0.5, size = 10),
               axis.title = element_text(face = "bold"),
               legend.text = element_text(size = 6),
-              axis.text.x = element_text(angle = 0, hjust = 0.5),
+              axis.text.x = element_text(angle = 45, hjust = 0.5),
               legend.position = "none")+
         geom_text(aes(label= Actual, 
                       x=date, y= Actual),
@@ -545,6 +592,16 @@ server <- function(input, output, session) {
     if (isolate(input$mshs_metrics) %in% c("Expense to Revenue Ratio")) {
       
       # data <- new_repo %>% filter(Site == "MSB" & Metrics == "Expense to Revenue Ratio") 
+      data <- data %>% 
+        select("month", "year", "Site", "Actual", "Metrics", "date")
+      
+      history <- Exp_Rev_Ratio %>% filter(Site== "MSM")
+      
+      
+      data <- rbind(history, data) %>%
+        mutate(Actual = round(Actual, 2))%>%
+        arrange(date) %>%
+        slice(tail(row_number(), 24))
       
       if((max(data$Actual, na.rm = TRUE))*1.5 < 0){
         max_value <- 0
@@ -566,14 +623,14 @@ server <- function(input, output, session) {
         labs(x = "Date", y = "Expense to Revenue Ratio" , 
              title = isolate(paste0("MSM Expense to Revenue Ratio" ))
         )+
-        geom_rect(xmin= 0, xmax= Inf , ymin = 1, ymax= Inf, fill= "#8f8ce0", alpha=0.05)+
+        geom_rect(xmin= 0, xmax= Inf , ymin = 1, ymax= Inf, fill= "#8f8ce0", alpha=0.02)+
         geom_hline(aes(yintercept= 1), colour="#990000", linetype="dashed")+
         geom_hline(aes(yintercept = 0))+
         theme(plot.title = element_text(hjust = 0.5, size = 20),
               plot.subtitle = element_text(hjust = 0.5, size = 10),
               axis.title = element_text(face = "bold"),
               legend.text = element_text(size = 6),
-              axis.text.x = element_text(angle = 0, hjust = 0.5),
+              axis.text.x = element_text(angle = 45, hjust = 0.5),
               legend.position = "none")+
         geom_text(aes(label= Actual, 
                       x=date, y= Actual),
@@ -659,6 +716,16 @@ server <- function(input, output, session) {
     if (isolate(input$mshs_metrics) %in% c("Expense to Revenue Ratio")) {
       
       # data <- new_repo %>% filter(Site == "MSB" & Metrics == "Expense to Revenue Ratio") 
+      data <- data %>% 
+        select("month", "year", "Site", "Actual", "Metrics", "date")
+      
+      history <- Exp_Rev_Ratio %>% filter(Site== "MSQ")
+      
+      
+      data <- rbind(history, data) %>%
+        mutate(Actual = round(Actual, 2))%>%
+        arrange(date) %>%
+        slice(tail(row_number(), 24))
       
       if((max(data$Actual, na.rm = TRUE))*1.5 < 0){
         max_value <- 0
@@ -680,14 +747,14 @@ server <- function(input, output, session) {
         labs(x = "Date", y = "Expense to Revenue Ratio" , 
              title = isolate(paste0("MSQ Expense to Revenue Ratio" ))
         )+
-        geom_rect(xmin= 0, xmax= Inf , ymin = 1, ymax= Inf, fill= "#8f8ce0", alpha=0.05)+
+        geom_rect(xmin= 0, xmax= Inf , ymin = 1, ymax= Inf, fill= "#8f8ce0", alpha=0.02)+
         geom_hline(aes(yintercept= 1), colour="#990000", linetype="dashed")+
         geom_hline(aes(yintercept = 0))+
         theme(plot.title = element_text(hjust = 0.5, size = 20),
               plot.subtitle = element_text(hjust = 0.5, size = 10),
               axis.title = element_text(face = "bold"),
               legend.text = element_text(size = 6),
-              axis.text.x = element_text(angle = 0, hjust = 0.5),
+              axis.text.x = element_text(angle = 45, hjust = 0.5),
               legend.position = "none")+
         geom_text(aes(label= Actual, 
                       x=date, y= Actual),
@@ -773,6 +840,16 @@ server <- function(input, output, session) {
     if (isolate(input$mshs_metrics) %in% c("Expense to Revenue Ratio")) {
       
       # data <- new_repo %>% filter(Site == "MSB" & Metrics == "Expense to Revenue Ratio") 
+      data <- data %>% 
+        select("month", "year", "Site", "Actual", "Metrics", "date")
+      
+      history <- Exp_Rev_Ratio %>% filter(Site== "MSSN")
+      
+      
+      data <- rbind(history, data) %>%
+        mutate(Actual = round(Actual, 2))%>%
+        arrange(date) %>%
+        slice(tail(row_number(), 24))
       
       if((max(data$Actual, na.rm = TRUE))*1.5 < 0){
         max_value <- 0
@@ -794,14 +871,14 @@ server <- function(input, output, session) {
         labs(x = "Date", y = "Expense to Revenue Ratio" , 
              title = isolate(paste0("MSSN Expense to Revenue Ratio" ))
         )+
-        geom_rect(xmin= 0, xmax= Inf , ymin = 1, ymax= Inf, fill= "#8f8ce0", alpha=0.05)+
+        geom_rect(xmin= 0, xmax= Inf , ymin = 1, ymax= Inf, fill= "#8f8ce0", alpha=0.02)+
         geom_hline(aes(yintercept= 1), colour="#990000", linetype="dashed")+
         geom_hline(aes(yintercept = 0))+
         theme(plot.title = element_text(hjust = 0.5, size = 20),
               plot.subtitle = element_text(hjust = 0.5, size = 10),
               axis.title = element_text(face = "bold"),
               legend.text = element_text(size = 6),
-              axis.text.x = element_text(angle = 0, hjust = 0.5),
+              axis.text.x = element_text(angle = 45, hjust = 0.5),
               legend.position = "none")+
         geom_text(aes(label= Actual, 
                       x=date, y= Actual),
@@ -887,6 +964,16 @@ server <- function(input, output, session) {
     if (isolate(input$mshs_metrics) %in% c("Expense to Revenue Ratio")) {
       
       # data <- new_repo %>% filter(Site == "MSB" & Metrics == "Expense to Revenue Ratio") 
+      data <- data %>% 
+        select("month", "year", "Site", "Actual", "Metrics", "date")
+      
+      history <- Exp_Rev_Ratio %>% filter(Site== "MSW")
+      
+      
+      data <- rbind(history, data) %>%
+        mutate(Actual = round(Actual, 2))%>%
+        arrange(date) %>%
+        slice(tail(row_number(), 24))
       
       if((max(data$Actual, na.rm = TRUE))*1.5 < 0){
         max_value <- 0
@@ -908,14 +995,14 @@ server <- function(input, output, session) {
         labs(x = "Date", y = "Expense to Revenue Ratio" , 
              title = isolate(paste0("MSW Expense to Revenue Ratio" ))
         )+
-        geom_rect(xmin= 0, xmax= Inf , ymin = 1, ymax= Inf, fill= "#8f8ce0", alpha=0.05)+
+        geom_rect(xmin= 0, xmax= Inf , ymin = 1, ymax= Inf, fill= "#8f8ce0", alpha=0.02)+
         geom_hline(aes(yintercept= 1), colour="#990000", linetype="dashed")+
         geom_hline(aes(yintercept = 0))+
         theme(plot.title = element_text(hjust = 0.5, size = 20),
               plot.subtitle = element_text(hjust = 0.5, size = 10),
               axis.title = element_text(face = "bold"),
               legend.text = element_text(size = 6),
-              axis.text.x = element_text(angle = 0, hjust = 0.5),
+              axis.text.x = element_text(angle = 45, hjust = 0.5),
               legend.position = "none")+
         geom_text(aes(label= Actual, 
                       x=date, y= Actual),
@@ -1003,6 +1090,17 @@ server <- function(input, output, session) {
       
       # data <- new_repo %>% filter(Site == "MSB" & Metrics == "Expense to Revenue Ratio") 
       
+      data <- data %>% 
+        select("month", "year", "Site", "Actual", "Metrics", "date")
+      
+      history <- Exp_Rev_Ratio %>% filter(Site== "NYEE")
+      
+      
+      data <- rbind(history, data) %>%
+        mutate(Actual = round(Actual, 2))%>%
+        arrange(date) %>%
+        slice(tail(row_number(), 24))
+      
       if((max(data$Actual, na.rm = TRUE))*1.5 < 0){
         max_value <- 0
       } else {
@@ -1023,14 +1121,14 @@ server <- function(input, output, session) {
         labs(x = "Date", y = "Expense to Revenue Ratio" , 
              title = isolate(paste0("NYEE Expense to Revenue Ratio" ))
         )+
-        geom_rect(xmin= 0, xmax= Inf , ymin = 1, ymax= Inf, fill= "#8f8ce0", alpha=0.05)+
+        geom_rect(xmin= 0, xmax= Inf , ymin = 1, ymax= Inf, fill= "#8f8ce0", alpha=0.02)+
         geom_hline(aes(yintercept= 1), colour="#990000", linetype="dashed")+
         geom_hline(aes(yintercept = 0))+
         theme(plot.title = element_text(hjust = 0.5, size = 20),
               plot.subtitle = element_text(hjust = 0.5, size = 10),
               axis.title = element_text(face = "bold"),
               legend.text = element_text(size = 6),
-              axis.text.x = element_text(angle = 0, hjust = 0.5),
+              axis.text.x = element_text(angle = 45, hjust = 0.5),
               legend.position = "none")+
         geom_text(aes(label= Actual, 
                       x=date, y= Actual),
@@ -1922,7 +2020,18 @@ server <- function(input, output, session) {
   
   output$ratio_plot <- renderPlot({
     data <- metric_data() %>% 
-      filter(Metrics == "Expense to Revenue Ratio" )
+      filter(Metrics == "Expense to Revenue Ratio" ) %>%
+      select("month", "year", "Site", "Actual", "Metrics", "date")
+    
+    hospital <- isolate(input$all_hospital)
+    
+    history <- Exp_Rev_Ratio %>% filter(Site== hospital)
+    
+    
+    data <- rbind(history, data) %>%
+      mutate(Actual = round(Actual, 2))%>%
+      arrange(date) %>%
+      slice(tail(row_number(), 24))
     
     #data <- new_repo %>% filter(Site == "MSHS", Metrics == "Expense to Revenue Ratio")
     
@@ -1949,14 +2058,14 @@ server <- function(input, output, session) {
       labs(x = "Date", y = "Expense to Revenue Ratio" , 
            title = isolate(paste0(input$all_hospital, " Expense to Revenue Ratio"))
       )+
-      geom_rect(xmin= 0, xmax= Inf , ymin = 1, ymax= Inf, fill= "#8f8ce0", alpha=0.05)+
+      geom_rect(xmin= 0, xmax= Inf , ymin = 1, ymax= Inf, fill= "#8f8ce0", alpha=0.02)+
       geom_hline(aes(yintercept= 1), colour="#990000", linetype="dashed")+
       geom_hline(aes(yintercept = 0))+
       theme(plot.title = element_text(hjust = 0.5, size = 20),
             plot.subtitle = element_text(hjust = 0.5, size = 10),
             axis.title = element_text(face = "bold"),
             legend.text = element_text(size = 6),
-            axis.text.x = element_text(angle = 0, hjust = 0.5),
+            axis.text.x = element_text(angle = 45, hjust = 0.5),
             legend.position = "none")+
       geom_text(aes(label= Actual, 
                     x=date, y= Actual),
@@ -1965,9 +2074,6 @@ server <- function(input, output, session) {
       scale_y_continuous(limits=c(min_value, max_value))
     
   })
-  
-  
-  
   
   
   output$revenue_plot <- renderPlot({
@@ -2004,7 +2110,7 @@ server <- function(input, output, session) {
             axis.title = element_text(face = "bold"),
             legend.text = element_text(size = 6),
             legend.position = "non")+
-      geom_text(aes(label= `Variance`, x=date, y= Variance, color = sign),
+      geom_text(aes(label= paste0("$", `Variance`), x=date, y= Variance, color = sign),
                 position = position_dodge(width = 1), fontface = "bold",
                 vjust = 0.5 - sign(data$Variance)/2, size = 3.5)+
       scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
@@ -2047,7 +2153,7 @@ server <- function(input, output, session) {
             axis.title = element_text(face = "bold"),
             legend.text = element_text(size = 6),
             legend.position = "non")+
-      geom_text(aes(label= `Variance`, x=date, y= Variance, color = sign),
+      geom_text(aes(label= paste0("$", `Variance`), x=date, y= Variance, color = sign),
                 position = position_dodge(width = 1), fontface = "bold",
                 vjust = 0.5 - sign(data$Variance)/2, size = 3.5)+
       scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
@@ -2090,7 +2196,7 @@ server <- function(input, output, session) {
             axis.title = element_text(face = "bold"),
             legend.text = element_text(size = 6),
             legend.position = "non")+
-      geom_text(aes(label= `Variance`, x=date, y= Variance, color = sign),
+      geom_text(aes(label= paste0("$", `Variance`), x=date, y= Variance, color = sign),
                 position = position_dodge(width = 1), fontface = "bold",
                 vjust = 0.5 - sign(data$Variance)/2, size = 3.5)+
       scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
@@ -2132,7 +2238,7 @@ server <- function(input, output, session) {
             axis.title = element_text(face = "bold"),
             legend.text = element_text(size = 6),
             legend.position = "non")+
-      geom_text(aes(label= `Variance`, x=date, y= Variance, color = sign),
+      geom_text(aes(label= paste0("$", `Variance`), x=date, y= Variance, color = sign),
                 position = position_dodge(width = 1), fontface = "bold",
                 vjust = 0.5 - sign(data$Variance)/2, size = 3.5)+
       scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
@@ -2174,7 +2280,7 @@ server <- function(input, output, session) {
             axis.title = element_text(face = "bold"),
             legend.text = element_text(size = 6),
             legend.position = "non")+
-      geom_text(aes(label= `Variance`, x=date, y= Variance, color = sign),
+      geom_text(aes(label= paste0("$", `Variance`), x=date, y= Variance, color = sign),
                 position = position_dodge(width = 1), fontface = "bold",
                 vjust = 0.5 - sign(data$Variance)/2, size = 3.5)+
       scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
@@ -2217,7 +2323,7 @@ server <- function(input, output, session) {
             axis.title = element_text(face = "bold"),
             legend.text = element_text(size = 6),
             legend.position = "non")+
-      geom_text(aes(label= `Variance`, x=date, y= Variance, color = sign),
+      geom_text(aes(label= paste0("$", `Variance`), x=date, y= Variance, color = sign),
                 position = position_dodge(width = 1), fontface = "bold",
                 vjust = 0.5 - sign(data$Variance)/2, size = 3.5)+
       scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
@@ -2259,7 +2365,7 @@ server <- function(input, output, session) {
             axis.title = element_text(face = "bold"),
             legend.text = element_text(size = 6),
             legend.position = "non")+
-      geom_text(aes(label= `Variance`, x=date, y= Variance, color = sign),
+      geom_text(aes(label= paste0("$", `Variance`), x=date, y= Variance, color = sign),
                 position = position_dodge(width = 1), fontface = "bold",
                 vjust = 0.5 - sign(data$Variance)/2, size = 3.5)+
       scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
@@ -2303,7 +2409,7 @@ server <- function(input, output, session) {
             axis.title = element_text(face = "bold"),
             legend.text = element_text(size = 6),
             legend.position = "non")+
-      geom_text(aes(label= `Variance`, x=date, y= Variance, color = sign),
+      geom_text(aes(label= paste0("$", `Variance`), x=date, y= Variance, color = sign),
                 position = position_dodge(width = 1), fontface = "bold",
                 vjust = 0.5 - sign(data$Variance)/2, size = 3.5)+
       scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
@@ -2347,7 +2453,7 @@ server <- function(input, output, session) {
             axis.title = element_text(face = "bold"),
             legend.text = element_text(size = 6),
             legend.position = "non")+
-      geom_text(aes(label= `Variance`, x=date, y= Variance, color = sign),
+      geom_text(aes(label= paste0("$", `Variance`), x=date, y= Variance, color = sign),
                 position = position_dodge(width = 1), fontface = "bold",
                 vjust = 0.5 - sign(data$Variance)/2, size = 3.5)+
       scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
@@ -2391,7 +2497,7 @@ server <- function(input, output, session) {
             axis.title = element_text(face = "bold"),
             legend.text = element_text(size = 6),
             legend.position = "non")+
-      geom_text(aes(label= `Variance`, x=date, y= Variance, color = sign),
+      geom_text(aes(label= paste0("$", `Variance`), x=date, y= Variance, color = sign),
                 position = position_dodge(width = 1), fontface = "bold",
                 vjust = 0.5 - sign(data$Variance)/2, size = 3.5)+
       scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
@@ -2435,7 +2541,7 @@ server <- function(input, output, session) {
             axis.title = element_text(face = "bold"),
             legend.text = element_text(size = 6),
             legend.position = "non")+
-      geom_text(aes(label= `Variance`, x=date, y= Variance, color = sign),
+      geom_text(aes(label= paste0("$", `Variance`), x=date, y= Variance, color = sign),
                 position = position_dodge(width = 1), fontface = "bold",
                 vjust = 0.5 - sign(data$Variance)/2, size = 3.5)+
       scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+

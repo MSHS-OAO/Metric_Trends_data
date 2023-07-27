@@ -21,10 +21,11 @@ library(shinyWidgets)
 #dir <- "C:/Users/aghaer01/Downloads/Metric_Trends_data/"
 dir <- "J:/deans/Presidents/HSPI-PM/Operations Planning/Financials/Metric Trends/"
 
+  
 
 # Import data --------------------------------------------------------
 # Import the latest aggregated file
-repo <- file.info(list.files(path = paste0(dir,"REPO/"), full.names = T))
+repo <- file.info(list.files(path = paste0(dir,"REPO/"), full.names = T, pattern = "Metric_Trends_Data_updated"))
 repo_file <- rownames(repo)[which.max(repo$ctime)]
 repo <- read.csv(repo_file)
 
@@ -238,6 +239,19 @@ new_repo <- new_repo %>%
   mutate(Variance.From.Budget.YTD = 
            ifelse(Variance.From.Budget.YTD %in% c("Inf", "-Inf", "NaN"), 0, Variance.From.Budget.YTD))
 
+
+
+
+# Import Historical Expense to Revenue Ratio data
+Exp_Rev_Ratio <- read_excel(paste0(dir,  "REPO/Exp_Rev_Ratio.xlsx"))
+
+Exp_Rev_Ratio <- Exp_Rev_Ratio %>%
+  gather(-c("month", "year"), key = Site, value = Actual) %>%
+  mutate(Metrics = "Expense to Revenue Ratio")%>%
+  mutate(month= ifelse(nchar(month) < 2, paste0("0", month), month),
+         date = paste0(year, "-", month),
+         month= as.numeric(month)) %>%
+  arrange(month, year)
 
 
 # Color Theme -----------------------------------------------------------
