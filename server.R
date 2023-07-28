@@ -2067,7 +2067,6 @@ server <- function(input, output, session) {
       min_value <- (min(data$Actual, na.rm = TRUE))*1.5
     }
     
-    
     ggplot(data)  + 
       geom_rect(xmin= 0, xmax= Inf , ymin = 1, ymax= Inf, fill= "#8f8ce0", alpha=0.02)+
       geom_line(aes(x=date, y= Actual, group = 1), 
