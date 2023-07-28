@@ -4,15 +4,32 @@ server <- function(input, output, session) {
   
   # Text output ---------------------------------
   ### Text output for Metrics tab -------------------------------
-  mshs_text <- eventReactive(input$mshs_filters_update, {
+  system_text <- eventReactive(input$mshs_filters_update, {
     end_date <- isolate(max(input$mshs_date_range))
     start_date <- isolate(min(input$mshs_date_range))
     metric <- isolate(input$mshs_metrics)
    paste0("Based on data from ", start_date, " to ", end_date, " for ", metric)
   }, ignoreNULL = FALSE)
   
+  var_text <- eventReactive(input$mshs_filters_update_var, {
+    end_date <- isolate(max(input$var_date_range))
+    start_date <- isolate(min(input$var_date_range))
+    metric <- isolate(input$var_metrics)
+    paste0("Based on data from ", start_date, " to ", end_date, " for ", metric)
+  }, ignoreNULL = FALSE)
+  
+  
+  ytd_text <- eventReactive(input$mshs_filters_update_ytd, {
+    end_date <- isolate(max(input$mshs_date_range_ytd))
+    start_date <- isolate(min(input$mshs_date_range_ytd))
+    metric <- isolate(input$mshs_metrics_ytd)
+    paste0("Based on data from ", start_date, " to ", end_date, " for ", metric)
+  }, ignoreNULL = FALSE)
+  
+  
   output$mshs_date_show  <- renderText({
-    mshs_text()
+
+    system_text()
   })
   
   ### Text output for Hospital tab -------------------------------
@@ -113,6 +130,7 @@ server <- function(input, output, session) {
       }
       
       ggplot(data)  + 
+        geom_rect(xmin= 0, xmax= Inf , ymin = 1, ymax= Inf, fill= "#8f8ce0", alpha=0.02)+
         geom_line(aes(x=date, y= Actual, group = 1), 
                   colour = "#212070", stat="identity", linewidth = 1.25)+
         geom_point(mapping = aes(date, Actual),
@@ -120,7 +138,6 @@ server <- function(input, output, session) {
         labs(x = "Date", y = "Expense to Revenue Ratio" , 
              title = isolate(paste0("MSHS Expense to Revenue Ratio" ))
         )+
-        geom_rect(xmin= 0, xmax= Inf , ymin = 1, ymax= Inf, fill= "#8f8ce0", alpha=0.02)+
         geom_hline(aes(yintercept= 1), colour="#990000", linetype="dashed")+
         geom_hline(aes(yintercept = 0))+
         theme(plot.title = element_text(hjust = 0.5, size = 20),
@@ -240,6 +257,7 @@ server <- function(input, output, session) {
       }
       
       ggplot(data)  + 
+        geom_rect(xmin= 0, xmax= Inf , ymin = 1, ymax= Inf, fill= "#8f8ce0", alpha=0.02)+
         geom_line(aes(x=date, y= Actual, group = 1), 
                   colour = "#212070", stat="identity", linewidth = 1.25)+
         geom_point(mapping = aes(date, Actual),
@@ -247,7 +265,6 @@ server <- function(input, output, session) {
         labs(x = "Date", y = "Expense to Revenue Ratio" , 
              title = isolate(paste0("MSB Expense to Revenue Ratio" ))
         )+
-        geom_rect(xmin= 0, xmax= Inf , ymin = 1, ymax= Inf, fill= "#8f8ce0", alpha=0.02)+
         geom_hline(aes(yintercept= 1), colour="#990000", linetype="dashed")+
         geom_hline(aes(yintercept = 0))+
         theme(plot.title = element_text(hjust = 0.5, size = 20),
@@ -366,6 +383,7 @@ server <- function(input, output, session) {
       }
       
       ggplot(data)  + 
+        geom_rect(xmin= 0, xmax= Inf , ymin = 1, ymax= Inf, fill= "#8f8ce0", alpha=0.02)+
         geom_line(aes(x=date, y= Actual, group = 1), 
                   colour = "#212070", stat="identity", linewidth = 1.25)+
         geom_point(mapping = aes(date, Actual),
@@ -373,7 +391,6 @@ server <- function(input, output, session) {
         labs(x = "Date", y = "Expense to Revenue Ratio" , 
              title = isolate(paste0("MSBI Expense to Revenue Ratio" ))
         )+
-        geom_rect(xmin= 0, xmax= Inf , ymin = 1, ymax= Inf, fill= "#8f8ce0", alpha=0.02)+
         geom_hline(aes(yintercept= 1), colour="#990000", linetype="dashed")+
         geom_hline(aes(yintercept = 0))+
         theme(plot.title = element_text(hjust = 0.5, size = 20),
@@ -492,6 +509,7 @@ server <- function(input, output, session) {
       }
       
       ggplot(data)  + 
+        geom_rect(xmin= 0, xmax= Inf , ymin = 1, ymax= Inf, fill= "#8f8ce0", alpha=0.02)+
         geom_line(aes(x=date, y= Actual, group = 1), 
                   colour = "#212070", stat="identity", linewidth = 1.25)+
         geom_point(mapping = aes(date, Actual),
@@ -499,7 +517,6 @@ server <- function(input, output, session) {
         labs(x = "Date", y = "Expense to Revenue Ratio" , 
              title = isolate(paste0("MSH Expense to Revenue Ratio" ))
         )+
-        geom_rect(xmin= 0, xmax= Inf , ymin = 1, ymax= Inf, fill= "#8f8ce0", alpha=0.02)+
         geom_hline(aes(yintercept= 1), colour="#990000", linetype="dashed")+
         geom_hline(aes(yintercept = 0))+
         theme(plot.title = element_text(hjust = 0.5, size = 20),
@@ -616,6 +633,7 @@ server <- function(input, output, session) {
       }
       
       ggplot(data)  + 
+        geom_rect(xmin= 0, xmax= Inf , ymin = 1, ymax= Inf, fill= "#8f8ce0", alpha=0.02)+
         geom_line(aes(x=date, y= Actual, group = 1), 
                   colour = "#212070", stat="identity", linewidth = 1.25)+
         geom_point(mapping = aes(date, Actual),
@@ -623,7 +641,6 @@ server <- function(input, output, session) {
         labs(x = "Date", y = "Expense to Revenue Ratio" , 
              title = isolate(paste0("MSM Expense to Revenue Ratio" ))
         )+
-        geom_rect(xmin= 0, xmax= Inf , ymin = 1, ymax= Inf, fill= "#8f8ce0", alpha=0.02)+
         geom_hline(aes(yintercept= 1), colour="#990000", linetype="dashed")+
         geom_hline(aes(yintercept = 0))+
         theme(plot.title = element_text(hjust = 0.5, size = 20),
@@ -740,6 +757,7 @@ server <- function(input, output, session) {
       }
       
       ggplot(data)  + 
+        geom_rect(xmin= 0, xmax= Inf , ymin = 1, ymax= Inf, fill= "#8f8ce0", alpha=0.02)+
         geom_line(aes(x=date, y= Actual, group = 1), 
                   colour = "#212070", stat="identity", linewidth = 1.25)+
         geom_point(mapping = aes(date, Actual),
@@ -747,7 +765,6 @@ server <- function(input, output, session) {
         labs(x = "Date", y = "Expense to Revenue Ratio" , 
              title = isolate(paste0("MSQ Expense to Revenue Ratio" ))
         )+
-        geom_rect(xmin= 0, xmax= Inf , ymin = 1, ymax= Inf, fill= "#8f8ce0", alpha=0.02)+
         geom_hline(aes(yintercept= 1), colour="#990000", linetype="dashed")+
         geom_hline(aes(yintercept = 0))+
         theme(plot.title = element_text(hjust = 0.5, size = 20),
@@ -864,6 +881,7 @@ server <- function(input, output, session) {
       }
       
       ggplot(data)  + 
+        geom_rect(xmin= 0, xmax= Inf , ymin = 1, ymax= Inf, fill= "#8f8ce0", alpha=0.02)+
         geom_line(aes(x=date, y= Actual, group = 1), 
                   colour = "#212070", stat="identity", linewidth = 1.25)+
         geom_point(mapping = aes(date, Actual),
@@ -871,7 +889,6 @@ server <- function(input, output, session) {
         labs(x = "Date", y = "Expense to Revenue Ratio" , 
              title = isolate(paste0("MSSN Expense to Revenue Ratio" ))
         )+
-        geom_rect(xmin= 0, xmax= Inf , ymin = 1, ymax= Inf, fill= "#8f8ce0", alpha=0.02)+
         geom_hline(aes(yintercept= 1), colour="#990000", linetype="dashed")+
         geom_hline(aes(yintercept = 0))+
         theme(plot.title = element_text(hjust = 0.5, size = 20),
@@ -988,6 +1005,7 @@ server <- function(input, output, session) {
       }
       
       ggplot(data)  + 
+        geom_rect(xmin= 0, xmax= Inf , ymin = 1, ymax= Inf, fill= "#8f8ce0", alpha=0.02)+
         geom_line(aes(x=date, y= Actual, group = 1), 
                   colour = "#212070", stat="identity", linewidth = 1.25)+
         geom_point(mapping = aes(date, Actual),
@@ -995,7 +1013,6 @@ server <- function(input, output, session) {
         labs(x = "Date", y = "Expense to Revenue Ratio" , 
              title = isolate(paste0("MSW Expense to Revenue Ratio" ))
         )+
-        geom_rect(xmin= 0, xmax= Inf , ymin = 1, ymax= Inf, fill= "#8f8ce0", alpha=0.02)+
         geom_hline(aes(yintercept= 1), colour="#990000", linetype="dashed")+
         geom_hline(aes(yintercept = 0))+
         theme(plot.title = element_text(hjust = 0.5, size = 20),
@@ -1114,6 +1131,7 @@ server <- function(input, output, session) {
       }
       
       ggplot(data)  + 
+        geom_rect(xmin= 0, xmax= Inf , ymin = 1, ymax= Inf, fill= "#8f8ce0", alpha=0.02)+
         geom_line(aes(x=date, y= Actual, group = 1), 
                   colour = "#212070", stat="identity", linewidth = 1.25)+
         geom_point(mapping = aes(date, Actual),
@@ -1121,7 +1139,6 @@ server <- function(input, output, session) {
         labs(x = "Date", y = "Expense to Revenue Ratio" , 
              title = isolate(paste0("NYEE Expense to Revenue Ratio" ))
         )+
-        geom_rect(xmin= 0, xmax= Inf , ymin = 1, ymax= Inf, fill= "#8f8ce0", alpha=0.02)+
         geom_hline(aes(yintercept= 1), colour="#990000", linetype="dashed")+
         geom_hline(aes(yintercept = 0))+
         theme(plot.title = element_text(hjust = 0.5, size = 20),
@@ -2052,13 +2069,13 @@ server <- function(input, output, session) {
     
     
     ggplot(data)  + 
+      geom_rect(xmin= 0, xmax= Inf , ymin = 1, ymax= Inf, fill= "#8f8ce0", alpha=0.02)+
       geom_line(aes(x=date, y= Actual, group = 1), 
                 colour = "#212070", stat="identity", linewidth = 1.25)+
       geom_point(mapping = aes(date, Actual), colour = "#212070", size = 3) +
       labs(x = "Date", y = "Expense to Revenue Ratio" , 
            title = isolate(paste0(input$all_hospital, " Expense to Revenue Ratio"))
       )+
-      geom_rect(xmin= 0, xmax= Inf , ymin = 1, ymax= Inf, fill= "#8f8ce0", alpha=0.02)+
       geom_hline(aes(yintercept= 1), colour="#990000", linetype="dashed")+
       geom_hline(aes(yintercept = 0))+
       theme(plot.title = element_text(hjust = 0.5, size = 20),
