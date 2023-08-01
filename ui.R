@@ -28,7 +28,8 @@ ui <- dashboardPage(
                    ))),
                    sidebarMenu(menuItem("Home", tabName = "home", icon = icon("home")),
                                menuItem("Metrics", tabName = "mshs", icon = icon("hospital")),
-                               menuItem("Hospitals", tabName = "site", icon = icon("hospital"))
+                               menuItem("Hospitals", tabName = "site", icon = icon("hospital")),
+                               menuItem("Ratio", tabName = "ratio", icon = icon("hospital"))
                    )),
   dashboardBody(
     tabItems(
@@ -87,6 +88,7 @@ ui <- dashboardPage(
                 tags$style(HTML(".box.box-solid.box-primary>.box-header {background:#221f72; color:#fff}")),
                 column(11,
                        tabBox(title = NULL, id = "tabset7", width = "100%", type = 'pills', 
+                      
                               
                        tabPanel(title = "Health System Summary",
                        box(
@@ -372,7 +374,50 @@ ui <- dashboardPage(
                 
 
                 ) # close fluidRow
-              ) # close tabname Site
+              ), # close tabname Site
+      
+      ## tab Ratio --------------------------------------------
+      tabItem(tabName = "ratio",
+              div("Hospitals Expense to Revenue Dashboard", style = paste("color:	#221f72; font-family:Calibri; font-weight:bold;",
+                                                                      "font-size:25px; margin-left: 20px")),
+              textOutput("ratio_date_show"),
+              tags$head(tags$style(paste("#ratio_date_show{color:#7f7f7f; font-family:Calibri; font-style: italic;",
+                                         "font-size: 18px; margin-top: -0.2em; margin-bottom: 0.5em; margin-left:",
+                                         "20px}"))), hr(),
+              tags$head(tags$style(HTML(paste("#ratio_filters_update {background-color: #d80b8c;color: #FFFFFF;",
+                                              "font-size: 18px}")))),
+              fluidRow(
+                tags$style(HTML(".box.box-solid.box-primary>.box-header {background:#221f72; color:#fff}")),
+                column(11,
+                       box(
+                         title = NULL, width = 12, status = "primary",
+                         solidHeader = TRUE, collapsible = TRUE, closable = TRUE, br(),
+                         fluidRow(
+                           box(width = 4, height = "100px", title = "Select Hospitals:", solidHeader = FALSE,
+                               pickerInput("ratio_hospital", label = NULL, multiple = FALSE,
+                                           options = pickerOptions(actionsBox = TRUE), 
+                                           choices = hospital_choices,
+                                           selected = "MSHS")),
+                           
+                           box(width = 4, height = "100px",
+                               title = "Select Date:",  solidHeader = FALSE,
+                               pickerInput("ratio_date_range", label = NULL, multiple = TRUE,
+                                           options = pickerOptions(
+                                             actionsBox = TRUE,
+                                             dropupAuto = FALSE),
+                                           choices = ratio_date_option, 
+                                           selected = ratio_date_option)),
+                           
+                           column(width = 4,
+                                  actionButton("ratio_filters_update", "CLICK TO UPDATE", width = "75%"),
+                                  br(),
+                                  br())))),
+                column(11,
+                       box(title = NULL, status = "primary",
+                           solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
+                           plotOutput("ratio_plot_all"),  width = 12)
+                )
+              )) #close tab item ratio
       
       
     ))  )

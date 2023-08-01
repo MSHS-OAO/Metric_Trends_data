@@ -26,10 +26,27 @@ server <- function(input, output, session) {
     paste0("Based on data from ", start_date, " to ", end_date, " for ", metric)
   }, ignoreNULL = FALSE)
   
-  
-  output$mshs_date_show  <- renderText({
 
-    system_text()
+  ### Observeevent to update the text based on different filters
+  observeEvent(input$mshs_filters_update, {
+    output$mshs_date_show  <- renderText({
+      system_text()
+    })
+    
+  })
+  
+  observeEvent(input$mshs_filters_update_var, {
+    output$mshs_date_show  <- renderText({
+      var_text()
+    })
+    
+  })
+  
+  observeEvent(input$mshs_filters_update_ytd, {
+    output$mshs_date_show  <- renderText({
+      ytd_text()
+    })
+    
   })
   
   ### Text output for Hospital tab -------------------------------
@@ -42,6 +59,19 @@ server <- function(input, output, session) {
   
   output$all_date_show  <- renderText({
     all_mshs_text()
+  })
+  
+  
+  ### Text output for Ratio tab -------------------------------
+  ratio_mshs_text <- eventReactive(input$ratio_filters_update, {
+    end_date <- isolate(max(input$ratio_date_range))
+    start_date <- isolate(min(input$ratio_date_range))
+    hospitals <- isolate(input$ratio_hospital)
+    paste0("Based on data from ", start_date, " to ", end_date, " for ", hospitals)
+  }, ignoreNULL = FALSE)
+  
+  output$ratio_date_show <- renderText({
+    ratio_mshs_text()
   })
   
   # eventReactive -------------------------------------
@@ -87,7 +117,25 @@ server <- function(input, output, session) {
              date %in% input$all_date_range)
   }, ignoreNULL = FALSE)
   
+  
+  ### eventReactive for ratio tab ------------------------------
+  ratio_data  <- eventReactive(input$ratio_filters_update,{
+    validate(need(input$ratio_hospital != "", "Please Select a Hospital"),
+             need(input$ratio_date_range != "", "Please Select a Date"))
+    
+    
+    data <-  new_repo  %>% 
+      filter(Metrics == "Expense to Revenue Ratio") %>%
+      select("month", "year", "Site", "Actual", "Metrics", "date")
+    
+    data <- rbind(Exp_Rev_Ratio, data)
+    
+    data %>%
+      filter(Site %in% input$ratio_hospital,
+             date %in% input$ratio_date_range)
+  }, ignoreNULL = FALSE)
  
+  
   # Metrics visualization ------------------------------
   # System Summary -----------------------------
   ### MSHS -------------------------------------
@@ -148,8 +196,8 @@ server <- function(input, output, session) {
               legend.position = "none")+
         geom_text(aes(label= Actual, 
                       x=date, y= Actual),
-                  position = position_dodge(width = 1),
-                  vjust = 0.5 - sign(data$Actual), size = 3.5)+
+                  position = position_dodge(width = 1), fontface = "bold",
+                  vjust = 0.5 - sign(data$Actual), size = 4)+
         scale_y_continuous(limits=c(min_value, max_value))
       
     } else {
@@ -193,7 +241,7 @@ server <- function(input, output, session) {
         geom_text(aes(label= paste0("$", `Variance`),
                       x=date, y= Variance, color = sign),
                   position = position_dodge(width = 1), fontface = "bold",
-                  vjust = 0.5 - sign(data$Variance), size = 3.5)+
+                  vjust = 0.5 - sign(data$Variance), size = 4)+
         scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
         geom_hline(aes(yintercept = 0)) 
       
@@ -209,7 +257,7 @@ server <- function(input, output, session) {
         geom_text_repel(aes(label= paste0(`Variance.From.Budget.YTD`, "%"), 
                             x=date, y= Variance_scaled , color = sign.YTD),
                         position = position_dodge(width = 1), fontface='bold',
-                        vjust = 0.5 - sign(data$Variance.From.Budget.YTD), size = 3.5 )
+                        vjust = 0.5 - sign(data$Variance.From.Budget.YTD), size = 4 )
       
       p1
       
@@ -275,8 +323,8 @@ server <- function(input, output, session) {
               legend.position = "none")+
         geom_text(aes(label= Actual, 
                       x=date, y= Actual),
-                  position = position_dodge(width = 1),
-                  vjust = 0.5 - sign(data$Actual), size = 3.5)+
+                  position = position_dodge(width = 1), fontface = "bold",
+                  vjust = 0.5 - sign(data$Actual), size = 4)+
         scale_y_continuous(limits=c(min_value, max_value))
       
     } else {
@@ -319,7 +367,7 @@ server <- function(input, output, session) {
         geom_text(aes(label= paste0("$", `Variance`),
                       x=date, y= Variance, color = sign),
                   position = position_dodge(width = 1), fontface = "bold",
-                  vjust = 0.5 - sign(data$Variance), size = 3.5)+
+                  vjust = 0.5 - sign(data$Variance), size = 4)+
         scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
         geom_hline(aes(yintercept = 0)) 
       
@@ -335,7 +383,7 @@ server <- function(input, output, session) {
         geom_text_repel(aes(label= paste0(`Variance.From.Budget.YTD`, "%"), 
                             x=date, y= Variance_scaled , color = sign.YTD),
                         position = position_dodge(width = 1), fontface='bold',
-                        vjust = 0.5 - sign(data$Variance.From.Budget.YTD), size = 3.5 )
+                        vjust = 0.5 - sign(data$Variance.From.Budget.YTD), size = 4 )
       
       p1
       
@@ -401,8 +449,8 @@ server <- function(input, output, session) {
               legend.position = "none")+
         geom_text(aes(label= Actual, 
                       x=date, y= Actual),
-                  position = position_dodge(width = 1),
-                  vjust = 0.5 - sign(data$Actual), size = 3.5)+
+                  position = position_dodge(width = 1), fontface = "bold",
+                  vjust = 0.5 - sign(data$Actual), size = 4)+
         scale_y_continuous(limits=c(min_value, max_value))
       
     } else {
@@ -445,7 +493,7 @@ server <- function(input, output, session) {
         geom_text(aes(label= paste0("$", `Variance`),
                       x=date, y= Variance, color = sign),
                   position = position_dodge(width = 1), fontface = "bold",
-                  vjust = 0.5 - sign(data$Variance), size = 3.5)+
+                  vjust = 0.5 - sign(data$Variance), size = 4)+
         scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
         geom_hline(aes(yintercept = 0)) 
       
@@ -461,7 +509,7 @@ server <- function(input, output, session) {
         geom_text_repel(aes(label= paste0(`Variance.From.Budget.YTD`, "%"), 
                             x=date, y= Variance_scaled , color = sign.YTD),
                         position = position_dodge(width = 1), fontface='bold',
-                        vjust = 0.5 - sign(data$Variance.From.Budget.YTD), size = 3.5 )
+                        vjust = 0.5 - sign(data$Variance.From.Budget.YTD), size = 4 )
       
       p1
       
@@ -527,8 +575,8 @@ server <- function(input, output, session) {
               legend.position = "none")+
         geom_text(aes(label= Actual, 
                       x=date, y= Actual),
-                  position = position_dodge(width = 1),
-                  vjust = 0.5 - sign(data$Actual), size = 3.5)+
+                  position = position_dodge(width = 1), fontface = "bold",
+                  vjust = 0.5 - sign(data$Actual), size = 4)+
         scale_y_continuous(limits=c(min_value, max_value))
       
     } else {
@@ -571,7 +619,7 @@ server <- function(input, output, session) {
         geom_text(aes(label= paste0("$", `Variance`),
                       x=date, y= Variance, color = sign),
                   position = position_dodge(width = 1), fontface = "bold",
-                  vjust = 0.5 - sign(data$Variance), size = 3.5)+
+                  vjust = 0.5 - sign(data$Variance), size = 4)+
         scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
         geom_hline(aes(yintercept = 0)) 
       
@@ -587,7 +635,7 @@ server <- function(input, output, session) {
         geom_text_repel(aes(label= paste0(`Variance.From.Budget.YTD`, "%"), 
                             x=date, y= Variance_scaled , color = sign.YTD),
                         position = position_dodge(width = 1), fontface='bold',
-                        vjust = 0.5 - sign(data$Variance.From.Budget.YTD), size = 3.5 )
+                        vjust = 0.5 - sign(data$Variance.From.Budget.YTD), size = 4 )
       
       p1
       
@@ -651,8 +699,8 @@ server <- function(input, output, session) {
               legend.position = "none")+
         geom_text(aes(label= Actual, 
                       x=date, y= Actual),
-                  position = position_dodge(width = 1),
-                  vjust = 0.5 - sign(data$Actual), size = 3.5)+
+                  position = position_dodge(width = 1), fontface = "bold",
+                  vjust = 0.5 - sign(data$Actual), size = 4)+
         scale_y_continuous(limits=c(min_value, max_value))
       
     } else {
@@ -695,7 +743,7 @@ server <- function(input, output, session) {
         geom_text(aes(label= paste0("$", `Variance`),
                       x=date, y= Variance, color = sign),
                   position = position_dodge(width = 1), fontface = "bold",
-                  vjust = 0.5 - sign(data$Variance), size = 3.5)+
+                  vjust = 0.5 - sign(data$Variance), size = 4)+
         scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
         geom_hline(aes(yintercept = 0)) 
       
@@ -711,7 +759,7 @@ server <- function(input, output, session) {
         geom_text_repel(aes(label= paste0(`Variance.From.Budget.YTD`, "%"), 
                             x=date, y= Variance_scaled , color = sign.YTD),
                         position = position_dodge(width = 1), fontface='bold',
-                        vjust = 0.5 - sign(data$Variance.From.Budget.YTD), size = 3.5 )
+                        vjust = 0.5 - sign(data$Variance.From.Budget.YTD), size = 4 )
       
       p1
       
@@ -775,8 +823,8 @@ server <- function(input, output, session) {
               legend.position = "none")+
         geom_text(aes(label= Actual, 
                       x=date, y= Actual),
-                  position = position_dodge(width = 1),
-                  vjust = 0.5 - sign(data$Actual), size = 3.5)+
+                  position = position_dodge(width = 1), fontface = "bold",
+                  vjust = 0.5 - sign(data$Actual), size = 4)+
         scale_y_continuous(limits=c(min_value, max_value))
       
     } else {
@@ -819,7 +867,7 @@ server <- function(input, output, session) {
         geom_text(aes(label= paste0("$", `Variance`),
                       x=date, y= Variance, color = sign),
                   position = position_dodge(width = 1), fontface = "bold",
-                  vjust = 0.5 - sign(data$Variance), size = 3.5)+
+                  vjust = 0.5 - sign(data$Variance), size = 4)+
         scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
         geom_hline(aes(yintercept = 0)) 
       
@@ -835,7 +883,7 @@ server <- function(input, output, session) {
         geom_text_repel(aes(label= paste0(`Variance.From.Budget.YTD`, "%"), 
                             x=date, y= Variance_scaled , color = sign.YTD),
                         position = position_dodge(width = 1), fontface='bold',
-                        vjust = 0.5 - sign(data$Variance.From.Budget.YTD), size = 3.5 )
+                        vjust = 0.5 - sign(data$Variance.From.Budget.YTD), size = 4 )
       
       p1
       
@@ -899,8 +947,8 @@ server <- function(input, output, session) {
               legend.position = "none")+
         geom_text(aes(label= Actual, 
                       x=date, y= Actual),
-                  position = position_dodge(width = 1),
-                  vjust = 0.5 - sign(data$Actual), size = 3.5)+
+                  position = position_dodge(width = 1), fontface = "bold",
+                  vjust = 0.5 - sign(data$Actual), size = 4)+
         scale_y_continuous(limits=c(min_value, max_value))
       
     } else {
@@ -943,7 +991,7 @@ server <- function(input, output, session) {
         geom_text(aes(label= paste0("$", `Variance`),
                       x=date, y= Variance, color = sign),
                   position = position_dodge(width = 1), fontface = "bold",
-                  vjust = 0.5 - sign(data$Variance), size = 3.5)+
+                  vjust = 0.5 - sign(data$Variance), size = 4)+
         scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
         geom_hline(aes(yintercept = 0)) 
       
@@ -959,7 +1007,7 @@ server <- function(input, output, session) {
         geom_text_repel(aes(label= paste0(`Variance.From.Budget.YTD`, "%"), 
                             x=date, y= Variance_scaled , color = sign.YTD),
                         position = position_dodge(width = 1), fontface='bold',
-                        vjust = 0.5 - sign(data$Variance.From.Budget.YTD), size = 3.5 )
+                        vjust = 0.5 - sign(data$Variance.From.Budget.YTD), size = 4 )
       
       p1
       
@@ -1023,8 +1071,8 @@ server <- function(input, output, session) {
               legend.position = "none")+
         geom_text(aes(label= Actual, 
                       x=date, y= Actual),
-                  position = position_dodge(width = 1),
-                  vjust = 0.5 - sign(data$Actual), size = 3.5)+
+                  position = position_dodge(width = 1), fontface = "bold",
+                  vjust = 0.5 - sign(data$Actual), size = 4)+
         scale_y_continuous(limits=c(min_value, max_value))
       
     } else {
@@ -1067,7 +1115,7 @@ server <- function(input, output, session) {
         geom_text(aes(label= paste0("$", `Variance`),
                       x=date, y= Variance, color = sign),
                   position = position_dodge(width = 1), fontface = "bold",
-                  vjust = 0.5 - sign(data$Variance), size = 3.5)+
+                  vjust = 0.5 - sign(data$Variance), size = 4)+
         scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
         geom_hline(aes(yintercept = 0)) 
       
@@ -1083,7 +1131,7 @@ server <- function(input, output, session) {
         geom_text_repel(aes(label= paste0(`Variance.From.Budget.YTD`, "%"), 
                             x=date, y= Variance_scaled , color = sign.YTD),
                         position = position_dodge(width = 1), fontface='bold',
-                        vjust = 0.5 - sign(data$Variance.From.Budget.YTD), size = 3.5 )
+                        vjust = 0.5 - sign(data$Variance.From.Budget.YTD), size = 4 )
       
       p1
       
@@ -1149,8 +1197,8 @@ server <- function(input, output, session) {
               legend.position = "none")+
         geom_text(aes(label= Actual, 
                       x=date, y= Actual),
-                  position = position_dodge(width = 1),
-                  vjust = 0.5 - sign(data$Actual), size = 3.5)+
+                  position = position_dodge(width = 1), fontface = "bold",
+                  vjust = 0.5 - sign(data$Actual), size = 4)+
         scale_y_continuous(limits=c(min_value, max_value))
       
     } else {
@@ -1193,7 +1241,7 @@ server <- function(input, output, session) {
         geom_text(aes(label= paste0("$", `Variance`),
                       x=date, y= Variance, color = sign),
                   position = position_dodge(width = 1), fontface = "bold",
-                  vjust = 0.5 - sign(data$Variance), size = 3.5)+
+                  vjust = 0.5 - sign(data$Variance), size = 4)+
         scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
         geom_hline(aes(yintercept = 0)) 
       
@@ -1209,7 +1257,7 @@ server <- function(input, output, session) {
         geom_text_repel(aes(label= paste0(`Variance.From.Budget.YTD`, "%"), 
                             x=date, y= Variance_scaled , color = sign.YTD),
                         position = position_dodge(width = 1), fontface='bold',
-                        vjust = 0.5 - sign(data$Variance.From.Budget.YTD), size = 3.5 )
+                        vjust = 0.5 - sign(data$Variance.From.Budget.YTD), size = 4 )
       
       p1
       
@@ -1251,7 +1299,7 @@ server <- function(input, output, session) {
         geom_text(aes(label= paste0("$", `Variance`),
                       x=date, y= Variance, color = sign),
                   position = position_dodge(width = 1), fontface = "bold",
-                  vjust = 0.5 - sign(data$Variance), size = 3.5)+
+                  vjust = 0.5 - sign(data$Variance), size = 4)+
         scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
         theme(plot.title = element_text(hjust = 0.5, size = 20),
               plot.subtitle = element_text(hjust = 0.5, size = 10),
@@ -1294,7 +1342,7 @@ server <- function(input, output, session) {
       geom_text(aes(label= paste0("$", `Variance`),
                     x=date, y= Variance, color = sign),
                 position = position_dodge(width = 1), fontface = "bold",
-                vjust = 0.5 - sign(data$Variance), size = 3.5)+
+                vjust = 0.5 - sign(data$Variance), size = 4)+
       scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
       theme(plot.title = element_text(hjust = 0.5, size = 20),
             plot.subtitle = element_text(hjust = 0.5, size = 10),
@@ -1337,7 +1385,7 @@ server <- function(input, output, session) {
       geom_text(aes(label= paste0("$", `Variance`),
                     x=date, y= Variance, color = sign),
                 position = position_dodge(width = 1), fontface = "bold",
-                vjust = 0.5 - sign(data$Variance), size = 3.5)+
+                vjust = 0.5 - sign(data$Variance), size = 4)+
       scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
       theme(plot.title = element_text(hjust = 0.5, size = 20),
             plot.subtitle = element_text(hjust = 0.5, size = 10),
@@ -1381,7 +1429,7 @@ server <- function(input, output, session) {
       geom_text(aes(label= paste0("$", `Variance`),
                     x=date, y= Variance, color = sign),
                 position = position_dodge(width = 1), fontface = "bold",
-                vjust = 0.5 - sign(data$Variance), size = 3.5)+
+                vjust = 0.5 - sign(data$Variance), size = 4)+
       scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
       theme(plot.title = element_text(hjust = 0.5, size = 20),
             plot.subtitle = element_text(hjust = 0.5, size = 10),
@@ -1424,7 +1472,7 @@ server <- function(input, output, session) {
       geom_text(aes(label= paste0("$", `Variance`),
                     x=date, y= Variance, color = sign),
                 position = position_dodge(width = 1), fontface = "bold",
-                vjust = 0.5 - sign(data$Variance), size = 3.5)+
+                vjust = 0.5 - sign(data$Variance), size = 4)+
       scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
       theme(plot.title = element_text(hjust = 0.5, size = 20),
             plot.subtitle = element_text(hjust = 0.5, size = 10),
@@ -1467,7 +1515,7 @@ server <- function(input, output, session) {
       geom_text(aes(label= paste0("$", `Variance`),
                     x=date, y= Variance, color = sign),
                 position = position_dodge(width = 1), fontface = "bold",
-                vjust = 0.5 - sign(data$Variance), size = 3.5)+
+                vjust = 0.5 - sign(data$Variance), size = 4)+
       scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
       theme(plot.title = element_text(hjust = 0.5, size = 20),
             plot.subtitle = element_text(hjust = 0.5, size = 10),
@@ -1510,7 +1558,7 @@ server <- function(input, output, session) {
       geom_text(aes(label= paste0("$", `Variance`),
                     x=date, y= Variance, color = sign),
                 position = position_dodge(width = 1), fontface = "bold",
-                vjust = 0.5 - sign(data$Variance), size = 3.5)+
+                vjust = 0.5 - sign(data$Variance), size = 4)+
       scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
       theme(plot.title = element_text(hjust = 0.5, size = 20),
             plot.subtitle = element_text(hjust = 0.5, size = 10),
@@ -1553,7 +1601,7 @@ server <- function(input, output, session) {
       geom_text(aes(label= paste0("$", `Variance`),
                     x=date, y= Variance, color = sign),
                 position = position_dodge(width = 1), fontface = "bold",
-                vjust = 0.5 - sign(data$Variance), size = 3.5)+
+                vjust = 0.5 - sign(data$Variance), size = 4)+
       scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
       theme(plot.title = element_text(hjust = 0.5, size = 20),
             plot.subtitle = element_text(hjust = 0.5, size = 10),
@@ -1596,7 +1644,7 @@ server <- function(input, output, session) {
       geom_text(aes(label= paste0("$", `Variance`),
                     x=date, y= Variance, color = sign),
                 position = position_dodge(width = 1), fontface = "bold",
-                vjust = 0.5 - sign(data$Variance), size = 3.5)+
+                vjust = 0.5 - sign(data$Variance), size = 4)+
       scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
       theme(plot.title = element_text(hjust = 0.5, size = 20),
             plot.subtitle = element_text(hjust = 0.5, size = 10),
@@ -1650,7 +1698,7 @@ server <- function(input, output, session) {
       geom_text(aes(label= paste0(`Variance.From.Budget.YTD`, "%"), 
                 x=date, y= Variance.From.Budget.YTD, color= sign.YTD),
                 position = position_dodge(width = 1), fontface = "bold",
-                vjust = 0.5 - sign(data$Variance.From.Budget.YTD), size = 3.5)+
+                vjust = 0.5 - sign(data$Variance.From.Budget.YTD), size = 4)+
       scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
       scale_y_continuous(limits=c(min_value_ytd, max_value_ytd))+
       geom_hline(aes(yintercept = 0))
@@ -1697,7 +1745,7 @@ server <- function(input, output, session) {
       geom_text(aes(label= paste0(`Variance.From.Budget.YTD`, "%"), 
                     x=date, y= Variance.From.Budget.YTD, color= sign.YTD),
                 position = position_dodge(width = 1), fontface = "bold",
-                vjust = 0.5 - sign(data$Variance.From.Budget.YTD), size = 3.5)+
+                vjust = 0.5 - sign(data$Variance.From.Budget.YTD), size = 4)+
       scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
       scale_y_continuous(limits=c(min_value_ytd, max_value_ytd))+
       geom_hline(aes(yintercept = 0))
@@ -1744,7 +1792,7 @@ server <- function(input, output, session) {
       geom_text(aes(label= paste0(`Variance.From.Budget.YTD`, "%"), 
                 x=date, y= Variance.From.Budget.YTD, color= sign.YTD),
                 position = position_dodge(width = 1), fontface = "bold",
-                vjust = 0.5 - sign(data$Variance.From.Budget.YTD), size = 3.5)+
+                vjust = 0.5 - sign(data$Variance.From.Budget.YTD), size = 4)+
       scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
       scale_y_continuous(limits=c(min_value_ytd, max_value_ytd))+
       geom_hline(aes(yintercept = 0))
@@ -1791,7 +1839,7 @@ server <- function(input, output, session) {
       geom_text(aes(label= paste0(`Variance.From.Budget.YTD`, "%"), 
                 x=date, y= Variance.From.Budget.YTD, color= sign.YTD),
                 position = position_dodge(width = 1), fontface = "bold",
-                vjust = 0.5 - sign(data$Variance.From.Budget.YTD), size = 3.5)+
+                vjust = 0.5 - sign(data$Variance.From.Budget.YTD), size = 4)+
       scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
       scale_y_continuous(limits=c(min_value_ytd, max_value_ytd))+
       geom_hline(aes(yintercept = 0))
@@ -1838,7 +1886,7 @@ server <- function(input, output, session) {
       geom_text(aes(label= paste0(`Variance.From.Budget.YTD`, "%"), 
                 x=date, y= Variance.From.Budget.YTD, color= sign.YTD),
                 position = position_dodge(width = 1), fontface = "bold",
-                vjust = 0.5 - sign(data$Variance.From.Budget.YTD), size = 3.5)+
+                vjust = 0.5 - sign(data$Variance.From.Budget.YTD), size = 4)+
       scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
       scale_y_continuous(limits=c(min_value_ytd, max_value_ytd))+
       geom_hline(aes(yintercept = 0))
@@ -1885,7 +1933,7 @@ server <- function(input, output, session) {
       geom_text(aes(label= paste0(`Variance.From.Budget.YTD`, "%"), 
                 x=date, y= Variance.From.Budget.YTD, color= sign.YTD),
                 position = position_dodge(width = 1), fontface = "bold",
-                vjust = 0.5 - sign(data$Variance.From.Budget.YTD), size = 3.5)+
+                vjust = 0.5 - sign(data$Variance.From.Budget.YTD), size = 4)+
       scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
       scale_y_continuous(limits=c(min_value_ytd, max_value_ytd))+
       geom_hline(aes(yintercept = 0))
@@ -1932,7 +1980,7 @@ server <- function(input, output, session) {
       geom_text(aes(label= paste0(`Variance.From.Budget.YTD`, "%"), 
                 x=date, y= Variance.From.Budget.YTD, color= sign.YTD),
                 position = position_dodge(width = 1), fontface = "bold",
-                vjust = 0.5 - sign(data$Variance.From.Budget.YTD), size = 3.5)+
+                vjust = 0.5 - sign(data$Variance.From.Budget.YTD), size = 4)+
       scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
       scale_y_continuous(limits=c(min_value_ytd, max_value_ytd))+
       geom_hline(aes(yintercept = 0))
@@ -1979,7 +2027,7 @@ server <- function(input, output, session) {
       geom_text(aes(label= paste0(`Variance.From.Budget.YTD`, "%"), 
                     x=date, y= Variance.From.Budget.YTD, color= sign.YTD),
                 position = position_dodge(width = 1), fontface = "bold",
-                vjust = 0.5 - sign(data$Variance.From.Budget.YTD), size = 3.5)+
+                vjust = 0.5 - sign(data$Variance.From.Budget.YTD), size = 4)+
       scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
       scale_y_continuous(limits=c(min_value_ytd, max_value_ytd))+
       geom_hline(aes(yintercept = 0))
@@ -2026,7 +2074,7 @@ server <- function(input, output, session) {
       geom_text(aes(label= paste0(`Variance.From.Budget.YTD`, "%"), 
                     x=date, y= Variance.From.Budget.YTD, color= sign.YTD),
                 position = position_dodge(width = 1), fontface = "bold",
-                vjust = 0.5 - sign(data$Variance.From.Budget.YTD), size = 3.5)+
+                vjust = 0.5 - sign(data$Variance.From.Budget.YTD), size = 4)+
       scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
       scale_y_continuous(limits=c(min_value_ytd, max_value_ytd))+
       geom_hline(aes(yintercept = 0))
@@ -2086,7 +2134,7 @@ server <- function(input, output, session) {
       geom_text(aes(label= Actual, 
                     x=date, y= Actual),
                 position = position_dodge(width = 1),
-                vjust = 0.5 - sign(data$Actual), size = 3.5)+
+                vjust = 0.5 - sign(data$Actual), size = 4)+
       scale_y_continuous(limits=c(min_value, max_value))
     
   })
@@ -2128,7 +2176,7 @@ server <- function(input, output, session) {
             legend.position = "non")+
       geom_text(aes(label= paste0("$", `Variance`), x=date, y= Variance, color = sign),
                 position = position_dodge(width = 1), fontface = "bold",
-                vjust = 0.5 - sign(data$Variance)/2, size = 3.5)+
+                vjust = 0.5 - sign(data$Variance)/2, size = 4)+
       scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
       scale_y_continuous(limits=c(min_value, max_value))+
       geom_hline(aes(yintercept = 0))
@@ -2171,7 +2219,7 @@ server <- function(input, output, session) {
             legend.position = "non")+
       geom_text(aes(label= paste0("$", `Variance`), x=date, y= Variance, color = sign),
                 position = position_dodge(width = 1), fontface = "bold",
-                vjust = 0.5 - sign(data$Variance)/2, size = 3.5)+
+                vjust = 0.5 - sign(data$Variance)/2, size = 4)+
       scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
       scale_y_continuous(limits=c(min_value, max_value))+
       geom_hline(aes(yintercept = 0))
@@ -2214,7 +2262,7 @@ server <- function(input, output, session) {
             legend.position = "non")+
       geom_text(aes(label= paste0("$", `Variance`), x=date, y= Variance, color = sign),
                 position = position_dodge(width = 1), fontface = "bold",
-                vjust = 0.5 - sign(data$Variance)/2, size = 3.5)+
+                vjust = 0.5 - sign(data$Variance)/2, size = 4)+
       scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
       scale_y_continuous(limits=c(min_value, max_value))+
       geom_hline(aes(yintercept = 0))
@@ -2256,7 +2304,7 @@ server <- function(input, output, session) {
             legend.position = "non")+
       geom_text(aes(label= paste0("$", `Variance`), x=date, y= Variance, color = sign),
                 position = position_dodge(width = 1), fontface = "bold",
-                vjust = 0.5 - sign(data$Variance)/2, size = 3.5)+
+                vjust = 0.5 - sign(data$Variance)/2, size = 4)+
       scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
       scale_y_continuous(limits=c(min_value, max_value))+
       geom_hline(aes(yintercept = 0))
@@ -2298,7 +2346,7 @@ server <- function(input, output, session) {
             legend.position = "non")+
       geom_text(aes(label= paste0("$", `Variance`), x=date, y= Variance, color = sign),
                 position = position_dodge(width = 1), fontface = "bold",
-                vjust = 0.5 - sign(data$Variance)/2, size = 3.5)+
+                vjust = 0.5 - sign(data$Variance)/2, size = 4)+
       scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
       scale_y_continuous(limits=c(min_value, max_value))+
       geom_hline(aes(yintercept = 0))
@@ -2341,7 +2389,7 @@ server <- function(input, output, session) {
             legend.position = "non")+
       geom_text(aes(label= paste0("$", `Variance`), x=date, y= Variance, color = sign),
                 position = position_dodge(width = 1), fontface = "bold",
-                vjust = 0.5 - sign(data$Variance)/2, size = 3.5)+
+                vjust = 0.5 - sign(data$Variance)/2, size = 4)+
       scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
       scale_y_continuous(limits=c(min_value, max_value))+
       geom_hline(aes(yintercept = 0))
@@ -2383,7 +2431,7 @@ server <- function(input, output, session) {
             legend.position = "non")+
       geom_text(aes(label= paste0("$", `Variance`), x=date, y= Variance, color = sign),
                 position = position_dodge(width = 1), fontface = "bold",
-                vjust = 0.5 - sign(data$Variance)/2, size = 3.5)+
+                vjust = 0.5 - sign(data$Variance)/2, size = 4)+
       scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
       scale_y_continuous(limits=c(min_value, max_value))+
       geom_hline(aes(yintercept = 0))
@@ -2427,7 +2475,7 @@ server <- function(input, output, session) {
             legend.position = "non")+
       geom_text(aes(label= paste0("$", `Variance`), x=date, y= Variance, color = sign),
                 position = position_dodge(width = 1), fontface = "bold",
-                vjust = 0.5 - sign(data$Variance)/2, size = 3.5)+
+                vjust = 0.5 - sign(data$Variance)/2, size = 4)+
       scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
       scale_y_continuous(limits=c(min_value, max_value))+
       geom_hline(aes(yintercept = 0))
@@ -2471,7 +2519,7 @@ server <- function(input, output, session) {
             legend.position = "non")+
       geom_text(aes(label= paste0("$", `Variance`), x=date, y= Variance, color = sign),
                 position = position_dodge(width = 1), fontface = "bold",
-                vjust = 0.5 - sign(data$Variance)/2, size = 3.5)+
+                vjust = 0.5 - sign(data$Variance)/2, size = 4)+
       scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
       scale_y_continuous(limits=c(min_value, max_value))+
       geom_hline(aes(yintercept = 0))
@@ -2515,7 +2563,7 @@ server <- function(input, output, session) {
             legend.position = "non")+
       geom_text(aes(label= paste0("$", `Variance`), x=date, y= Variance, color = sign),
                 position = position_dodge(width = 1), fontface = "bold",
-                vjust = 0.5 - sign(data$Variance)/2, size = 3.5)+
+                vjust = 0.5 - sign(data$Variance)/2, size = 4)+
       scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
       scale_y_continuous(limits=c(min_value, max_value))+
       geom_hline(aes(yintercept = 0))
@@ -2559,10 +2607,59 @@ server <- function(input, output, session) {
             legend.position = "non")+
       geom_text(aes(label= paste0("$", `Variance`), x=date, y= Variance, color = sign),
                 position = position_dodge(width = 1), fontface = "bold",
-                vjust = 0.5 - sign(data$Variance)/2, size = 3.5)+
+                vjust = 0.5 - sign(data$Variance)/2, size = 4)+
       scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
       scale_y_continuous(limits=c(min_value, max_value))+
       geom_hline(aes(yintercept = 0))
+  })
+  
+  
+  
+  # Ratio tab --------------------------------------
+  
+  output$ratio_plot_all <- renderPlot({
+    
+    data <- ratio_data()
+  test_data <<- data
+    
+    data <- data %>%
+      mutate(Actual = round(Actual, 2))%>%
+      arrange(date) %>% 
+      mutate(month= month.abb[as.numeric(month)],
+                            year = as.factor(year))
+   
+    
+    
+    ggplot(data, 
+           aes(x=month, y=Actual, fill= year, group = year))+
+      geom_bar(position= position_dodge(),stat="identity", width=0.7)+
+      scale_fill_manual(values=c("#d80b8c",	"#00aeef","#863198", "#212070"))+
+      labs(x = "Date", y = "Expense to Revenue Ratio" , 
+           title = isolate(paste0("MSHS Expense to Revenue Ratio" ))
+      )+
+      guides(fill=guide_legend(title="Year"))+
+      theme_bw()+
+      theme(plot.title = element_text(size = 20, hjust = 0.5), 
+            legend.position='top', 
+            legend.justification='center',
+            legend.direction='horizontal',
+            axis.title = element_text(face = "bold"),
+            legend.text = element_text(size = 6),
+            legend.title = element_text(size = 10),
+            axis.text.x = element_text(angle = 45, hjust = 0.5),
+            axis.text.y = element_text(size = 10),
+            panel.grid.major = element_line(color = "lightgrey"),
+            panel.grid.minor = element_line(color = "lightgrey"))+
+      scale_x_discrete(limits = month.abb)+
+      scale_y_continuous(limits = c(0, max(data$Actual)*1.5), breaks= pretty_breaks())+
+      geom_text(aes(label= Actual, x=month, y= Actual), color="#212070",
+                position = position_dodge(width = 1), fontface = "bold",
+                vjust = 0.5 - sign(data$Actual), size = 4)+
+      geom_hline(aes(yintercept= 1), colour="#990000", linetype="dashed")+
+      geom_hline(aes(yintercept = 0))
+    
+    
+    
   })
   
 }
