@@ -6,6 +6,7 @@ suppressMessages({
 library(tidyverse)
 library(readxl)
 library(plotly)
+library(scales)
 library(reshape2)
 library(zoo)
 library(gridExtra)
@@ -18,8 +19,8 @@ library(shinyWidgets)
 })
 
 # Work directory
-#dir <- "C:/Users/aghaer01/Downloads/Metric_Trends_data/"
-dir <- "J:/deans/Presidents/HSPI-PM/Operations Planning/Financials/Metric Trends/"
+#dir <- "J:/deans/Presidents/HSPI-PM/Operations Planning/Financials/Metric Trends/"
+dir <- "/SharedDrive/deans/Presidents/HSPI-PM/Operations Planning/Financials/Metric Trends/"
 
   
 
@@ -331,4 +332,4 @@ metric_choices <- sort(unique(new_repo$Metrics))
 index <- which(metric_choices == "Expense to Revenue Ratio")
 metric_choices <- metric_choices[- index]
 
-
+ratio_date_option <- sort(c( unique(Exp_Rev_Ratio$date), date_options))
