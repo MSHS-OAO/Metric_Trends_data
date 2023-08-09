@@ -4,10 +4,10 @@ server <- function(input, output, session) {
   
   # Text output ---------------------------------
   ### Text output for Metrics tab -------------------------------
-  system_text <- eventReactive(input$mshs_filters_update, {
-    end_date <- isolate(max(input$mshs_date_range))
-    start_date <- isolate(min(input$mshs_date_range))
-    metric <- isolate(input$mshs_metrics)
+  system_text <- eventReactive(c(input$mshs_filters_update, input$tabSwitch), {
+    end_date <- max(input$mshs_date_range)
+    start_date <- min(input$mshs_date_range)
+    metric <- input$mshs_metrics
    paste0("Based on data from ", start_date, " to ", end_date, " for ", metric)
   }, ignoreNULL = FALSE)
   
@@ -28,27 +28,29 @@ server <- function(input, output, session) {
   
 
   ### Observeevent to update the text based on different filters
-  observeEvent(input$mshs_filters_update, {
+  observeEvent(c(input$mshs_filters_update, input$tabSwitch), {
     output$mshs_date_show  <- renderText({
       system_text()
     })
-    
   })
-  
-  observeEvent(input$mshs_filters_update_var, {
+
+  observeEvent(c(input$mshs_filters_update_var, input$tabSwitch), {
     output$mshs_date_show  <- renderText({
       var_text()
     })
-    
   })
-  
-  observeEvent(input$mshs_filters_update_ytd, {
+
+  observeEvent(c(input$mshs_filters_update_ytd, input$tabSwitch), {
     output$mshs_date_show  <- renderText({
       ytd_text()
     })
-    
   })
   
+  observeEvent(input$mshs_filters_update_ytd, {
+    updateTabsetPanel(session, "tabSwitch", selected = paste0("panel", input$mshs_filters_update_ytd))
+  })
+
+
   ### Text output for Hospital tab -------------------------------
   all_mshs_text <- eventReactive(input$mshs_filters_update, {
     end_date <- isolate(max(input$all_date_range))
@@ -121,8 +123,10 @@ server <- function(input, output, session) {
   ### eventReactive for ratio tab ------------------------------
   ratio_data  <- eventReactive(input$ratio_filters_update,{
     validate(need(input$ratio_hospital != "", "Please Select a Hospital"),
-             need(input$ratio_date_range != "", "Please Select a Date"))
-    
+             #need(input$ratio_date_range != "", "Please Select a Date"))
+             need(input$ratio_date_range[1] < input$ratio_date_range[2], "Error: Start date should be earlier than end date."))
+  
+   
     
     data <-  new_repo  %>% 
       filter(Metrics == "Expense to Revenue Ratio") %>%
@@ -132,7 +136,9 @@ server <- function(input, output, session) {
     
     data %>%
       filter(Site %in% input$ratio_hospital,
-             date %in% input$ratio_date_range)
+             #date %in% input$ratio_date_range)
+            as.Date(paste0(date, "-01"), format="%Y-%m-%d") >= as.Date(input$ratio_date_range[1],  format="%Y-%m-%d") & 
+              as.Date(paste0(date, "-01"), format="%Y-%m-%d") <= as.Date(input$ratio_date_range[2], format="%Y-%m-%d"))
   }, ignoreNULL = FALSE)
  
   
@@ -2620,22 +2626,19 @@ server <- function(input, output, session) {
   output$ratio_plot_all <- renderPlot({
     
     data <- ratio_data()
-  test_data <<- data
-    
+ 
     data <- data %>%
       mutate(Actual = round(Actual, 2))%>%
       arrange(date) %>% 
       mutate(month= month.abb[as.numeric(month)],
                             year = as.factor(year))
-   
-    
-    
+
     ggplot(data, 
            aes(x=month, y=Actual, fill= year, group = year))+
       geom_bar(position= position_dodge(),stat="identity", width=0.7)+
       scale_fill_manual(values=c("#d80b8c",	"#00aeef","#863198", "#212070"))+
       labs(x = "Date", y = "Expense to Revenue Ratio" , 
-           title = isolate(paste0("MSHS Expense to Revenue Ratio" ))
+           title = isolate(paste0(input$ratio_hospital, " Expense to Revenue Ratio" ))
       )+
       guides(fill=guide_legend(title="Year"))+
       theme_bw()+
@@ -2646,7 +2649,7 @@ server <- function(input, output, session) {
             axis.title = element_text(face = "bold"),
             legend.text = element_text(size = 6),
             legend.title = element_text(size = 10),
-            axis.text.x = element_text(angle = 45, hjust = 0.5),
+            axis.text.x = element_text(angle = 0, hjust = 0.5, size = 10),
             axis.text.y = element_text(size = 10),
             panel.grid.major = element_line(color = "lightgrey"),
             panel.grid.minor = element_line(color = "lightgrey"))+

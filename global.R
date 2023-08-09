@@ -6,6 +6,7 @@ suppressMessages({
 library(tidyverse)
 library(readxl)
 library(plotly)
+library(scales)
 library(reshape2)
 library(zoo)
 library(gridExtra)
@@ -332,3 +333,7 @@ index <- which(metric_choices == "Expense to Revenue Ratio")
 metric_choices <- metric_choices[- index]
 
 
+ratio_date_option <- sort(c( unique(Exp_Rev_Ratio$date), date_options))
+start_date <- paste0(ratio_date_option[length(ratio_date_option)-23], "-01")
+end_date <- paste0(max(ratio_date_option),  "-01")
+min_date <- paste0(min(ratio_date_option),  "-01")

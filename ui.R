@@ -74,6 +74,7 @@ ui <- dashboardPage(
                                          "font-size: 18px; margin-top: -0.2em; margin-bottom: 0.5em; margin-left:",
                                          "20px}"))), hr(),
               
+              
               tags$head(tags$style(HTML(paste("#mshs_filters_update {background-color: #d80b8c;color: #FFFFFF;",
                                               "font-size: 18px}")))),
               
@@ -89,7 +90,7 @@ ui <- dashboardPage(
                 column(11,
                        tabBox(title = NULL, id = "tabset7", width = "100%", type = 'pills', 
                       
-                              
+                    tabsetPanel(id = "tabSwitch",     
                        tabPanel(title = "Health System Summary",
                        box(
                          title = NULL, width = 12, status = "primary",
@@ -200,11 +201,7 @@ ui <- dashboardPage(
                                solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
                                plotOutput("nyee_var"),  width = 6)
                          )),
-                
-                
-                
-                
-                
+
                 tabPanel(title = "YTD Variance to Budget Ratio",
                          box(
                            title = NULL, width = 12, status = "primary",
@@ -260,7 +257,7 @@ ui <- dashboardPage(
                                     solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
                                     plotOutput("nyee_plot_ytd"),  width = 6),
                                 
-                         )) # close tabPanel
+                         ))) # close tabPanel
                       )
                   )
                 
@@ -378,7 +375,7 @@ ui <- dashboardPage(
       
       ## tab Ratio --------------------------------------------
       tabItem(tabName = "ratio",
-              div("Hospitals Expense to Revenue Dashboard", style = paste("color:	#221f72; font-family:Calibri; font-weight:bold;",
+              div("Expense to Revenue Ratio Dashboard", style = paste("color:	#221f72; font-family:Calibri; font-weight:bold;",
                                                                       "font-size:25px; margin-left: 20px")),
               textOutput("ratio_date_show"),
               tags$head(tags$style(paste("#ratio_date_show{color:#7f7f7f; font-family:Calibri; font-style: italic;",
@@ -401,12 +398,19 @@ ui <- dashboardPage(
                            
                            box(width = 4, height = "100px",
                                title = "Select Date:",  solidHeader = FALSE,
-                               pickerInput("ratio_date_range", label = NULL, multiple = TRUE,
-                                           options = pickerOptions(
-                                             actionsBox = TRUE,
-                                             dropupAuto = FALSE),
-                                           choices = ratio_date_option, 
-                                           selected = ratio_date_option)),
+                               dateRangeInput("ratio_date_range", label = NULL, width = "75%",
+                                              start = start_date, end = end_date,
+                                              startview = "year",
+                                              min = min_date, max = end_date)),
+                               
+                               
+                               # pickerInput("ratio_date_range", label = NULL, multiple = TRUE,
+                               #             
+                               #             options = pickerOptions(
+                               #               actionsBox = TRUE,
+                               #               dropupAuto = FALSE),
+                               #             choices = ratio_date_option, 
+                               #             selected = ratio_date_option)),
                            
                            column(width = 4,
                                   actionButton("ratio_filters_update", "CLICK TO UPDATE", width = "75%"),
