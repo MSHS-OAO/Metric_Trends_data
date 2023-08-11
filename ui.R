@@ -54,16 +54,24 @@ ui <- dashboardPage(
                               style = "color:	#221f72;
                                   margin-left: 20px",
                               h3("Description:"),
-                              p(paste("This dashboard summarizes MSHS Metrics Trends. The data is",
-                                      "stratified by hospitals and Financial Metrics."),
+                              p(paste("Metric Trends: The graphs show the Monthly and YTD variances trend of Operating ",
+                                      "and Financial Metrics against budget for the fiscal year. For each metric, ",
+                                      "the bar graphs display the monthly variances ($) against the corresponding month’s ", 
+                                      "budget and the line graph displays the YTD variance (%) against the YTD budget. ",
+                                       "A positive variance is favorable to the budget and negative variance is ",
+                                      "unfavorable to the budget."),
+                                p("The follow metrics are displayed for the health system combined, and by each hospital:"),
                                 style = "font-size:16px"))),
-              column(12,
-                     tags$div(id = "data description", style = "color: #221f72; font-size:14px; margin-left: 20px",
-                              h3("Data Notes"),
-                              h5("We can explain the data and any notes here.")))),
-      
-      
-      
+               column(12,
+                      tags$div(id = "data description", style = "color: #221f72; font-size:14px; margin-left: 20px",
+                              h4("Operating Metrics:"),
+                              h5("Discharges, Case Mix Index (CMI), and Average Length of Stay (ALOS)"),
+                              
+                              h4("Revenue Metrics:"),
+                              h5("Total Hospital Revenue, Outpatient Revenue, 340B Pharmacy Program, and Other Operating Revenue"),
+                              
+                              h4("Expense Metrics:"),
+                              h5("Total Hospital Expenses, Salaries and Benefits, Supplies and Expenses, Nurse Agency Costs, and CARTS")))),
       
       ## tab MSHS --------------------------------------------
       tabItem(tabName = "mshs",

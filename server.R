@@ -4,10 +4,10 @@ server <- function(input, output, session) {
   
   # Text output ---------------------------------
   ### Text output for Metrics tab -------------------------------
-  system_text <- eventReactive(c(input$mshs_filters_update, input$tabSwitch), {
-    end_date <- max(input$mshs_date_range)
-    start_date <- min(input$mshs_date_range)
-    metric <- input$mshs_metrics
+  system_text <- eventReactive(input$mshs_filters_update, {
+    end_date <- isolate(max(input$mshs_date_range))
+    start_date <- isolate(min(input$mshs_date_range))
+    metric <- isolate(input$mshs_metrics)
    paste0("Based on data from ", start_date, " to ", end_date, " for ", metric)
   }, ignoreNULL = FALSE)
   
@@ -28,26 +28,23 @@ server <- function(input, output, session) {
   
 
   ### Observeevent to update the text based on different filters
-  observeEvent(c(input$mshs_filters_update, input$tabSwitch), {
-    output$mshs_date_show  <- renderText({
-      system_text()
-    })
-  })
-
-  observeEvent(c(input$mshs_filters_update_var, input$tabSwitch), {
-    output$mshs_date_show  <- renderText({
-      var_text()
-    })
-  })
-
-  observeEvent(c(input$mshs_filters_update_ytd, input$tabSwitch), {
-    output$mshs_date_show  <- renderText({
-      ytd_text()
-    })
-  })
-  
-  observeEvent(input$mshs_filters_update_ytd, {
-    updateTabsetPanel(session, "tabSwitch", selected = paste0("panel", input$mshs_filters_update_ytd))
+  observeEvent(input$tabSwitch, {
+    print(input$tabSwitch)
+    if(input$tabSwitch == "Health System Summary") {
+      output$mshs_date_show  <- renderText({
+        system_text()
+      })
+    }
+    if(input$tabSwitch == "Variance to Budget") {
+      output$mshs_date_show  <- renderText({
+        var_text()
+      })
+    }
+    if(input$tabSwitch == "YTD Variance to Budget Ratio") {
+      output$mshs_date_show  <- renderText({
+        ytd_text()
+      })
+    }
   })
 
 
