@@ -120,11 +120,8 @@ server <- function(input, output, session) {
   ### eventReactive for ratio tab ------------------------------
   ratio_data  <- eventReactive(input$ratio_filters_update,{
     validate(need(input$ratio_hospital != "", "Please Select a Hospital"),
-             #need(input$ratio_date_range != "", "Please Select a Date"))
-             need(input$ratio_date_range[1] < input$ratio_date_range[2], "Error: Start date should be earlier than end date."))
-  
-   
-    
+             need(input$ratio_date_range != "", "Please Select a Date"))
+             
     data <-  new_repo  %>% 
       filter(Metrics == "Expense to Revenue Ratio") %>%
       select("month", "year", "Site", "Actual", "Metrics", "date")
@@ -133,9 +130,7 @@ server <- function(input, output, session) {
     
     data %>%
       filter(Site %in% input$ratio_hospital,
-             #date %in% input$ratio_date_range)
-            as.Date(paste0(date, "-01"), format="%Y-%m-%d") >= as.Date(input$ratio_date_range[1],  format="%Y-%m-%d") & 
-              as.Date(paste0(date, "-01"), format="%Y-%m-%d") <= as.Date(input$ratio_date_range[2], format="%Y-%m-%d"))
+             date %in% input$ratio_date_range)
   }, ignoreNULL = FALSE)
  
   
@@ -228,11 +223,20 @@ server <- function(input, output, session) {
       } else {
         min_value <- (min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5
       }
+    
+    # Define different labels for metrics    
+      if (isolate(input$mshs_metrics) %in% c("CMI", "ALOS", "Discharges")) {
+        text_label <- data$`Variance`
+        y_label <- "Variance to Budget"
+      } else {
+        text_label <- paste0("$", data$`Variance`)
+        y_label <- "Variance to Budget $"
+      }
       
       
       p1 <- ggplot(data)  + 
         geom_bar(aes(x=date, y= Variance), stat="identity", fill= "#06ABEB")+
-        labs(x = "Date", y = "Variance to Budget $", 
+        labs(x = "Date", y = y_label, 
             title = isolate(paste0("MSH ", input$mshs_metrics , " Monthly Variance to Budget")),
              subtitle = paste0("($ in Thousands)"))+
         
@@ -241,7 +245,7 @@ server <- function(input, output, session) {
               axis.title = element_text(face='bold'),
               legend.text = element_text(size = 6),
               legend.position = "non")+
-        geom_text(aes(label= paste0("$", `Variance`),
+        geom_text(aes(label= text_label,
                       x=date, y= Variance, color = sign),
                   position = position_dodge(width = 1), fontface = "bold",
                   vjust = 0.5 - sign(data$Variance), size = 4)+
@@ -356,10 +360,19 @@ server <- function(input, output, session) {
         min_value <- (min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5
       }
       
+      # Define different labels for metrics    
+      if (isolate(input$mshs_metrics) %in% c("CMI", "ALOS", "Discharges")) {
+        text_label <- data$`Variance`
+        y_label <- "Variance to Budget"
+      } else {
+        text_label <- paste0("$", data$`Variance`)
+        y_label <- "Variance to Budget $"
+      }
+      
       
       p1 <- ggplot(data)  + 
         geom_bar(aes(x=date, y= Variance), stat="identity", fill= "#06ABEB")+
-        labs(x = "Date", y = "Variance to Budget $", 
+        labs(x = "Date", y = y_label, 
               title = isolate(paste0("MSB ", input$mshs_metrics , " Monthly Variance to Budget")),
              subtitle = paste0("($ in Thousands)"))+
         theme(plot.title = element_text(hjust = 0.5, size = 20),
@@ -367,7 +380,7 @@ server <- function(input, output, session) {
               axis.title = element_text(face='bold'),
               legend.text = element_text(size = 6),
               legend.position = "non")+
-        geom_text(aes(label= paste0("$", `Variance`),
+        geom_text(aes(label= text_label,
                       x=date, y= Variance, color = sign),
                   position = position_dodge(width = 1), fontface = "bold",
                   vjust = 0.5 - sign(data$Variance), size = 4)+
@@ -482,10 +495,18 @@ server <- function(input, output, session) {
         min_value <- (min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5
       }
       
+      # Define different labels for metrics    
+      if (isolate(input$mshs_metrics) %in% c("CMI", "ALOS", "Discharges")) {
+        text_label <- data$`Variance`
+        y_label <- "Variance to Budget"
+      } else {
+        text_label <- paste0("$", data$`Variance`)
+        y_label <- "Variance to Budget $"
+      }
       
       p1 <- ggplot(data)  + 
         geom_bar(aes(x=date, y= Variance), stat="identity", fill= "#06ABEB")+
-        labs(x = "Date", y = "Variance to Budget $", 
+        labs(x = "Date", y = y_label, 
              title = isolate(paste0("MSBI ", input$mshs_metrics , " Monthly Variance to Budget")),
              subtitle = paste0("($ in Thousands)"))+
         theme(plot.title = element_text(hjust = 0.5, size = 20),
@@ -493,7 +514,7 @@ server <- function(input, output, session) {
               axis.title = element_text(face='bold'),
               legend.text = element_text(size = 6),
               legend.position = "non")+
-        geom_text(aes(label= paste0("$", `Variance`),
+        geom_text(aes(label= text_label,
                       x=date, y= Variance, color = sign),
                   position = position_dodge(width = 1), fontface = "bold",
                   vjust = 0.5 - sign(data$Variance), size = 4)+
@@ -608,10 +629,18 @@ server <- function(input, output, session) {
         min_value <- (min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5
       }
       
+      # Define different labels for metrics    
+      if (isolate(input$mshs_metrics) %in% c("CMI", "ALOS", "Discharges")) {
+        text_label <- data$`Variance`
+        y_label <- "Variance to Budget"
+      } else {
+        text_label <- paste0("$", data$`Variance`)
+        y_label <- "Variance to Budget $"
+      }
       
       p1 <- ggplot(data)  + 
         geom_bar(aes(x=date, y= Variance), stat="identity", fill= "#06ABEB")+
-        labs(x = "Date", y = "Variance to Budget $", 
+        labs(x = "Date", y = y_label, 
              title = isolate(paste0("MSH ", input$mshs_metrics , " Monthly Variance to Budget")),
              subtitle = paste0("($ in Thousands)"))+
         theme(plot.title = element_text(hjust = 0.5, size = 20),
@@ -619,7 +648,7 @@ server <- function(input, output, session) {
               axis.title = element_text(face='bold'),
               legend.text = element_text(size = 6),
               legend.position = "non")+
-        geom_text(aes(label= paste0("$", `Variance`),
+        geom_text(aes(label= text_label,
                       x=date, y= Variance, color = sign),
                   position = position_dodge(width = 1), fontface = "bold",
                   vjust = 0.5 - sign(data$Variance), size = 4)+
@@ -732,10 +761,18 @@ server <- function(input, output, session) {
         min_value <- (min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5
       }
       
+      # Define different labels for metrics    
+      if (isolate(input$mshs_metrics) %in% c("CMI", "ALOS", "Discharges")) {
+        text_label <- data$`Variance`
+        y_label <- "Variance to Budget"
+      } else {
+        text_label <- paste0("$", data$`Variance`)
+        y_label <- "Variance to Budget $"
+      }
       
       p1 <- ggplot(data)  + 
         geom_bar(aes(x=date, y= Variance), stat="identity", fill= "#06ABEB")+
-        labs(x = "Date", y = "Variance to Budget $", 
+        labs(x = "Date", y = y_label, 
              title = isolate(paste0("MSM ", input$mshs_metrics , " Monthly Variance to Budget")),
              subtitle = paste0("($ in Thousands)"))+
         theme(plot.title = element_text(hjust = 0.5, size = 20),
@@ -743,7 +780,7 @@ server <- function(input, output, session) {
               axis.title = element_text(face='bold'),
               legend.text = element_text(size = 6),
               legend.position = "non")+
-        geom_text(aes(label= paste0("$", `Variance`),
+        geom_text(aes(label= text_label,
                       x=date, y= Variance, color = sign),
                   position = position_dodge(width = 1), fontface = "bold",
                   vjust = 0.5 - sign(data$Variance), size = 4)+
@@ -856,10 +893,18 @@ server <- function(input, output, session) {
         min_value <- (min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5
       }
       
+      # Define different labels for metrics    
+      if (isolate(input$mshs_metrics) %in% c("CMI", "ALOS", "Discharges")) {
+        text_label <- data$`Variance`
+        y_label <- "Variance to Budget"
+      } else {
+        text_label <- paste0("$", data$`Variance`)
+        y_label <- "Variance to Budget $"
+      }
       
       p1 <- ggplot(data)  + 
         geom_bar(aes(x=date, y= Variance), stat="identity", fill= "#06ABEB")+
-        labs(x = "Date", y = "Variance to Budget $", 
+        labs(x = "Date", y = y_label, 
              title = isolate(paste0("MSQ ", input$mshs_metrics , " Monthly Variance to Budget")),
              subtitle = paste0("($ in Thousands)"))+
         theme(plot.title = element_text(hjust = 0.5, size = 20),
@@ -867,7 +912,7 @@ server <- function(input, output, session) {
               axis.title = element_text(face='bold'),
               legend.text = element_text(size = 6),
               legend.position = "non")+
-        geom_text(aes(label= paste0("$", `Variance`),
+        geom_text(aes(label= text_label,
                       x=date, y= Variance, color = sign),
                   position = position_dodge(width = 1), fontface = "bold",
                   vjust = 0.5 - sign(data$Variance), size = 4)+
@@ -980,10 +1025,18 @@ server <- function(input, output, session) {
         min_value <- (min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5
       }
       
+      # Define different labels for metrics    
+      if (isolate(input$mshs_metrics) %in% c("CMI", "ALOS", "Discharges")) {
+        text_label <- data$`Variance`
+        y_label <- "Variance to Budget"
+      } else {
+        text_label <- paste0("$", data$`Variance`)
+        y_label <- "Variance to Budget $"
+      }
       
       p1 <- ggplot(data)  + 
         geom_bar(aes(x=date, y= Variance), stat="identity", fill= "#06ABEB")+
-        labs(x = "Date", y = "Variance to Budget $", 
+        labs(x = "Date", y = y_label, 
              title = isolate(paste0("MSSN ", input$mshs_metrics , " Monthly Variance to Budget")),
              subtitle = paste0("($ in Thousands)"))+
         theme(plot.title = element_text(hjust = 0.5, size = 20),
@@ -991,7 +1044,7 @@ server <- function(input, output, session) {
               axis.title = element_text(face='bold'),
               legend.text = element_text(size = 6),
               legend.position = "non")+
-        geom_text(aes(label= paste0("$", `Variance`),
+        geom_text(aes(label= text_label,
                       x=date, y= Variance, color = sign),
                   position = position_dodge(width = 1), fontface = "bold",
                   vjust = 0.5 - sign(data$Variance), size = 4)+
@@ -1104,10 +1157,18 @@ server <- function(input, output, session) {
         min_value <- (min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5
       }
       
+      # Define different labels for metrics    
+      if (isolate(input$mshs_metrics) %in% c("CMI", "ALOS", "Discharges")) {
+        text_label <- data$`Variance`
+        y_label <- "Variance to Budget"
+      } else {
+        text_label <- paste0("$", data$`Variance`)
+        y_label <- "Variance to Budget $"
+      }
       
       p1 <- ggplot(data)  + 
         geom_bar(aes(x=date, y= Variance), stat="identity", fill= "#06ABEB")+
-        labs(x = "Date", y = "Variance to Budget $", 
+        labs(x = "Date", y = y_label,  
              title = isolate(paste0("MSW ", input$mshs_metrics , " Monthly Variance to Budget")),
              subtitle = paste0("($ in Thousands)"))+
         theme(plot.title = element_text(hjust = 0.5, size = 20),
@@ -1115,7 +1176,7 @@ server <- function(input, output, session) {
               axis.title = element_text(face='bold'),
               legend.text = element_text(size = 6),
               legend.position = "non")+
-        geom_text(aes(label= paste0("$", `Variance`),
+        geom_text(aes(label= text_label,
                       x=date, y= Variance, color = sign),
                   position = position_dodge(width = 1), fontface = "bold",
                   vjust = 0.5 - sign(data$Variance), size = 4)+
@@ -1230,10 +1291,19 @@ server <- function(input, output, session) {
         min_value <- (min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5
       }
       
+      # Define different labels for metrics    
+      if (isolate(input$mshs_metrics) %in% c("CMI", "ALOS", "Discharges")) {
+        text_label <- data$`Variance`
+        y_label <- "Variance to Budget"
+      } else {
+        text_label <- paste0("$", data$`Variance`)
+        y_label <- "Variance to Budget $"
+      }
+      
       
       p1 <- ggplot(data)  + 
         geom_bar(aes(x=date, y= Variance), stat="identity", fill= "#06ABEB")+
-        labs(x = "Date", y = "Variance to Budget $", 
+        labs(x = "Date", y = y_label, 
              title = isolate(paste0("NYEE ", input$mshs_metrics , " Monthly Variance to Budget")),
              subtitle = paste0("($ in Thousands)"))+
         theme(plot.title = element_text(hjust = 0.5, size = 20),
@@ -1241,7 +1311,7 @@ server <- function(input, output, session) {
               axis.title = element_text(face='bold'),
               legend.text = element_text(size = 6),
               legend.position = "non")+
-        geom_text(aes(label= paste0("$", `Variance`),
+        geom_text(aes(label= text_label,
                       x=date, y= Variance, color = sign),
                   position = position_dodge(width = 1), fontface = "bold",
                   vjust = 0.5 - sign(data$Variance), size = 4)+
@@ -1293,13 +1363,22 @@ server <- function(input, output, session) {
       } else {
         min_value <- (min(data$Variance, na.rm = TRUE))*1.5
       }
+    
+    # Define different labels for metrics    
+    if (isolate(input$var_metrics) %in% c("CMI", "ALOS", "Discharges")) {
+      text_label <- data$`Variance`
+      y_label <- "Variance to Budget"
+    } else {
+      text_label <- paste0("$", data$`Variance`)
+      y_label <- "Variance to Budget $"
+    }
   
       ggplot(data)  + 
         geom_bar(aes(x=date, y= Variance), stat="identity", fill= "#212070")+
-        labs(x = "Date", y = "Variance to Budget $", 
+        labs(x = "Date", y = y_label, 
              title = isolate(paste0("MSHS ", input$var_metrics , " Monthly Variance to Budget")),
              subtitle = paste0("($ in Thousands)"))+
-        geom_text(aes(label= paste0("$", `Variance`),
+        geom_text(aes(label= text_label,
                       x=date, y= Variance, color = sign),
                   position = position_dodge(width = 1), fontface = "bold",
                   vjust = 0.5 - sign(data$Variance), size = 4)+
@@ -1337,12 +1416,21 @@ server <- function(input, output, session) {
       min_value <- (min(data$Variance, na.rm = TRUE))*1.5
     }
     
+    # Define different labels for metrics    
+    if (isolate(input$var_metrics) %in% c("CMI", "ALOS", "Discharges")) {
+      text_label <- data$`Variance`
+      y_label <- "Variance to Budget"
+    } else {
+      text_label <- paste0("$", data$`Variance`)
+      y_label <- "Variance to Budget $"
+    }
+    
     ggplot(data)  + 
       geom_bar(aes(x=date, y= Variance), stat="identity", fill= "#212070")+
-      labs(x = "Date", y = "Variance to Budget $", 
+      labs(x = "Date", y = y_label, 
            title = isolate(paste0("MSB ", input$var_metrics , " Monthly Variance to Budget")),
            subtitle = paste0("($ in Thousands)"))+
-      geom_text(aes(label= paste0("$", `Variance`),
+      geom_text(aes(label= text_label,
                     x=date, y= Variance, color = sign),
                 position = position_dodge(width = 1), fontface = "bold",
                 vjust = 0.5 - sign(data$Variance), size = 4)+
@@ -1380,12 +1468,21 @@ server <- function(input, output, session) {
       min_value <- (min(data$Variance, na.rm = TRUE))*1.5
     }
     
+    # Define different labels for metrics    
+    if (isolate(input$var_metrics) %in% c("CMI", "ALOS", "Discharges")) {
+      text_label <- data$`Variance`
+      y_label <- "Variance to Budget"
+    } else {
+      text_label <- paste0("$", data$`Variance`)
+      y_label <- "Variance to Budget $"
+    }
+    
     ggplot(data)  + 
       geom_bar(aes(x=date, y= Variance), stat="identity", fill= "#212070")+
-      labs(x = "Date", y = "Variance to Budget $", 
+      labs(x = "Date", y = y_label, 
            title = isolate(paste0("MSBI ", input$var_metrics , " Monthly Variance to Budget")),
            subtitle = paste0("($ in Thousands)"))+
-      geom_text(aes(label= paste0("$", `Variance`),
+      geom_text(aes(label= text_label,
                     x=date, y= Variance, color = sign),
                 position = position_dodge(width = 1), fontface = "bold",
                 vjust = 0.5 - sign(data$Variance), size = 4)+
@@ -1423,13 +1520,21 @@ server <- function(input, output, session) {
       min_value <- (min(data$Variance, na.rm = TRUE))*1.5
     }
     
+    # Define different labels for metrics    
+    if (isolate(input$var_metrics) %in% c("CMI", "ALOS", "Discharges")) {
+      text_label <- data$`Variance`
+      y_label <- "Variance to Budget"
+    } else {
+      text_label <- paste0("$", data$`Variance`)
+      y_label <- "Variance to Budget $"
+    }
     
     ggplot(data)  + 
       geom_bar(aes(x=date, y= Variance), stat="identity", fill= "#212070")+
-      labs(x = "Date", y = "Variance to Budget $", 
+      labs(x = "Date", y = y_label, 
            title = isolate(paste0("MSH ", input$var_metrics , " Monthly Variance to Budget")),
            subtitle = paste0("($ in Thousands)"))+
-      geom_text(aes(label= paste0("$", `Variance`),
+      geom_text(aes(label= text_label,
                     x=date, y= Variance, color = sign),
                 position = position_dodge(width = 1), fontface = "bold",
                 vjust = 0.5 - sign(data$Variance), size = 4)+
@@ -1466,13 +1571,22 @@ server <- function(input, output, session) {
     } else {
       min_value <- (min(data$Variance, na.rm = TRUE))*1.5
     }
-
+    
+    # Define different labels for metrics    
+    if (isolate(input$var_metrics) %in% c("CMI", "ALOS", "Discharges")) {
+      text_label <- data$`Variance`
+      y_label <- "Variance to Budget"
+    } else {
+      text_label <- paste0("$", data$`Variance`)
+      y_label <- "Variance to Budget $"
+    }
+    
     ggplot(data)  + 
       geom_bar(aes(x=date, y= Variance), stat="identity", fill= "#212070")+
-      labs(x = "Date", y = "Variance to Budget $", 
+      labs(x = "Date", y = y_label, 
            title = isolate(paste0("MSM ", input$var_metrics , " Monthly Variance to Budget")),
            subtitle = paste0("($ in Thousands)"))+
-      geom_text(aes(label= paste0("$", `Variance`),
+      geom_text(aes(label= text_label,
                     x=date, y= Variance, color = sign),
                 position = position_dodge(width = 1), fontface = "bold",
                 vjust = 0.5 - sign(data$Variance), size = 4)+
@@ -1510,12 +1624,21 @@ server <- function(input, output, session) {
       min_value <- (min(data$Variance, na.rm = TRUE))*1.5
     }
     
+    # Define different labels for metrics    
+    if (isolate(input$var_metrics) %in% c("CMI", "ALOS", "Discharges")) {
+      text_label <- data$`Variance`
+      y_label <- "Variance to Budget"
+    } else {
+      text_label <- paste0("$", data$`Variance`)
+      y_label <- "Variance to Budget $"
+    }
+    
     ggplot(data)  + 
       geom_bar(aes(x=date, y= Variance), stat="identity", fill= "#212070")+
-      labs(x = "Date", y = "Variance to Budget $", 
+      labs(x = "Date", y = y_label, 
            title = isolate(paste0("MSQ ", input$var_metrics , " Monthly Variance to Budget")),
            subtitle = paste0("($ in Thousands)"))+
-      geom_text(aes(label= paste0("$", `Variance`),
+      geom_text(aes(label= text_label,
                     x=date, y= Variance, color = sign),
                 position = position_dodge(width = 1), fontface = "bold",
                 vjust = 0.5 - sign(data$Variance), size = 4)+
@@ -1553,12 +1676,20 @@ server <- function(input, output, session) {
       min_value <- (min(data$Variance, na.rm = TRUE))*1.5
     }
     
+    # Define different labels for metrics    
+    if (isolate(input$var_metrics) %in% c("CMI", "ALOS", "Discharges")) {
+      text_label <- data$`Variance`
+      y_label <- "Variance to Budget"
+    } else {
+      text_label <- paste0("$", data$`Variance`)
+      y_label <- "Variance to Budget $"
+    }
     ggplot(data)  + 
       geom_bar(aes(x=date, y= Variance), stat="identity", fill= "#212070")+
-      labs(x = "Date", y = "Variance to Budget $", 
+      labs(x = "Date", y = y_label, 
            title = isolate(paste0("MSSN ", input$var_metrics , " Monthly Variance to Budget")),
            subtitle = paste0("($ in Thousands)"))+
-      geom_text(aes(label= paste0("$", `Variance`),
+      geom_text(aes(label= text_label,
                     x=date, y= Variance, color = sign),
                 position = position_dodge(width = 1), fontface = "bold",
                 vjust = 0.5 - sign(data$Variance), size = 4)+
@@ -1596,12 +1727,21 @@ server <- function(input, output, session) {
       min_value <- (min(data$Variance, na.rm = TRUE))*1.5
     }
     
+    # Define different labels for metrics    
+    if (isolate(input$var_metrics) %in% c("CMI", "ALOS", "Discharges")) {
+      text_label <- data$`Variance`
+      y_label <- "Variance to Budget"
+    } else {
+      text_label <- paste0("$", data$`Variance`)
+      y_label <- "Variance to Budget $"
+    }
+    
     ggplot(data)  + 
       geom_bar(aes(x=date, y= Variance), stat="identity", fill= "#212070")+
-      labs(x = "Date", y = "Variance to Budget $", 
+      labs(x = "Date", y = y_label, 
            title = isolate(paste0("MSW ", input$var_metrics , " Monthly Variance to Budget")),
            subtitle = paste0("($ in Thousands)"))+
-      geom_text(aes(label= paste0("$", `Variance`),
+      geom_text(aes(label= text_label,
                     x=date, y= Variance, color = sign),
                 position = position_dodge(width = 1), fontface = "bold",
                 vjust = 0.5 - sign(data$Variance), size = 4)+
@@ -1639,12 +1779,21 @@ server <- function(input, output, session) {
       min_value <- (min(data$Variance, na.rm = TRUE))*1.5
     }
     
+    # Define different labels for metrics    
+    if (isolate(input$var_metrics) %in% c("CMI", "ALOS", "Discharges")) {
+      text_label <- data$`Variance`
+      y_label <- "Variance to Budget"
+    } else {
+      text_label <- paste0("$", data$`Variance`)
+      y_label <- "Variance to Budget $"
+    }
+    
     ggplot(data)  + 
       geom_bar(aes(x=date, y= Variance), stat="identity", fill= "#212070")+
-      labs(x = "Date", y = "Variance to Budget $", 
+      labs(x = "Date", y = y_label, 
            title = isolate(paste0("NYEE ", input$var_metrics , " Monthly Variance to Budget")),
            subtitle = paste0("($ in Thousands)"))+
-      geom_text(aes(label= paste0("$", `Variance`),
+      geom_text(aes(label= text_label,
                     x=date, y= Variance, color = sign),
                 position = position_dodge(width = 1), fontface = "bold",
                 vjust = 0.5 - sign(data$Variance), size = 4)+
@@ -2255,7 +2404,7 @@ server <- function(input, output, session) {
     
     ggplot(data)  + 
       geom_bar(aes(x=date, y= Variance), stat="identity", fill= "#212070")+
-      labs(x = "Date", y = "Variance to Budget $", 
+      labs(x = "Date", y = "Variance to Budget", 
            title = paste0(isolate(input$all_hospital) , " Discharges Monthly Variance to Budget"),
            subtitle = paste0("($ in Thousands)"))+
       theme(plot.title = element_text(hjust = 0.5, size = 20),
@@ -2263,7 +2412,7 @@ server <- function(input, output, session) {
             axis.title = element_text(face = "bold"),
             legend.text = element_text(size = 6),
             legend.position = "non")+
-      geom_text(aes(label= paste0("$", `Variance`), x=date, y= Variance, color = sign),
+      geom_text(aes(label= `Variance`, x=date, y= Variance, color = sign),
                 position = position_dodge(width = 1), fontface = "bold",
                 vjust = 0.5 - sign(data$Variance)/2, size = 4)+
       scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
@@ -2297,7 +2446,7 @@ server <- function(input, output, session) {
     
     ggplot(data)  + 
       geom_bar(aes(x=date, y= Variance), stat="identity", fill= "#212070")+
-      labs(x = "Date", y = "Variance to Budget $", 
+      labs(x = "Date", y = "Variance to Budget", 
            title = paste0(isolate(input$all_hospital) , " CMI Monthly Variance to Budget"),
            subtitle = paste0("($ in Thousands)"))+
       theme(plot.title = element_text(hjust = 0.5, size = 20),
@@ -2305,7 +2454,7 @@ server <- function(input, output, session) {
             axis.title = element_text(face = "bold"),
             legend.text = element_text(size = 6),
             legend.position = "non")+
-      geom_text(aes(label= paste0("$", `Variance`), x=date, y= Variance, color = sign),
+      geom_text(aes(label= `Variance`, x=date, y= Variance, color = sign),
                 position = position_dodge(width = 1), fontface = "bold",
                 vjust = 0.5 - sign(data$Variance)/2, size = 4)+
       scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
@@ -2339,7 +2488,7 @@ server <- function(input, output, session) {
     
     ggplot(data)  + 
       geom_bar(aes(x=date, y= Variance), stat="identity", fill= "#212070")+
-      labs(x = "Date", y = "Variance to Budget $", 
+      labs(x = "Date", y = "Variance to Budget", 
            title = paste0(isolate(input$all_hospital) , " ALOS Monthly Variance to Budget"),
            subtitle = paste0("($ in Thousands)"))+
       theme(plot.title = element_text(hjust = 0.5, size = 20),
@@ -2347,7 +2496,7 @@ server <- function(input, output, session) {
             axis.title = element_text(face = "bold"),
             legend.text = element_text(size = 6),
             legend.position = "non")+
-      geom_text(aes(label= paste0("$", `Variance`), x=date, y= Variance, color = sign),
+      geom_text(aes(label= `Variance`, x=date, y= Variance, color = sign),
                 position = position_dodge(width = 1), fontface = "bold",
                 vjust = 0.5 - sign(data$Variance)/2, size = 4)+
       scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+

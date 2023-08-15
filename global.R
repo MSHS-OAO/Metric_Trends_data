@@ -39,7 +39,7 @@ raw_data_list <- file.info(list.files(path = paste0(dir,"Monthly Financial Data/
 # Select new data
 new_metric_data <- basename(rownames(raw_data_list))[!(basename(rownames(raw_data_list)) 
                                                                      %in% repo$Filename)]
-
+new_metric_data <-  "MSHG- Summary Financials June 2023v4.xlsm"
 
 if (length(new_metric_data) > 0) {
   
@@ -84,8 +84,8 @@ data <- data %>%
   filter(Metrics %in% c("Total Hospital Revenue", "Total Hospital Expenses", 
                         "Salaries & Wages", "Contractual & Other Benefits",
                         "Discharges", "Average Length of Stay", "Outpatient",
-                        "Other Operating", "CARTS", "CMI", "Nursing Agency Costs", 
-                        "Supplies & Expenses"))
+                        "Other Operating", "340B Pharmacy Program", "CARTS", 
+                        "CMI", "Nursing Agency Costs", "Supplies & Expenses"))
 
 
 # replace all - with NA
@@ -152,15 +152,38 @@ salary <- salary %>%
 data <- rbind(data, salary)
 
 
+#Create 340B/Other Operating Revenue
+operating <- data %>%
+  filter(Metrics %in% c("Other Operating", "340B Pharmacy Program"))%>%
+  select(-c("Filename", "month", "year")) %>%
+  replace(is.na(.), 0) 
+  
+# change th data from long to wide
+operating <- dcast(melt(operating, id.vars=c("Metrics")), variable ~ Metrics )
+
+# estimate 340B/Other Operating Revenue and change the data to long
+operating <- operating %>%
+  mutate(`340B/Other Operating Revenue`= `340B Pharmacy Program`+ `Other Operating`)%>%
+  select(-c("340B Pharmacy Program", "Other Operating"))%>%
+   spread(key = variable, value = `340B/Other Operating Revenue`) %>%
+   mutate(Metrics= "340B/Other Operating Revenue",
+         Filename = unique(data$Filename), 
+         month = unique(data$month),
+         year = unique(data$year))
+
+
+
+# Bind data and salary
+data <- rbind(data, operating)  
+
 # Removed unnecessary Metrics
 data <- data %>% 
-  filter(Metrics != c("Salaries & Wages", "Contractual & Other Benefits"))
+  filter(!(Metrics %in% c("Salaries & Wages", "Contractual & Other Benefits",
+                      "340B Pharmacy Program", "Other Operating")))
 
 data <- data %>%
   mutate(Metrics = ifelse(Metrics == "Outpatient", "Outpatient Revenue", Metrics),
-         Metrics = ifelse(Metrics == "Average Length of Stay", "ALOS", Metrics),
-         Metrics = ifelse(Metrics == "Other Operating",
-                          "340B/Other Operating Revenue", Metrics))
+         Metrics = ifelse(Metrics == "Average Length of Stay", "ALOS", Metrics))
 
 # subset actual data
 actual <- data %>%
@@ -187,7 +210,7 @@ final_data <- left_join(actual, budget %>%
 new_repo <- rbind(repo, final_data) %>%
   distinct()
 
-rm(actual, budget, final_data, data, salary, exp_rev)
+rm(actual, budget, final_data, data, salary, exp_rev, operating)
 
 
 # Save the data
@@ -334,7 +357,5 @@ index <- which(metric_choices == "Expense to Revenue Ratio")
 metric_choices <- metric_choices[- index]
 
 
-ratio_date_option <- sort(c( unique(Exp_Rev_Ratio$date), date_options))
-start_date <- paste0(ratio_date_option[length(ratio_date_option)-23], "-01")
-end_date <- paste0(max(ratio_date_option),  "-01")
-min_date <- paste0(min(ratio_date_option),  "-01")
+ratio_date_option <- sort(c( unique(Exp_Rev_Ratio$date), date_options), 
+                          decreasing = TRUE)

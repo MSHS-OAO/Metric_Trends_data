@@ -403,22 +403,13 @@ ui <- dashboardPage(
                                            options = pickerOptions(actionsBox = TRUE), 
                                            choices = hospital_choices,
                                            selected = "MSHS")),
-                           
-                           box(width = 4, height = "100px",
-                               title = "Select Date:",  solidHeader = FALSE,
-                               dateRangeInput("ratio_date_range", label = NULL, width = "75%",
-                                              start = start_date, end = end_date,
-                                              startview = "year",
-                                              min = min_date, max = end_date)),
-                               
-                               
-                               # pickerInput("ratio_date_range", label = NULL, multiple = TRUE,
-                               #             
-                               #             options = pickerOptions(
-                               #               actionsBox = TRUE,
-                               #               dropupAuto = FALSE),
-                               #             choices = ratio_date_option, 
-                               #             selected = ratio_date_option)),
+                           box(width = 4, height = "100px", title = "Select Date:", solidHeader = FALSE,
+                               pickerInput("ratio_date_range", label = NULL, multiple = TRUE,
+                                           options = pickerOptions(
+                                             actionsBox = TRUE,
+                                             dropupAuto = FALSE),
+                                           choices = ratio_date_option,
+                                           selected = ratio_date_option[1:24])),
                            
                            column(width = 4,
                                   actionButton("ratio_filters_update", "CLICK TO UPDATE", width = "75%"),
