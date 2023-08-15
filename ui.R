@@ -266,33 +266,35 @@ ui <- dashboardPage(
                                     plotOutput("nyee_plot_ytd"),  width = 6),
                                 
                          ))) # close tabPanel
-                      )
-                  )
-                
+                      ))
               ) # close fluidRow
       ),   # close tab MSHS  
       
-      
-      
-      
       ## tab Site --------------------------------------------
       tabItem(tabName = "site",
-              div("Hospitals Metrics Trends Dashboard", style = paste("color:	#221f72; font-family:Calibri; font-weight:bold;",
-                                                             "font-size:25px; margin-left: 20px")),
+             div("Hospitals Metrics Trends Dashboard", 
+        style = paste("color:	#221f72; font-family:Calibri; font-weight:bold;",
+                                        "font-size:25px; margin-left: 20px")),
               textOutput("all_date_show"),
-              tags$head(tags$style(paste("#all_date_show{color:#7f7f7f; font-family:Calibri; font-style: italic;",
-                                         "font-size: 18px; margin-top: -0.2em; margin-bottom: 0.5em; margin-left:",
+              tags$head(tags$style(paste("#all_date_show{color:#7f7f7f; 
+                                      font-family:Calibri; font-style: italic;",
+                                      "font-size: 18px; margin-top: -0.2em;
+                                      margin-bottom: 0.5em; margin-left:",
                                          "20px}"))), hr(),
-              tags$head(tags$style(HTML(paste("#all_filters_update {background-color: #d80b8c;color: #FFFFFF;",
+              tags$head(tags$style(
+               HTML(paste("#all_filters_update {background-color: #d80b8c;color: #FFFFFF;",
                                               "font-size: 18px}")))),
               fluidRow(
-                tags$style(HTML(".box.box-solid.box-primary>.box-header {background:#221f72; color:#fff}")),
+                tags$style(
+                  HTML(".box.box-solid.box-primary>.box-header {background:#221f72; color:#fff}")),
                 column(11,
                        box(
                          title = NULL, width = 12, status = "primary",
-                         solidHeader = TRUE, collapsible = TRUE, closable = TRUE, br(),
+                         solidHeader = TRUE, collapsible = TRUE,
+                                       closable = TRUE, br(),
                          fluidRow(
-                           box(width = 4, height = "100px", title = "Select Hospitals:", solidHeader = FALSE,
+                           box(width = 4, height = "100px",
+                               title = "Select Hospitals:", solidHeader = FALSE,
                                pickerInput("all_hospital", label = NULL, multiple = FALSE,
                                            options = pickerOptions(actionsBox = TRUE), 
                                            choices = hospital_choices,
@@ -300,7 +302,8 @@ ui <- dashboardPage(
                         
                            box(width = 4, height = "100px",
                                title = "Select Date:",  solidHeader = FALSE,
-                               pickerInput("all_date_range", label = NULL, multiple = TRUE,
+                               pickerInput("all_date_range", label = NULL, 
+                                           multiple = TRUE,
                                            options = pickerOptions(
                                                      actionsBox = TRUE,
                                                      dropupAuto = FALSE),
@@ -308,75 +311,63 @@ ui <- dashboardPage(
                                            selected = date_options)),
                           
                            column(width = 4,
-                                  actionButton("all_filters_update", "CLICK TO UPDATE", width = "75%"),
+                                  actionButton("all_filters_update", 
+                                            "CLICK TO UPDATE", width = "75%"),
                                   br(),
                                   br())))),
                 column(11,
                        box(title = NULL, status = "primary",
-                           solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
+                        solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
                            plotOutput("ratio_plot"),  width = 6),
                        
                        box(title = NULL, status = "primary", 
-                           solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
-                           plotOutput("revenue_plot"),  width = 6)
-  
-                       ),
+                        solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
+                           plotOutput("revenue_plot"),  width = 6) ),
                 
                 column(11,
                        box(title = NULL, status = "primary",
-                           solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
+                        solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
                            plotOutput("expense_plot"),  width = 6),
                        
                        box(title = NULL, status = "primary", 
-                           solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
-                           plotOutput("discharges_plot"),  width = 6),
-                       
-                ),
+                        solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
+                           plotOutput("discharges_plot"),  width = 6)),
                 
                 column(11,
                        box(title = NULL, status = "primary",
-                           solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
+                        solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
                            plotOutput("cmi_plot"),  width = 6),
                        
                        box(title = NULL, status = "primary", 
-                           solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
-                           plotOutput("alos_plot"),  width = 6),
-                       
-                ),
+                        solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
+                           plotOutput("alos_plot"),  width = 6)),
                 
                 column(11,
                        box(title = NULL, status = "primary",
-                           solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
+                        solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
                            plotOutput("outpt_plot"),  width = 6),
                        
                        box(title = NULL, status = "primary", 
-                           solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
-                           plotOutput("operate_plot"),  width = 6),
-                       
-                ),
+                        solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
+                           plotOutput("operate_plot"),  width = 6)),
                 
                 column(11,
                        box(title = NULL, status = "primary",
-                           solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
+                        solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
                            plotOutput("salary_plot"),  width = 6),
                        
                        box(title = NULL, status = "primary", 
-                           solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
-                           plotOutput("supply_plot"),  width = 6),
-                       
-                ),
+                        solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
+                           plotOutput("supply_plot"),  width = 6)),
                 
                 column(11,
                        box(title = NULL, status = "primary",
-                           solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
+                        solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
                            plotOutput("nurse_plot"),  width = 6),
                        
                        box(title = NULL, status = "primary", 
-                           solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
-                           plotOutput("carts_plot"),  width = 6),
-                       
-                )
-                
+                        solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
+                           plotOutput("carts_plot"),  width = 6))
 
                 ) # close fluidRow
               ), # close tabname Site

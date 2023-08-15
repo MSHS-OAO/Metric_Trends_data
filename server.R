@@ -163,16 +163,16 @@ server <- function(input, output, session) {
         slice(tail(row_number(), 24))
       
       
-      if((max(data$Actual, na.rm = TRUE))*1.5 < 0){
+      if((max(data$Actual, na.rm = TRUE))*1.3 < 0){
         max_value <- 0
       } else {
-        max_value <- (max(data$Actual, na.rm = TRUE))*1.5
+        max_value <- (max(data$Actual, na.rm = TRUE))*1.3
       }
       
-      if( (min(data$Actual, na.rm = TRUE))*1.5 > 0){
+      if( (min(data$Actual, na.rm = TRUE))*1.3 > 0){
         min_value <- 0
       } else {
-        min_value <- (min(data$Actual, na.rm = TRUE))*1.5
+        min_value <- (min(data$Actual, na.rm = TRUE))*1.3
       }
       
       ggplot(data)  + 
@@ -212,16 +212,16 @@ server <- function(input, output, session) {
       data <- data %>% mutate(Variance_scaled = Variance.From.Budget.YTD * ratio)
       
       
-      if((max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5 < 0){
+      if((max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3 < 0){
         max_value <- 0
       } else {
-        max_value <- (max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5
+        max_value <- (max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3
       }
       
-      if((min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5 > 0){
+      if((min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3 > 0){
         min_value <- 0
       } else {
-        min_value <- (min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5
+        min_value <- (min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3
       }
     
     # Define different labels for metrics    
@@ -239,7 +239,6 @@ server <- function(input, output, session) {
         labs(x = "Date", y = y_label, 
             title = isolate(paste0("MSH ", input$mshs_metrics , " Monthly Variance to Budget")),
              subtitle = paste0("($ in Thousands)"))+
-        
         theme(plot.title = element_text(hjust = 0.5, size = 20),
               plot.subtitle = element_text(hjust = 0.5, size = 10),
               axis.title = element_text(face='bold'),
@@ -299,16 +298,16 @@ server <- function(input, output, session) {
         slice(tail(row_number(), 24))
       
       
-      if((max(data$Actual, na.rm = TRUE))*1.5 < 0){
+      if((max(data$Actual, na.rm = TRUE))*1.3 < 0){
         max_value <- 0
       } else {
-        max_value <- (max(data$Actual, na.rm = TRUE))*1.5
+        max_value <- (max(data$Actual, na.rm = TRUE))*1.3
       }
       
-      if( (min(data$Actual, na.rm = TRUE))*1.5 > 0){
+      if( (min(data$Actual, na.rm = TRUE))*1.3 > 0){
         min_value <- 0
       } else {
-        min_value <- (min(data$Actual, na.rm = TRUE))*1.5
+        min_value <- (min(data$Actual, na.rm = TRUE))*1.3
       }
       
       ggplot(data)  + 
@@ -348,16 +347,16 @@ server <- function(input, output, session) {
       data <- data %>% mutate(Variance_scaled = Variance.From.Budget.YTD * ratio)
       
       
-      if((max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5 < 0){
+      if((max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3 < 0){
         max_value <- 0
       } else {
-        max_value <- (max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5
+        max_value <- (max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3
       }
       
-      if((min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5 > 0){
+      if((min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3 > 0){
         min_value <- 0
       } else {
-        min_value <- (min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5
+        min_value <- (min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3
       }
       
       # Define different labels for metrics    
@@ -375,7 +374,7 @@ server <- function(input, output, session) {
         labs(x = "Date", y = y_label, 
               title = isolate(paste0("MSB ", input$mshs_metrics , " Monthly Variance to Budget")),
              subtitle = paste0("($ in Thousands)"))+
-        theme(plot.title = element_text(hjust = 0.5, size = 20),
+        theme(plot.title = element_textbox_simple(size = 20, halign=0.5),
               plot.subtitle = element_text(hjust = 0.5, size = 10),
               axis.title = element_text(face='bold'),
               legend.text = element_text(size = 6),
@@ -434,16 +433,16 @@ server <- function(input, output, session) {
         arrange(date) %>%
         slice(tail(row_number(), 24))
       
-      if((max(data$Actual, na.rm = TRUE))*1.5 < 0){
+      if((max(data$Actual, na.rm = TRUE))*1.3 < 0){
         max_value <- 0
       } else {
-        max_value <- (max(data$Actual, na.rm = TRUE))*1.5
+        max_value <- (max(data$Actual, na.rm = TRUE))*1.3
       }
       
-      if( (min(data$Actual, na.rm = TRUE))*1.5 > 0){
+      if( (min(data$Actual, na.rm = TRUE))*1.3 > 0){
         min_value <- 0
       } else {
-        min_value <- (min(data$Actual, na.rm = TRUE))*1.5
+        min_value <- (min(data$Actual, na.rm = TRUE))*1.3
       }
       
       ggplot(data)  + 
@@ -483,16 +482,16 @@ server <- function(input, output, session) {
       data <- data %>% mutate(Variance_scaled = Variance.From.Budget.YTD * ratio)
       
       
-      if((max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5 < 0){
+      if((max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3 < 0){
         max_value <- 0
       } else {
-        max_value <- (max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5
+        max_value <- (max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3
       }
       
-      if((min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5 > 0){
+      if((min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3 > 0){
         min_value <- 0
       } else {
-        min_value <- (min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5
+        min_value <- (min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3
       }
       
       # Define different labels for metrics    
@@ -509,7 +508,7 @@ server <- function(input, output, session) {
         labs(x = "Date", y = y_label, 
              title = isolate(paste0("MSBI ", input$mshs_metrics , " Monthly Variance to Budget")),
              subtitle = paste0("($ in Thousands)"))+
-        theme(plot.title = element_text(hjust = 0.5, size = 20),
+        theme(plot.title = element_textbox_simple(size = 20, halign=0.5),
               plot.subtitle = element_text(hjust = 0.5, size = 10),
               axis.title = element_text(face='bold'),
               legend.text = element_text(size = 6),
@@ -568,16 +567,16 @@ server <- function(input, output, session) {
         slice(tail(row_number(), 24))
       
       
-      if((max(data$Actual, na.rm = TRUE))*1.5 < 0){
+      if((max(data$Actual, na.rm = TRUE))*1.3 < 0){
         max_value <- 0
       } else {
-        max_value <- (max(data$Actual, na.rm = TRUE))*1.5
+        max_value <- (max(data$Actual, na.rm = TRUE))*1.3
       }
       
-      if( (min(data$Actual, na.rm = TRUE))*1.5 > 0){
+      if( (min(data$Actual, na.rm = TRUE))*1.3 > 0){
         min_value <- 0
       } else {
-        min_value <- (min(data$Actual, na.rm = TRUE))*1.5
+        min_value <- (min(data$Actual, na.rm = TRUE))*1.3
       }
       
       ggplot(data)  + 
@@ -617,16 +616,16 @@ server <- function(input, output, session) {
       data <- data %>% mutate(Variance_scaled = Variance.From.Budget.YTD * ratio)
       
       
-      if((max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5 < 0){
+      if((max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3 < 0){
         max_value <- 0
       } else {
-        max_value <- (max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5
+        max_value <- (max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3
       }
       
-      if((min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5 > 0){
+      if((min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3 > 0){
         min_value <- 0
       } else {
-        min_value <- (min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5
+        min_value <- (min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3
       }
       
       # Define different labels for metrics    
@@ -643,7 +642,7 @@ server <- function(input, output, session) {
         labs(x = "Date", y = y_label, 
              title = isolate(paste0("MSH ", input$mshs_metrics , " Monthly Variance to Budget")),
              subtitle = paste0("($ in Thousands)"))+
-        theme(plot.title = element_text(hjust = 0.5, size = 20),
+        theme(plot.title = element_textbox_simple(size = 20, halign=0.5),
               plot.subtitle = element_text(hjust = 0.5, size = 10),
               axis.title = element_text(face='bold'),
               legend.text = element_text(size = 6),
@@ -700,16 +699,16 @@ server <- function(input, output, session) {
         arrange(date) %>%
         slice(tail(row_number(), 24))
       
-      if((max(data$Actual, na.rm = TRUE))*1.5 < 0){
+      if((max(data$Actual, na.rm = TRUE))*1.3 < 0){
         max_value <- 0
       } else {
-        max_value <- (max(data$Actual, na.rm = TRUE))*1.5
+        max_value <- (max(data$Actual, na.rm = TRUE))*1.3
       }
       
-      if( (min(data$Actual, na.rm = TRUE))*1.5 > 0){
+      if( (min(data$Actual, na.rm = TRUE))*1.3 > 0){
         min_value <- 0
       } else {
-        min_value <- (min(data$Actual, na.rm = TRUE))*1.5
+        min_value <- (min(data$Actual, na.rm = TRUE))*1.3
       }
       
       ggplot(data)  + 
@@ -723,7 +722,7 @@ server <- function(input, output, session) {
         )+
         geom_hline(aes(yintercept= 1), colour="#990000", linetype="dashed")+
         geom_hline(aes(yintercept = 0))+
-        theme(plot.title = element_text(hjust = 0.5, size = 20),
+        theme(plot.title = element_textbox_simple(size = 20, halign=0.5),
               plot.subtitle = element_text(hjust = 0.5, size = 10),
               axis.title = element_text(face = "bold"),
               legend.text = element_text(size = 6),
@@ -749,16 +748,16 @@ server <- function(input, output, session) {
       data <- data %>% mutate(Variance_scaled = Variance.From.Budget.YTD * ratio)
       
       
-      if((max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5 < 0){
+      if((max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3 < 0){
         max_value <- 0
       } else {
-        max_value <- (max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5
+        max_value <- (max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3
       }
       
-      if((min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5 > 0){
+      if((min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3 > 0){
         min_value <- 0
       } else {
-        min_value <- (min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5
+        min_value <- (min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3
       }
       
       # Define different labels for metrics    
@@ -775,7 +774,7 @@ server <- function(input, output, session) {
         labs(x = "Date", y = y_label, 
              title = isolate(paste0("MSM ", input$mshs_metrics , " Monthly Variance to Budget")),
              subtitle = paste0("($ in Thousands)"))+
-        theme(plot.title = element_text(hjust = 0.5, size = 20),
+        theme(plot.title = element_textbox_simple(size = 20, halign=0.5),
               plot.subtitle = element_text(hjust = 0.5, size = 10),
               axis.title = element_text(face='bold'),
               legend.text = element_text(size = 6),
@@ -832,16 +831,16 @@ server <- function(input, output, session) {
         arrange(date) %>%
         slice(tail(row_number(), 24))
       
-      if((max(data$Actual, na.rm = TRUE))*1.5 < 0){
+      if((max(data$Actual, na.rm = TRUE))*1.3 < 0){
         max_value <- 0
       } else {
-        max_value <- (max(data$Actual, na.rm = TRUE))*1.5
+        max_value <- (max(data$Actual, na.rm = TRUE))*1.3
       }
       
-      if( (min(data$Actual, na.rm = TRUE))*1.5 > 0){
+      if( (min(data$Actual, na.rm = TRUE))*1.3 > 0){
         min_value <- 0
       } else {
-        min_value <- (min(data$Actual, na.rm = TRUE))*1.5
+        min_value <- (min(data$Actual, na.rm = TRUE))*1.3
       }
       
       ggplot(data)  + 
@@ -881,16 +880,16 @@ server <- function(input, output, session) {
       data <- data %>% mutate(Variance_scaled = Variance.From.Budget.YTD * ratio)
       
       
-      if((max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5 < 0){
+      if((max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3 < 0){
         max_value <- 0
       } else {
-        max_value <- (max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5
+        max_value <- (max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3
       }
       
-      if((min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5 > 0){
+      if((min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3 > 0){
         min_value <- 0
       } else {
-        min_value <- (min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5
+        min_value <- (min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3
       }
       
       # Define different labels for metrics    
@@ -907,7 +906,7 @@ server <- function(input, output, session) {
         labs(x = "Date", y = y_label, 
              title = isolate(paste0("MSQ ", input$mshs_metrics , " Monthly Variance to Budget")),
              subtitle = paste0("($ in Thousands)"))+
-        theme(plot.title = element_text(hjust = 0.5, size = 20),
+        theme(plot.title = element_textbox_simple(size = 20, halign=0.5),
               plot.subtitle = element_text(hjust = 0.5, size = 10),
               axis.title = element_text(face='bold'),
               legend.text = element_text(size = 6),
@@ -964,16 +963,16 @@ server <- function(input, output, session) {
         arrange(date) %>%
         slice(tail(row_number(), 24))
       
-      if((max(data$Actual, na.rm = TRUE))*1.5 < 0){
+      if((max(data$Actual, na.rm = TRUE))*1.3 < 0){
         max_value <- 0
       } else {
-        max_value <- (max(data$Actual, na.rm = TRUE))*1.5
+        max_value <- (max(data$Actual, na.rm = TRUE))*1.3
       }
       
-      if( (min(data$Actual, na.rm = TRUE))*1.5 > 0){
+      if( (min(data$Actual, na.rm = TRUE))*1.3 > 0){
         min_value <- 0
       } else {
-        min_value <- (min(data$Actual, na.rm = TRUE))*1.5
+        min_value <- (min(data$Actual, na.rm = TRUE))*1.3
       }
       
       ggplot(data)  + 
@@ -1013,16 +1012,16 @@ server <- function(input, output, session) {
       data <- data %>% mutate(Variance_scaled = Variance.From.Budget.YTD * ratio)
       
       
-      if((max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5 < 0){
+      if((max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3 < 0){
         max_value <- 0
       } else {
-        max_value <- (max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5
+        max_value <- (max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3
       }
       
-      if((min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5 > 0){
+      if((min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3 > 0){
         min_value <- 0
       } else {
-        min_value <- (min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5
+        min_value <- (min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3
       }
       
       # Define different labels for metrics    
@@ -1039,7 +1038,7 @@ server <- function(input, output, session) {
         labs(x = "Date", y = y_label, 
              title = isolate(paste0("MSSN ", input$mshs_metrics , " Monthly Variance to Budget")),
              subtitle = paste0("($ in Thousands)"))+
-        theme(plot.title = element_text(hjust = 0.5, size = 20),
+        theme(plot.title = element_textbox_simple(size = 20, halign=0.5),
               plot.subtitle = element_text(hjust = 0.5, size = 10),
               axis.title = element_text(face='bold'),
               legend.text = element_text(size = 6),
@@ -1096,16 +1095,16 @@ server <- function(input, output, session) {
         arrange(date) %>%
         slice(tail(row_number(), 24))
       
-      if((max(data$Actual, na.rm = TRUE))*1.5 < 0){
+      if((max(data$Actual, na.rm = TRUE))*1.3 < 0){
         max_value <- 0
       } else {
-        max_value <- (max(data$Actual, na.rm = TRUE))*1.5
+        max_value <- (max(data$Actual, na.rm = TRUE))*1.3
       }
       
-      if( (min(data$Actual, na.rm = TRUE))*1.5 > 0){
+      if( (min(data$Actual, na.rm = TRUE))*1.3 > 0){
         min_value <- 0
       } else {
-        min_value <- (min(data$Actual, na.rm = TRUE))*1.5
+        min_value <- (min(data$Actual, na.rm = TRUE))*1.3
       }
       
       ggplot(data)  + 
@@ -1145,16 +1144,16 @@ server <- function(input, output, session) {
       data <- data %>% mutate(Variance_scaled = Variance.From.Budget.YTD * ratio)
       
       
-      if((max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5 < 0){
+      if((max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3 < 0){
         max_value <- 0
       } else {
-        max_value <- (max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5
+        max_value <- (max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3
       }
       
-      if((min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5 > 0){
+      if((min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3 > 0){
         min_value <- 0
       } else {
-        min_value <- (min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5
+        min_value <- (min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3
       }
       
       # Define different labels for metrics    
@@ -1171,7 +1170,7 @@ server <- function(input, output, session) {
         labs(x = "Date", y = y_label,  
              title = isolate(paste0("MSW ", input$mshs_metrics , " Monthly Variance to Budget")),
              subtitle = paste0("($ in Thousands)"))+
-        theme(plot.title = element_text(hjust = 0.5, size = 20),
+        theme(plot.title = element_textbox_simple(size = 20, halign=0.5),
               plot.subtitle = element_text(hjust = 0.5, size = 10),
               axis.title = element_text(face='bold'),
               legend.text = element_text(size = 6),
@@ -1230,16 +1229,16 @@ server <- function(input, output, session) {
         arrange(date) %>%
         slice(tail(row_number(), 24))
       
-      if((max(data$Actual, na.rm = TRUE))*1.5 < 0){
+      if((max(data$Actual, na.rm = TRUE))*1.3 < 0){
         max_value <- 0
       } else {
-        max_value <- (max(data$Actual, na.rm = TRUE))*1.5
+        max_value <- (max(data$Actual, na.rm = TRUE))*1.3
       }
       
-      if( (min(data$Actual, na.rm = TRUE))*1.5 > 0){
+      if( (min(data$Actual, na.rm = TRUE))*1.3 > 0){
         min_value <- 0
       } else {
-        min_value <- (min(data$Actual, na.rm = TRUE))*1.5
+        min_value <- (min(data$Actual, na.rm = TRUE))*1.3
       }
       
       ggplot(data)  + 
@@ -1279,16 +1278,16 @@ server <- function(input, output, session) {
       data <- data %>% mutate(Variance_scaled = Variance.From.Budget.YTD * ratio)
       
       
-      if((max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5 < 0){
+      if((max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3 < 0){
         max_value <- 0
       } else {
-        max_value <- (max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5
+        max_value <- (max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3
       }
       
-      if((min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5 > 0){
+      if((min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3 > 0){
         min_value <- 0
       } else {
-        min_value <- (min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.5
+        min_value <- (min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3
       }
       
       # Define different labels for metrics    
@@ -1306,7 +1305,7 @@ server <- function(input, output, session) {
         labs(x = "Date", y = y_label, 
              title = isolate(paste0("NYEE ", input$mshs_metrics , " Monthly Variance to Budget")),
              subtitle = paste0("($ in Thousands)"))+
-        theme(plot.title = element_text(hjust = 0.5, size = 20),
+        theme(plot.title = element_textbox_simple(size = 20, halign=0.5),
               plot.subtitle = element_text(hjust = 0.5, size = 10),
               axis.title = element_text(face='bold'),
               legend.text = element_text(size = 6),
@@ -1352,16 +1351,16 @@ server <- function(input, output, session) {
       # data <- new_repo %>% filter(Site == "MSHS" & Metrics == "CMI")
       
 
-      if((max(data$Variance, na.rm = TRUE))*1.5 < 0){
+      if((max(data$Variance, na.rm = TRUE))*1.3 < 0){
         max_value <- 0
       } else {
-        max_value <- (max(data$Variance, na.rm = TRUE))*1.5
+        max_value <- (max(data$Variance, na.rm = TRUE))*1.3
       }
       
-      if((min(data$Variance, na.rm = TRUE))*1.5 > 0){
+      if((min(data$Variance, na.rm = TRUE))*1.3 > 0){
         min_value <- 0
       } else {
-        min_value <- (min(data$Variance, na.rm = TRUE))*1.5
+        min_value <- (min(data$Variance, na.rm = TRUE))*1.3
       }
     
     # Define different labels for metrics    
@@ -1383,7 +1382,7 @@ server <- function(input, output, session) {
                   position = position_dodge(width = 1), fontface = "bold",
                   vjust = 0.5 - sign(data$Variance), size = 4)+
         scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
-        theme(plot.title = element_text(hjust = 0.5, size = 20),
+        theme(plot.title = element_textbox_simple(size = 20, halign=0.5),
               plot.subtitle = element_text(hjust = 0.5, size = 10),
               axis.title = element_text(face = "bold"),
               legend.text = element_text(size = 6),
@@ -1404,16 +1403,16 @@ server <- function(input, output, session) {
     # data <- new_repo %>% filter(Site == "MSHS" & Metrics == "CMI")
     
     
-    if((max(data$Variance, na.rm = TRUE))*1.5 < 0){
+    if((max(data$Variance, na.rm = TRUE))*1.3 < 0){
       max_value <- 0
     } else {
-      max_value <- (max(data$Variance, na.rm = TRUE))*1.5
+      max_value <- (max(data$Variance, na.rm = TRUE))*1.3
     }
     
-    if((min(data$Variance, na.rm = TRUE))*1.5 > 0){
+    if((min(data$Variance, na.rm = TRUE))*1.3 > 0){
       min_value <- 0
     } else {
-      min_value <- (min(data$Variance, na.rm = TRUE))*1.5
+      min_value <- (min(data$Variance, na.rm = TRUE))*1.3
     }
     
     # Define different labels for metrics    
@@ -1435,7 +1434,7 @@ server <- function(input, output, session) {
                 position = position_dodge(width = 1), fontface = "bold",
                 vjust = 0.5 - sign(data$Variance), size = 4)+
       scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
-      theme(plot.title = element_text(hjust = 0.5, size = 20),
+      theme(plot.title = element_textbox_simple(size = 20, halign=0.5),
             plot.subtitle = element_text(hjust = 0.5, size = 10),
             axis.title = element_text(face = "bold"),
             legend.text = element_text(size = 6),
@@ -1456,16 +1455,16 @@ server <- function(input, output, session) {
     # data <- new_repo %>% filter(Site == "MSHS" & Metrics == "CMI")
     
     
-    if((max(data$Variance, na.rm = TRUE))*1.5 < 0){
+    if((max(data$Variance, na.rm = TRUE))*1.3 < 0){
       max_value <- 0
     } else {
-      max_value <- (max(data$Variance, na.rm = TRUE))*1.5
+      max_value <- (max(data$Variance, na.rm = TRUE))*1.3
     }
     
-    if((min(data$Variance, na.rm = TRUE))*1.5 > 0){
+    if((min(data$Variance, na.rm = TRUE))*1.3 > 0){
       min_value <- 0
     } else {
-      min_value <- (min(data$Variance, na.rm = TRUE))*1.5
+      min_value <- (min(data$Variance, na.rm = TRUE))*1.3
     }
     
     # Define different labels for metrics    
@@ -1487,7 +1486,7 @@ server <- function(input, output, session) {
                 position = position_dodge(width = 1), fontface = "bold",
                 vjust = 0.5 - sign(data$Variance), size = 4)+
       scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
-      theme(plot.title = element_text(hjust = 0.5, size = 20),
+      theme(plot.title = element_textbox_simple(size = 20, halign=0.5),
             plot.subtitle = element_text(hjust = 0.5, size = 10),
             axis.title = element_text(face = "bold"),
             legend.text = element_text(size = 6),
@@ -1508,16 +1507,16 @@ server <- function(input, output, session) {
     # data <- new_repo %>% filter(Site == "MSHS" & Metrics == "CMI")
     
     
-    if((max(data$Variance, na.rm = TRUE))*1.5 < 0){
+    if((max(data$Variance, na.rm = TRUE))*1.3 < 0){
       max_value <- 0
     } else {
-      max_value <- (max(data$Variance, na.rm = TRUE))*1.5
+      max_value <- (max(data$Variance, na.rm = TRUE))*1.3
     }
     
-    if((min(data$Variance, na.rm = TRUE))*1.5 > 0){
+    if((min(data$Variance, na.rm = TRUE))*1.3 > 0){
       min_value <- 0
     } else {
-      min_value <- (min(data$Variance, na.rm = TRUE))*1.5
+      min_value <- (min(data$Variance, na.rm = TRUE))*1.3
     }
     
     # Define different labels for metrics    
@@ -1539,7 +1538,7 @@ server <- function(input, output, session) {
                 position = position_dodge(width = 1), fontface = "bold",
                 vjust = 0.5 - sign(data$Variance), size = 4)+
       scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
-      theme(plot.title = element_text(hjust = 0.5, size = 20),
+      theme(plot.title = element_textbox_simple(size = 20, halign=0.5),
             plot.subtitle = element_text(hjust = 0.5, size = 10),
             axis.title = element_text(face = "bold"),
             legend.text = element_text(size = 6),
@@ -1560,16 +1559,16 @@ server <- function(input, output, session) {
     # data <- new_repo %>% filter(Site == "MSHS" & Metrics == "CMI")
     
     
-    if((max(data$Variance, na.rm = TRUE))*1.5 < 0){
+    if((max(data$Variance, na.rm = TRUE))*1.3 < 0){
       max_value <- 0
     } else {
-      max_value <- (max(data$Variance, na.rm = TRUE))*1.5
+      max_value <- (max(data$Variance, na.rm = TRUE))*1.3
     }
     
-    if((min(data$Variance, na.rm = TRUE))*1.5 > 0){
+    if((min(data$Variance, na.rm = TRUE))*1.3 > 0){
       min_value <- 0
     } else {
-      min_value <- (min(data$Variance, na.rm = TRUE))*1.5
+      min_value <- (min(data$Variance, na.rm = TRUE))*1.3
     }
     
     # Define different labels for metrics    
@@ -1591,7 +1590,7 @@ server <- function(input, output, session) {
                 position = position_dodge(width = 1), fontface = "bold",
                 vjust = 0.5 - sign(data$Variance), size = 4)+
       scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
-      theme(plot.title = element_text(hjust = 0.5, size = 20),
+      theme(plot.title = element_textbox_simple(size = 20, halign=0.5),
             plot.subtitle = element_text(hjust = 0.5, size = 10),
             axis.title = element_text(face = "bold"),
             legend.text = element_text(size = 6),
@@ -1612,16 +1611,16 @@ server <- function(input, output, session) {
     # data <- new_repo %>% filter(Site == "MSHS" & Metrics == "CMI")
     
     
-    if((max(data$Variance, na.rm = TRUE))*1.5 < 0){
+    if((max(data$Variance, na.rm = TRUE))*1.3 < 0){
       max_value <- 0
     } else {
-      max_value <- (max(data$Variance, na.rm = TRUE))*1.5
+      max_value <- (max(data$Variance, na.rm = TRUE))*1.3
     }
     
-    if((min(data$Variance, na.rm = TRUE))*1.5 > 0){
+    if((min(data$Variance, na.rm = TRUE))*1.3 > 0){
       min_value <- 0
     } else {
-      min_value <- (min(data$Variance, na.rm = TRUE))*1.5
+      min_value <- (min(data$Variance, na.rm = TRUE))*1.3
     }
     
     # Define different labels for metrics    
@@ -1643,7 +1642,7 @@ server <- function(input, output, session) {
                 position = position_dodge(width = 1), fontface = "bold",
                 vjust = 0.5 - sign(data$Variance), size = 4)+
       scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
-      theme(plot.title = element_text(hjust = 0.5, size = 20),
+      theme(plot.title = element_textbox_simple(size = 20, halign=0.5),
             plot.subtitle = element_text(hjust = 0.5, size = 10),
             axis.title = element_text(face = "bold"),
             legend.text = element_text(size = 6),
@@ -1664,16 +1663,16 @@ server <- function(input, output, session) {
     # data <- new_repo %>% filter(Site == "MSHS" & Metrics == "CMI")
     
     
-    if((max(data$Variance, na.rm = TRUE))*1.5 < 0){
+    if((max(data$Variance, na.rm = TRUE))*1.3 < 0){
       max_value <- 0
     } else {
-      max_value <- (max(data$Variance, na.rm = TRUE))*1.5
+      max_value <- (max(data$Variance, na.rm = TRUE))*1.3
     }
     
-    if((min(data$Variance, na.rm = TRUE))*1.5 > 0){
+    if((min(data$Variance, na.rm = TRUE))*1.3 > 0){
       min_value <- 0
     } else {
-      min_value <- (min(data$Variance, na.rm = TRUE))*1.5
+      min_value <- (min(data$Variance, na.rm = TRUE))*1.3
     }
     
     # Define different labels for metrics    
@@ -1694,7 +1693,7 @@ server <- function(input, output, session) {
                 position = position_dodge(width = 1), fontface = "bold",
                 vjust = 0.5 - sign(data$Variance), size = 4)+
       scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
-      theme(plot.title = element_text(hjust = 0.5, size = 20),
+      theme(plot.title = element_textbox_simple(size = 20, halign=0.5),
             plot.subtitle = element_text(hjust = 0.5, size = 10),
             axis.title = element_text(face = "bold"),
             legend.text = element_text(size = 6),
@@ -1715,16 +1714,16 @@ server <- function(input, output, session) {
     # data <- new_repo %>% filter(Site == "MSHS" & Metrics == "CMI")
     
     
-    if((max(data$Variance, na.rm = TRUE))*1.5 < 0){
+    if((max(data$Variance, na.rm = TRUE))*1.3 < 0){
       max_value <- 0
     } else {
-      max_value <- (max(data$Variance, na.rm = TRUE))*1.5
+      max_value <- (max(data$Variance, na.rm = TRUE))*1.3
     }
     
-    if((min(data$Variance, na.rm = TRUE))*1.5 > 0){
+    if((min(data$Variance, na.rm = TRUE))*1.3 > 0){
       min_value <- 0
     } else {
-      min_value <- (min(data$Variance, na.rm = TRUE))*1.5
+      min_value <- (min(data$Variance, na.rm = TRUE))*1.3
     }
     
     # Define different labels for metrics    
@@ -1746,7 +1745,7 @@ server <- function(input, output, session) {
                 position = position_dodge(width = 1), fontface = "bold",
                 vjust = 0.5 - sign(data$Variance), size = 4)+
       scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
-      theme(plot.title = element_text(hjust = 0.5, size = 20),
+      theme(plot.title = element_textbox_simple(size = 20, halign=0.5),
             plot.subtitle = element_text(hjust = 0.5, size = 10),
             axis.title = element_text(face = "bold"),
             legend.text = element_text(size = 6),
@@ -1767,16 +1766,16 @@ server <- function(input, output, session) {
     # data <- new_repo %>% filter(Site == "MSHS" & Metrics == "CMI")
     
     
-    if((max(data$Variance, na.rm = TRUE))*1.5 < 0){
+    if((max(data$Variance, na.rm = TRUE))*1.3 < 0){
       max_value <- 0
     } else {
-      max_value <- (max(data$Variance, na.rm = TRUE))*1.5
+      max_value <- (max(data$Variance, na.rm = TRUE))*1.3
     }
     
-    if((min(data$Variance, na.rm = TRUE))*1.5 > 0){
+    if((min(data$Variance, na.rm = TRUE))*1.3 > 0){
       min_value <- 0
     } else {
-      min_value <- (min(data$Variance, na.rm = TRUE))*1.5
+      min_value <- (min(data$Variance, na.rm = TRUE))*1.3
     }
     
     # Define different labels for metrics    
@@ -1798,7 +1797,7 @@ server <- function(input, output, session) {
                 position = position_dodge(width = 1), fontface = "bold",
                 vjust = 0.5 - sign(data$Variance), size = 4)+
       scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
-      theme(plot.title = element_text(hjust = 0.5, size = 20),
+      theme(plot.title = element_textbox_simple(size = 20, halign=0.5),
             plot.subtitle = element_text(hjust = 0.5, size = 10),
             axis.title = element_text(face = "bold"),
             legend.text = element_text(size = 6),
@@ -1821,16 +1820,16 @@ server <- function(input, output, session) {
     validate(need(nrow(data) > 0, paste0(isolate(input$mshs_metrics_ytd), " is not available for MSHS")))
     
     
-    if( (max(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.5 < 0){
+    if( (max(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.3 < 0){
       max_value_ytd <- 0
     } else {
-      max_value_ytd <- (max(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.5
+      max_value_ytd <- (max(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.3
     }
     
-    if( (min(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.5 > 0){
+    if( (min(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.3 > 0){
       min_value_ytd <- 0
     } else {
-      min_value_ytd <- (min(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.5
+      min_value_ytd <- (min(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.3
     }
     
     ggplot(data)  + 
@@ -1841,7 +1840,7 @@ server <- function(input, output, session) {
       labs(x = "Date", y = "YTD Variance to Budget Ratio %" , 
            title = isolate(paste0("MSHS " , input$mshs_metrics_ytd, " YTD Variance to Budget Ratio" ))
       )+
-      theme(plot.title = element_text(hjust = 0.5, size = 20),
+      theme(plot.title = element_textbox_simple(size = 20, halign=0.5),
             plot.subtitle = element_text(hjust = 0.5, size = 10),
             axis.title = element_text(face = "bold"),
             legend.text = element_text(size = 6),
@@ -1868,16 +1867,16 @@ server <- function(input, output, session) {
     validate(need(nrow(data) > 0, paste0(isolate(input$mshs_metrics_ytd), " is not available for MSB")))
     
     
-    if( (max(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.5 < 0){
+    if( (max(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.3 < 0){
       max_value_ytd <- 0
     } else {
-      max_value_ytd <- (max(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.5
+      max_value_ytd <- (max(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.3
     }
     
-    if( (min(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.5 > 0){
+    if( (min(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.3 > 0){
       min_value_ytd <- 0
     } else {
-      min_value_ytd <- (min(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.5
+      min_value_ytd <- (min(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.3
     }
     
     ggplot(data)  + 
@@ -1888,7 +1887,7 @@ server <- function(input, output, session) {
       labs(x = "Date", y = "YTD Variance to Budget Ratio %" , 
            title = isolate(paste0("MSB " , input$mshs_metrics_ytd, " YTD Variance to Budget Ratio" ))
       )+
-      theme(plot.title = element_text(hjust = 0.5, size = 20),
+      theme(plot.title = element_textbox_simple(size = 20, halign=0.5),
             plot.subtitle = element_text(hjust = 0.5, size = 10),
             axis.title = element_text(face = "bold"),
             legend.text = element_text(size = 6),
@@ -1915,16 +1914,16 @@ server <- function(input, output, session) {
     validate(need(nrow(data) > 0, paste0(isolate(input$mshs_metrics_ytd), " is not available for MSBI")))
     
     
-    if( (max(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.5 < 0){
+    if( (max(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.3 < 0){
       max_value_ytd <- 0
     } else {
-      max_value_ytd <- (max(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.5
+      max_value_ytd <- (max(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.3
     }
     
-    if( (min(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.5 > 0){
+    if( (min(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.3 > 0){
       min_value_ytd <- 0
     } else {
-      min_value_ytd <- (min(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.5
+      min_value_ytd <- (min(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.3
     }
     
     ggplot(data)  + 
@@ -1935,7 +1934,7 @@ server <- function(input, output, session) {
       labs(x = "Date", y = "YTD Variance to Budget Ratio %" , 
            title = isolate(paste0("MSBI " , input$mshs_metrics_ytd, " YTD Variance to Budget Ratio" ))
       )+
-      theme(plot.title = element_text(hjust = 0.5, size = 20),
+      theme(plot.title = element_textbox_simple(size = 20, halign=0.5),
             plot.subtitle = element_text(hjust = 0.5, size = 10),
             axis.title = element_text(face = "bold"),
             legend.text = element_text(size = 6),
@@ -1962,16 +1961,16 @@ server <- function(input, output, session) {
     validate(need(nrow(data) > 0, paste0(isolate(input$mshs_metrics_ytd), " is not available for MSH")))
     
     
-    if( (max(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.5 < 0){
+    if( (max(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.3 < 0){
       max_value_ytd <- 0
     } else {
-      max_value_ytd <- (max(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.5
+      max_value_ytd <- (max(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.3
     }
     
-    if( (min(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.5 > 0){
+    if( (min(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.3 > 0){
       min_value_ytd <- 0
     } else {
-      min_value_ytd <- (min(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.5
+      min_value_ytd <- (min(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.3
     }
     
     ggplot(data)  + 
@@ -1982,7 +1981,7 @@ server <- function(input, output, session) {
       labs(x = "Date", y = "YTD Variance to Budget Ratio %" , 
            title = isolate(paste0("MSH " , input$mshs_metrics_ytd, " YTD Variance to Budget Ratio" ))
       )+
-      theme(plot.title = element_text(hjust = 0.5, size = 20),
+      theme(plot.title = element_textbox_simple(size = 20, halign=0.5),
             plot.subtitle = element_text(hjust = 0.5, size = 10),
             axis.title = element_text(face = "bold"),
             legend.text = element_text(size = 6),
@@ -2009,16 +2008,16 @@ server <- function(input, output, session) {
     validate(need(nrow(data) > 0, paste0(isolate(input$mshs_metrics_ytd), " is not available for MSM")))
     
     
-    if( (max(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.5 < 0){
+    if( (max(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.3 < 0){
       max_value_ytd <- 0
     } else {
-      max_value_ytd <- (max(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.5
+      max_value_ytd <- (max(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.3
     }
     
-    if( (min(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.5 > 0){
+    if( (min(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.3 > 0){
       min_value_ytd <- 0
     } else {
-      min_value_ytd <- (min(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.5
+      min_value_ytd <- (min(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.3
     }
     
     ggplot(data)  + 
@@ -2029,7 +2028,7 @@ server <- function(input, output, session) {
       labs(x = "Date", y = "YTD Variance to Budget Ratio %" , 
            title = isolate(paste0("MSM " , input$mshs_metrics_ytd, " YTD Variance to Budget Ratio" ))
       )+
-      theme(plot.title = element_text(hjust = 0.5, size = 20),
+      theme(plot.title = element_textbox_simple(size = 20, halign=0.5),
             plot.subtitle = element_text(hjust = 0.5, size = 10),
             axis.title = element_text(face = "bold"),
             legend.text = element_text(size = 6),
@@ -2056,16 +2055,16 @@ server <- function(input, output, session) {
     validate(need(nrow(data) > 0, paste0(isolate(input$mshs_metrics_ytd), " is not available for MSQ")))
     
     
-    if( (max(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.5 < 0){
+    if( (max(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.3 < 0){
       max_value_ytd <- 0
     } else {
-      max_value_ytd <- (max(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.5
+      max_value_ytd <- (max(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.3
     }
     
-    if( (min(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.5 > 0){
+    if( (min(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.3 > 0){
       min_value_ytd <- 0
     } else {
-      min_value_ytd <- (min(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.5
+      min_value_ytd <- (min(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.3
     }
     
     ggplot(data)  + 
@@ -2076,7 +2075,7 @@ server <- function(input, output, session) {
       labs(x = "Date", y = "YTD Variance to Budget Ratio %" , 
            title = isolate(paste0("MSQ " , input$mshs_metrics_ytd, " YTD Variance to Budget Ratio" ))
       )+
-      theme(plot.title = element_text(hjust = 0.5, size = 20),
+      theme(plot.title = element_textbox_simple(size = 20, halign=0.5),
             plot.subtitle = element_text(hjust = 0.5, size = 10),
             axis.title = element_text(face = "bold"),
             legend.text = element_text(size = 6),
@@ -2103,16 +2102,16 @@ server <- function(input, output, session) {
     validate(need(nrow(data) > 0, paste0(isolate(input$mshs_metrics_ytd), " is not available for MSSN")))
     
     
-    if( (max(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.5 < 0){
+    if( (max(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.3 < 0){
       max_value_ytd <- 0
     } else {
-      max_value_ytd <- (max(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.5
+      max_value_ytd <- (max(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.3
     }
     
-    if( (min(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.5 > 0){
+    if( (min(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.3 > 0){
       min_value_ytd <- 0
     } else {
-      min_value_ytd <- (min(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.5
+      min_value_ytd <- (min(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.3
     }
     
     ggplot(data)  + 
@@ -2123,7 +2122,7 @@ server <- function(input, output, session) {
       labs(x = "Date", y = "YTD Variance to Budget Ratio %" , 
            title = isolate(paste0("MSSN " , input$mshs_metrics_ytd, " YTD Variance to Budget Ratio" ))
       )+
-      theme(plot.title = element_text(hjust = 0.5, size = 20),
+      theme(plot.title = element_textbox_simple(size = 20, halign=0.5),
             plot.subtitle = element_text(hjust = 0.5, size = 10),
             axis.title = element_text(face = "bold"),
             legend.text = element_text(size = 6),
@@ -2150,16 +2149,16 @@ server <- function(input, output, session) {
     validate(need(nrow(data) > 0, paste0(isolate(input$mshs_metrics_ytd), " is not available for MSW")))
     
     
-    if( (max(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.5 < 0){
+    if( (max(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.3 < 0){
       max_value_ytd <- 0
     } else {
-      max_value_ytd <- (max(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.5
+      max_value_ytd <- (max(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.3
     }
     
-    if( (min(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.5 > 0){
+    if( (min(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.3 > 0){
       min_value_ytd <- 0
     } else {
-      min_value_ytd <- (min(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.5
+      min_value_ytd <- (min(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.3
     }
     
     ggplot(data)  + 
@@ -2170,7 +2169,7 @@ server <- function(input, output, session) {
       labs(x = "Date", y = "YTD Variance to Budget Ratio %" , 
            title = isolate(paste0("MSW " , input$mshs_metrics_ytd, " YTD Variance to Budget Ratio" ))
       )+
-      theme(plot.title = element_text(hjust = 0.5, size = 20),
+      theme(plot.title = element_textbox_simple(size = 20, halign=0.5),
             plot.subtitle = element_text(hjust = 0.5, size = 10),
             axis.title = element_text(face = "bold"),
             legend.text = element_text(size = 6),
@@ -2197,16 +2196,16 @@ server <- function(input, output, session) {
     validate(need(nrow(data) > 0, paste0(isolate(input$mshs_metrics_ytd), " is not available for NYEE")))
     
     
-    if( (max(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.5 < 0){
+    if( (max(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.3 < 0){
       max_value_ytd <- 0
     } else {
-      max_value_ytd <- (max(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.5
+      max_value_ytd <- (max(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.3
     }
     
-    if( (min(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.5 > 0){
+    if( (min(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.3 > 0){
       min_value_ytd <- 0
     } else {
-      min_value_ytd <- (min(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.5
+      min_value_ytd <- (min(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.3
     }
     
     ggplot(data)  + 
@@ -2217,7 +2216,7 @@ server <- function(input, output, session) {
       labs(x = "Date", y = "YTD Variance to Budget Ratio %" , 
            title = isolate(paste0("NYEE " , input$mshs_metrics_ytd, " YTD Variance to Budget Ratio" ))
       )+
-      theme(plot.title = element_text(hjust = 0.5, size = 20),
+      theme(plot.title = element_textbox_simple(size = 20, halign=0.5),
             plot.subtitle = element_text(hjust = 0.5, size = 10),
             axis.title = element_text(face = "bold"),
             legend.text = element_text(size = 6),
@@ -2255,16 +2254,16 @@ server <- function(input, output, session) {
     validate(need(nrow(data)>0, paste0("Expense to Revenue Ratio is not available for ", input$all_hospital)))
     
     
-    if((max(data$Actual, na.rm = TRUE))*1.5 < 0){
+    if((max(data$Actual, na.rm = TRUE))*1.3 < 0){
       max_value <- 0
     } else {
-      max_value <- (max(data$Actual, na.rm = TRUE))*1.5
+      max_value <- (max(data$Actual, na.rm = TRUE))*1.3
     }
     
-    if( (min(data$Actual, na.rm = TRUE))*1.5 > 0){
+    if( (min(data$Actual, na.rm = TRUE))*1.3 > 0){
       min_value <- 0
     } else {
-      min_value <- (min(data$Actual, na.rm = TRUE))*1.5
+      min_value <- (min(data$Actual, na.rm = TRUE))*1.3
     }
     
     ggplot(data)  + 
@@ -2277,7 +2276,7 @@ server <- function(input, output, session) {
       )+
       geom_hline(aes(yintercept= 1), colour="#990000", linetype="dashed")+
       geom_hline(aes(yintercept = 0))+
-      theme(plot.title = element_text(hjust = 0.5, size = 20),
+      theme(plot.title = element_textbox_simple(size = 20, halign=0.5),
             plot.subtitle = element_text(hjust = 0.5, size = 10),
             axis.title = element_text(face = "bold"),
             legend.text = element_text(size = 6),
@@ -2304,16 +2303,16 @@ server <- function(input, output, session) {
     validate(need(nrow(data)> 0, paste0("Total Hospital Revenue is not available for ",isolate(input$all_hospital))))
     
     
-    if( (max(data$Variance, na.rm = TRUE))*1.5 < 0){
+    if( (max(data$Variance, na.rm = TRUE))*1.3 < 0){
       max_value <- 0
     } else {
-      max_value <- (max(data$Variance, na.rm = TRUE))*1.5
+      max_value <- (max(data$Variance, na.rm = TRUE))*1.3
     }
     
-    if( (min(data$Variance, na.rm = TRUE))*1.5 > 0){
+    if( (min(data$Variance, na.rm = TRUE))*1.3 > 0){
       min_value <- 0
     } else {
-      min_value <- (min(data$Variance, na.rm = TRUE))*1.5
+      min_value <- (min(data$Variance, na.rm = TRUE))*1.3
     }
     
     ggplot(data)  + 
@@ -2321,7 +2320,7 @@ server <- function(input, output, session) {
       labs(x = "Date", y = "Variance to Budget $", 
            title = paste0(isolate(input$all_hospital) , " Total Hospital Revenue Monthly Variance to Budget"),
            subtitle = paste0("($ in Thousands)"))+
-      theme(plot.title = element_text(hjust = 0.5, size = 20),
+      theme(plot.title = element_textbox_simple(size = 20, halign=0.5),
             plot.subtitle = element_text(hjust = 0.5, size = 10),
             axis.title = element_text(face = "bold"),
             legend.text = element_text(size = 6),
@@ -2347,16 +2346,16 @@ server <- function(input, output, session) {
     
     validate(need(nrow(data)> 0, paste0("Total Hospital Expenses is not available for ", isolate(input$all_hospital))))
     
-    if( (max(data$Variance, na.rm = TRUE))*1.5 < 0){
+    if( (max(data$Variance, na.rm = TRUE))*1.3 < 0){
       max_value <- 0
     } else {
-      max_value <- (max(data$Variance, na.rm = TRUE))*1.5
+      max_value <- (max(data$Variance, na.rm = TRUE))*1.3
     }
     
-    if( (min(data$Variance, na.rm = TRUE))*1.5 > 0){
+    if( (min(data$Variance, na.rm = TRUE))*1.3 > 0){
       min_value <- 0
     } else {
-      min_value <- (min(data$Variance, na.rm = TRUE))*1.5
+      min_value <- (min(data$Variance, na.rm = TRUE))*1.3
     }
     
     ggplot(data)  + 
@@ -2364,7 +2363,7 @@ server <- function(input, output, session) {
       labs(x = "Date", y = "Variance to Budget $", 
            title = paste0(isolate(input$all_hospital) , " Total Hospital Expenses Monthly Variance to Budget"),
            subtitle = paste0("($ in Thousands)"))+
-      theme(plot.title = element_text(hjust = 0.5, size = 20),
+      theme(plot.title = element_textbox_simple(size = 20, halign=0.5),
             plot.subtitle = element_text(hjust = 0.5, size = 10),
             axis.title = element_text(face = "bold"),
             legend.text = element_text(size = 6),
@@ -2390,16 +2389,16 @@ server <- function(input, output, session) {
     validate(need(nrow(data)> 0, paste0("Discharges is not available for ", isolate(input$all_hospital))))
     
     
-    if( (max(data$Variance, na.rm = TRUE))*1.5 < 0){
+    if( (max(data$Variance, na.rm = TRUE))*1.3 < 0){
       max_value <- 0
     } else {
-      max_value <- (max(data$Variance, na.rm = TRUE))*1.5
+      max_value <- (max(data$Variance, na.rm = TRUE))*1.3
     }
     
-    if( (min(data$Variance, na.rm = TRUE))*1.5 > 0){
+    if( (min(data$Variance, na.rm = TRUE))*1.3 > 0){
       min_value <- 0
     } else {
-      min_value <- (min(data$Variance, na.rm = TRUE))*1.5
+      min_value <- (min(data$Variance, na.rm = TRUE))*1.3
     }
     
     ggplot(data)  + 
@@ -2407,7 +2406,7 @@ server <- function(input, output, session) {
       labs(x = "Date", y = "Variance to Budget", 
            title = paste0(isolate(input$all_hospital) , " Discharges Monthly Variance to Budget"),
            subtitle = paste0("($ in Thousands)"))+
-      theme(plot.title = element_text(hjust = 0.5, size = 20),
+      theme(plot.title = element_textbox_simple(size = 20, halign=0.5),
             plot.subtitle = element_text(hjust = 0.5, size = 10),
             axis.title = element_text(face = "bold"),
             legend.text = element_text(size = 6),
@@ -2432,16 +2431,16 @@ server <- function(input, output, session) {
     
     validate(need(nrow(data)> 0, paste0("CMI is not available for ", isolate(input$all_hospital))))
     
-    if( (max(data$Variance, na.rm = TRUE))*1.5 < 0){
+    if( (max(data$Variance, na.rm = TRUE))*1.3 < 0){
       max_value <- 0
     } else {
-      max_value <- (max(data$Variance, na.rm = TRUE))*1.5
+      max_value <- (max(data$Variance, na.rm = TRUE))*1.3
     }
     
-    if( (min(data$Variance, na.rm = TRUE))*1.5 > 0){
+    if( (min(data$Variance, na.rm = TRUE))*1.3 > 0){
       min_value <- 0
     } else {
-      min_value <- (min(data$Variance, na.rm = TRUE))*1.5
+      min_value <- (min(data$Variance, na.rm = TRUE))*1.3
     }
     
     ggplot(data)  + 
@@ -2449,7 +2448,7 @@ server <- function(input, output, session) {
       labs(x = "Date", y = "Variance to Budget", 
            title = paste0(isolate(input$all_hospital) , " CMI Monthly Variance to Budget"),
            subtitle = paste0("($ in Thousands)"))+
-      theme(plot.title = element_text(hjust = 0.5, size = 20),
+      theme(plot.title = element_textbox_simple(size = 20, halign=0.5),
             plot.subtitle = element_text(hjust = 0.5, size = 10),
             axis.title = element_text(face = "bold"),
             legend.text = element_text(size = 6),
@@ -2474,16 +2473,16 @@ server <- function(input, output, session) {
     
     validate(need(nrow(data)> 0, paste0("ALOS is not available for ", isolate(input$all_hospital))))
     
-    if( (max(data$Variance, na.rm = TRUE))*1.5 < 0){
+    if( (max(data$Variance, na.rm = TRUE))*1.3 < 0){
       max_value <- 0
     } else {
-      max_value <- (max(data$Variance, na.rm = TRUE))*1.5
+      max_value <- (max(data$Variance, na.rm = TRUE))*1.3
     }
     
-    if( (min(data$Variance, na.rm = TRUE))*1.5 > 0){
+    if( (min(data$Variance, na.rm = TRUE))*1.3 > 0){
       min_value <- 0
     } else {
-      min_value <- (min(data$Variance, na.rm = TRUE))*1.5
+      min_value <- (min(data$Variance, na.rm = TRUE))*1.3
     }
     
     ggplot(data)  + 
@@ -2491,7 +2490,7 @@ server <- function(input, output, session) {
       labs(x = "Date", y = "Variance to Budget", 
            title = paste0(isolate(input$all_hospital) , " ALOS Monthly Variance to Budget"),
            subtitle = paste0("($ in Thousands)"))+
-      theme(plot.title = element_text(hjust = 0.5, size = 20),
+      theme(plot.title = element_textbox_simple(size = 20, halign=0.5),
             plot.subtitle = element_text(hjust = 0.5, size = 10),
             axis.title = element_text(face = "bold"),
             legend.text = element_text(size = 6),
@@ -2517,16 +2516,16 @@ server <- function(input, output, session) {
     validate(need(nrow(data)> 0, paste0("Outpatient Revenue is not available for ", isolate(input$all_hospital))))
     
     
-    if( (max(data$Variance, na.rm = TRUE))*1.5 < 0){
+    if( (max(data$Variance, na.rm = TRUE))*1.3 < 0){
       max_value <- 0
     } else {
-      max_value <- (max(data$Variance, na.rm = TRUE))*1.5
+      max_value <- (max(data$Variance, na.rm = TRUE))*1.3
     }
     
-    if( (min(data$Variance, na.rm = TRUE))*1.5 > 0){
+    if( (min(data$Variance, na.rm = TRUE))*1.3 > 0){
       min_value <- 0
     } else {
-      min_value <- (min(data$Variance, na.rm = TRUE))*1.5
+      min_value <- (min(data$Variance, na.rm = TRUE))*1.3
     }
     
     ggplot(data)  + 
@@ -2534,7 +2533,7 @@ server <- function(input, output, session) {
       labs(x = "Date", y = "Variance to Budget $", 
            title = paste0(isolate(input$all_hospital) , " Outpatient Revenue Monthly Variance to Budget"),
            subtitle = paste0("($ in Thousands)"))+
-      theme(plot.title = element_text(hjust = 0.5, size = 20),
+      theme(plot.title = element_textbox_simple(size = 20, halign=0.5),
             plot.subtitle = element_text(hjust = 0.5, size = 10),
             axis.title = element_text(face = "bold"),
             legend.text = element_text(size = 6),
@@ -2559,16 +2558,16 @@ server <- function(input, output, session) {
     
     validate(need(nrow(data)> 0, paste0("340B/Other Operating Revenue is not available for ", isolate(input$all_hospital))))
     
-    if( (max(data$Variance, na.rm = TRUE))*1.5 < 0){
+    if( (max(data$Variance, na.rm = TRUE))*1.3 < 0){
       max_value <- 0
     } else {
-      max_value <- (max(data$Variance, na.rm = TRUE))*1.5
+      max_value <- (max(data$Variance, na.rm = TRUE))*1.3
     }
     
-    if( (min(data$Variance, na.rm = TRUE))*1.5 > 0){
+    if( (min(data$Variance, na.rm = TRUE))*1.3 > 0){
       min_value <- 0
     } else {
-      min_value <- (min(data$Variance, na.rm = TRUE))*1.5
+      min_value <- (min(data$Variance, na.rm = TRUE))*1.3
     }
     
     ggplot(data)  + 
@@ -2576,7 +2575,7 @@ server <- function(input, output, session) {
       labs(x = "Date", y = "Variance to Budget $", 
            title = paste0(isolate(input$all_hospital) , " 340B/Other Operating Revenue Monthly Variance to Budget"),
            subtitle = paste0("($ in Thousands)"))+
-      theme(plot.title = element_text(hjust = 0.5, size = 20),
+      theme(plot.title = element_textbox_simple(size = 20, halign=0.5),
             plot.subtitle = element_text(hjust = 0.5, size = 10),
             axis.title = element_text(face = "bold"),
             legend.text = element_text(size = 6),
@@ -2603,16 +2602,16 @@ server <- function(input, output, session) {
     
     
     
-    if( (max(data$Variance, na.rm = TRUE))*1.5 < 0){
+    if( (max(data$Variance, na.rm = TRUE))*1.3 < 0){
       max_value <- 0
     } else {
-      max_value <- (max(data$Variance, na.rm = TRUE))*1.5
+      max_value <- (max(data$Variance, na.rm = TRUE))*1.3
     }
     
-    if( (min(data$Variance, na.rm = TRUE))*1.5 > 0){
+    if( (min(data$Variance, na.rm = TRUE))*1.3 > 0){
       min_value <- 0
     } else {
-      min_value <- (min(data$Variance, na.rm = TRUE))*1.5
+      min_value <- (min(data$Variance, na.rm = TRUE))*1.3
     }
     
     ggplot(data)  + 
@@ -2620,7 +2619,7 @@ server <- function(input, output, session) {
       labs(x = "Date", y = "Variance to Budget $", 
            title = paste0(isolate(input$all_hospital) , " Salaries and Benefits Monthly Variance to Budget"),
            subtitle = paste0("($ in Thousands)"))+
-      theme(plot.title = element_text(hjust = 0.5, size = 20),
+      theme(plot.title = element_textbox_simple(size = 20, halign=0.5),
             plot.subtitle = element_text(hjust = 0.5, size = 10),
             axis.title = element_text(face = "bold"),
             legend.text = element_text(size = 6),
@@ -2647,16 +2646,16 @@ server <- function(input, output, session) {
     validate(need(nrow(data)> 0, paste0("Supplies & Expenses is not available for ", isolate(input$all_hospital))))
     
     
-    if( (max(data$Variance, na.rm = TRUE))*1.5 < 0){
+    if( (max(data$Variance, na.rm = TRUE))*1.3 < 0){
       max_value <- 0
     } else {
-      max_value <- (max(data$Variance, na.rm = TRUE))*1.5
+      max_value <- (max(data$Variance, na.rm = TRUE))*1.3
     }
     
-    if( (min(data$Variance, na.rm = TRUE))*1.5 > 0){
+    if( (min(data$Variance, na.rm = TRUE))*1.3 > 0){
       min_value <- 0
     } else {
-      min_value <- (min(data$Variance, na.rm = TRUE))*1.5
+      min_value <- (min(data$Variance, na.rm = TRUE))*1.3
     }
     
     ggplot(data)  + 
@@ -2664,7 +2663,7 @@ server <- function(input, output, session) {
       labs(x = "Date", y = "Variance to Budget $", 
            title = paste0(isolate(input$all_hospital) , " Supplies & Expenses Monthly Variance to Budget"),
            subtitle = paste0("($ in Thousands)"))+
-      theme(plot.title = element_text(hjust = 0.5, size = 20),
+      theme(plot.title = element_textbox_simple(size = 20, halign=0.5),
             plot.subtitle = element_text(hjust = 0.5, size = 10),
             axis.title = element_text(face = "bold"),
             legend.text = element_text(size = 6),
@@ -2691,16 +2690,16 @@ server <- function(input, output, session) {
     validate(need(nrow(data)> 0, paste0("Nursing Agency Costs is not available for ", isolate(input$all_hospital))))
     
     
-    if( (max(data$Variance, na.rm = TRUE))*1.5 < 0){
+    if( (max(data$Variance, na.rm = TRUE))*1.3 < 0){
       max_value <- 0
     } else {
-      max_value <- (max(data$Variance, na.rm = TRUE))*1.5
+      max_value <- (max(data$Variance, na.rm = TRUE))*1.3
     }
     
-    if( (min(data$Variance, na.rm = TRUE))*1.5 > 0){
+    if( (min(data$Variance, na.rm = TRUE))*1.3 > 0){
       min_value <- 0
     } else {
-      min_value <- (min(data$Variance, na.rm = TRUE))*1.5
+      min_value <- (min(data$Variance, na.rm = TRUE))*1.3
     }
     
     ggplot(data)  + 
@@ -2708,7 +2707,7 @@ server <- function(input, output, session) {
       labs(x = "Date", y = "Variance to Budget $", 
            title = paste0(isolate(input$all_hospital) , " Nursing Agency Costs Monthly Variance to Budget"),
            subtitle = paste0("($ in Thousands)"))+
-      theme(plot.title = element_text(hjust = 0.5, size = 20),
+      theme(plot.title = element_textbox_simple(size = 20, halign=0.5),
             plot.subtitle = element_text(hjust = 0.5, size = 10),
             axis.title = element_text(face = "bold"),
             legend.text = element_text(size = 6),
@@ -2735,16 +2734,16 @@ server <- function(input, output, session) {
     validate(need(nrow(data)> 0, paste0("CARTS is not available for ", isolate(input$all_hospital))))
     
     
-    if( (max(data$Variance, na.rm = TRUE))*1.5 < 0){
+    if( (max(data$Variance, na.rm = TRUE))*1.3 < 0){
       max_value <- 0
     } else {
-      max_value <- (max(data$Variance, na.rm = TRUE))*1.5
+      max_value <- (max(data$Variance, na.rm = TRUE))*1.3
     }
     
-    if( (min(data$Variance, na.rm = TRUE))*1.5 > 0){
+    if( (min(data$Variance, na.rm = TRUE))*1.3 > 0){
       min_value <- 0
     } else {
-      min_value <- (min(data$Variance, na.rm = TRUE))*1.5
+      min_value <- (min(data$Variance, na.rm = TRUE))*1.3
     }
     
     ggplot(data)  + 
@@ -2752,7 +2751,7 @@ server <- function(input, output, session) {
       labs(x = "Date", y = "Variance to Budget $", 
            title = paste0(isolate(input$all_hospital) , " CARTS Monthly Variance to Budget"),
            subtitle = paste0("($ in Thousands)"))+
-      theme(plot.title = element_text(hjust = 0.5, size = 20),
+      theme(plot.title = element_textbox_simple(size = 20, halign=0.5),
             plot.subtitle = element_text(hjust = 0.5, size = 10),
             axis.title = element_text(face = "bold"),
             legend.text = element_text(size = 6),
@@ -2800,7 +2799,7 @@ server <- function(input, output, session) {
             panel.grid.major = element_line(color = "lightgrey"),
             panel.grid.minor = element_line(color = "lightgrey"))+
       scale_x_discrete(limits = month.abb)+
-      scale_y_continuous(limits = c(0, max(data$Actual)*1.5), breaks= pretty_breaks())+
+      scale_y_continuous(limits = c(0, max(data$Actual)*1.3), breaks= pretty_breaks())+
       geom_text(aes(label= Actual, x=month, y= Actual), color="#212070",
                 position = position_dodge(width = 1), fontface = "bold",
                 vjust = 0.5 - sign(data$Actual), size = 4)+
