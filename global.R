@@ -20,9 +20,8 @@ library(shinyWidgets)
 })
 
 # Work directory
-#dir <- "C:/Users/aghaer01/Downloads/Metric_Trends_data/"
-dir <- "J:/deans/Presidents/HSPI-PM/Operations Planning/Financials/Metric Trends/"
-
+#dir <- "J:/deans/Presidents/HSPI-PM/Operations Planning/Financials/Metric Trends/"
+dir <- "/SharedDrive/deans/Presidents/HSPI-PM/Operations Planning/Financials/Metric Trends/"
   
 
 # Import data --------------------------------------------------------
@@ -39,7 +38,6 @@ raw_data_list <- file.info(list.files(path = paste0(dir,"Monthly Financial Data/
 # Select new data
 new_metric_data <- basename(rownames(raw_data_list))[!(basename(rownames(raw_data_list)) 
                                                                      %in% repo$Filename)]
-new_metric_data <-  "MSHG- Summary Financials June 2023v4.xlsm"
 
 if (length(new_metric_data) > 0) {
   
