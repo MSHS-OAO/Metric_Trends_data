@@ -2251,7 +2251,7 @@ server <- function(input, output, session) {
     
     #data <- new_repo %>% filter(Site == "MSHS", Metrics == "Expense to Revenue Ratio")
     
-    validate(need(nrow(data)>0, paste0("Expense to Revenue Ratio is not available for ", input$all_hospital)))
+    validate(need(nrow(data)>0, paste0("Expense to Revenue Ratio is not available for ", isolate(input$all_hospital))))
     
     
     if((max(data$Actual, na.rm = TRUE))*1.3 < 0){
@@ -2272,7 +2272,7 @@ server <- function(input, output, session) {
                 colour = "#212070", stat="identity", linewidth = 1.25)+
       geom_point(mapping = aes(date, Actual), colour = "#212070", size = 3) +
       labs(x = "Date", y = "Expense to Revenue Ratio" , 
-           title = isolate(paste0(input$all_hospital, " Expense to Revenue Ratio"))
+           title = paste0(isolate(input$all_hospital), " Expense to Revenue Ratio")
       )+
       geom_hline(aes(yintercept= 1), colour="#990000", linetype="dashed")+
       geom_hline(aes(yintercept = 0))+
