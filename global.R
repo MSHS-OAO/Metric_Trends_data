@@ -83,7 +83,7 @@ data <- data %>%
   filter(Metrics %in% c("Total Hospital Revenue", "Total Hospital Expenses", 
                         "Salaries & Wages", "Contractual & Other Benefits",
                         "Discharges", "Average Length of Stay", "Outpatient",
-                        "Other Operating", "340B Pharmacy Program", "CARTS", 
+                        "Other Operating", "CARTS", "340B Pharmacy Program",
                         "CMI", "Nursing Agency Costs", "Supplies & Expenses"))
 
 
@@ -171,14 +171,15 @@ operating <- operating %>%
          year = unique(data$year))
 
 
-
 # Bind data and salary
 data <- rbind(data, operating)  
 
 # Removed unnecessary Metrics
-data <- data %>% 
+data <- data %>%
   filter(!(Metrics %in% c("Salaries & Wages", "Contractual & Other Benefits",
                       "340B Pharmacy Program", "Other Operating")))
+
+
 
 data <- data %>%
   mutate(Metrics = ifelse(Metrics == "Outpatient", "Outpatient Revenue", Metrics),
@@ -188,8 +189,7 @@ data <- data %>%
 actual <- data %>%
   select("Metrics", "Filename", "month", "year", matches("Actual"))%>%
   gather(-c("Metrics", "Filename", "month", "year"), key = Site, value = Actual) %>%
-  mutate(Site = gsub("\\-.*","", Site)) %>%
-  mutate(Actual = round(as.numeric(Actual), 2))
+  mutate(Site = gsub("\\-.*","", Site)) 
 
 # subset budget data
 budget <- data %>%
@@ -233,8 +233,10 @@ new_repo <- new_repo %>%
 # fill na with zero if one of the Actual or Budget is available 
 new_repo <- new_repo %>% mutate(Actual = ifelse(!is.na(Budget) & is.na(Actual), 0, Actual),
                                      Budget = ifelse(is.na(Budget) & !is.na(Actual), 0, Budget))
+                                     
 
-
+new_repo <- new_repo %>% mutate(Actual = round(Actual, 3), 
+                                Budget = round(Budget, 3))
 
 # for these metrics YTD variance = (budget - Actual)/budget
 metrics_dif <- c("CARTS", "Nursing Agency Costs", "Salaries and Benefits", 
@@ -255,8 +257,8 @@ new_repo <- new_repo %>%
   mutate(Actual_YTD = cumsum(Actual),
          Budget_YTD = cumsum(Budget), 
          Variance.From.Budget.YTD = ifelse(Metrics %in% metrics_dif, 
-                                           round((Budget_YTD - Actual_YTD)/Budget_YTD, 2),
-                                           round((Actual_YTD - Budget_YTD)/Budget_YTD, 2)))
+                                           round(100*(Budget_YTD - Actual_YTD)/Budget_YTD, 1),
+                                           round(100*(Actual_YTD - Budget_YTD)/Budget_YTD, 1)))
 
 
 new_repo <- new_repo %>%

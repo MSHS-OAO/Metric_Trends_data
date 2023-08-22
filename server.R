@@ -237,7 +237,7 @@ server <- function(input, output, session) {
       p1 <- ggplot(data)  + 
         geom_bar(aes(x=date, y= Variance), stat="identity", fill= "#06ABEB")+
         labs(x = "Date", y = y_label, 
-            title = isolate(paste0("MSH ", input$mshs_metrics , " Monthly Variance to Budget")),
+            title = isolate(paste0("MSHS ", input$mshs_metrics , " Monthly Variance to Budget")),
              subtitle = paste0("($ in Thousands)"))+
         theme(plot.title = element_text(hjust = 0.5, size = 20),
               plot.subtitle = element_text(hjust = 0.5, size = 10),

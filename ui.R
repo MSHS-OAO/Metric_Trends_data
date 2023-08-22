@@ -114,6 +114,8 @@ ui <- dashboardPage(
                                pickerInput("mshs_date_range", label = NULL, multiple = TRUE,
                                            options = pickerOptions(
                                            actionsBox = TRUE,
+                                           selectedTextFormat = "count > 1", 
+                                           countSelectedText = "{0}/{1} Dates",
                                            dropupAuto = FALSE),
                                            choices = date_options, 
                                            selected = date_options)),
@@ -170,6 +172,8 @@ ui <- dashboardPage(
                                  pickerInput("var_date_range", label = NULL, multiple = TRUE,
                                              options = pickerOptions(
                                              actionsBox = TRUE,
+                                             selectedTextFormat = "count > 1", 
+                                             countSelectedText = "{0}/{1} Dates",
                                              dropupAuto = FALSE),
                                              choices = date_options, 
                                              selected = date_options)),
@@ -226,6 +230,8 @@ ui <- dashboardPage(
                                  pickerInput("mshs_date_range_ytd", label = NULL, multiple = TRUE,
                                              options = pickerOptions(
                                                actionsBox = TRUE,
+                                               selectedTextFormat = "count > 1", 
+                                               countSelectedText = "{0}/{1} Dates",
                                                dropupAuto = FALSE),
                                              choices = date_options, 
                                              selected = date_options)),
@@ -306,6 +312,8 @@ ui <- dashboardPage(
                                            multiple = TRUE,
                                            options = pickerOptions(
                                                      actionsBox = TRUE,
+                                                     selectedTextFormat = "count > 1", 
+                                                     countSelectedText = "{0}/{1} Dates",
                                                      dropupAuto = FALSE),
                                            choices = date_options, 
                                            selected = date_options)),
@@ -398,6 +406,8 @@ ui <- dashboardPage(
                                pickerInput("ratio_date_range", label = NULL, multiple = TRUE,
                                            options = pickerOptions(
                                              actionsBox = TRUE,
+                                             selectedTextFormat = "count > 1", 
+                                             countSelectedText = "{0}/{1} Dates",
                                              dropupAuto = FALSE),
                                            choices = ratio_date_option,
                                            selected = ratio_date_option[1:24])),
