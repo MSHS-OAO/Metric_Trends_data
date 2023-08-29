@@ -35,7 +35,7 @@ server <- function(input, output, session) {
         system_text()
       })
     }
-    if(input$tabSwitch == "Variance to Budget") {
+    if(input$tabSwitch == "Monthly Variance to Budget") {
       output$mshs_date_show  <- renderText({
         var_text()
       })
@@ -160,7 +160,7 @@ server <- function(input, output, session) {
       data <- rbind(history, data) %>%
         mutate(Actual = round(Actual, 2))%>%
         arrange(date) %>%
-        slice(tail(row_number(), 24))
+        slice(tail(row_number(), 12))
       
       
       if((max(data$Actual, na.rm = TRUE))*1.3 < 0){
@@ -190,7 +190,8 @@ server <- function(input, output, session) {
               plot.subtitle = element_text(hjust = 0.5, size = 10),
               axis.title = element_text(face = "bold"),
               legend.text = element_text(size = 6),
-              axis.text.x = element_text(angle = 45, hjust = 0.5),
+              axis.text.x = element_text(angle = 45, hjust = 0.5, face = "bold"),
+              axis.text.y = element_text(face = "bold"),
               legend.position = "none")+
         geom_text(aes(label= Actual, 
                       x=date, y= Actual),
@@ -237,12 +238,15 @@ server <- function(input, output, session) {
       p1 <- ggplot(data)  + 
         geom_bar(aes(x=date, y= Variance), stat="identity", fill= "#06ABEB")+
         labs(x = "Date", y = y_label, 
-            title = isolate(paste0("MSHS ", input$mshs_metrics , " Monthly Variance to Budget")),
+            title = isolate(paste0("MSHS ", input$mshs_metrics , 
+                                   " Monthly Variance to Budget")),
              subtitle = paste0("($ in Thousands)"))+
-        theme(plot.title = element_text(hjust = 0.5, size = 20),
+        theme(plot.title = element_textbox_simple(size = 15, halign=0.5),
               plot.subtitle = element_text(hjust = 0.5, size = 10),
               axis.title = element_text(face='bold'),
               legend.text = element_text(size = 6),
+              axis.text.x = element_text(angle = 0, hjust = 0.5, face = "bold"),
+              axis.text.y = element_text(face = "bold"),
               legend.position = "non")+
         geom_text(aes(label= text_label,
                       x=date, y= Variance, color = sign),
@@ -295,7 +299,7 @@ server <- function(input, output, session) {
       data <- rbind(history, data) %>%
         mutate(Actual = round(Actual, 2))%>%
         arrange(date) %>%
-        slice(tail(row_number(), 24))
+        slice(tail(row_number(), 12))
       
       
       if((max(data$Actual, na.rm = TRUE))*1.3 < 0){
@@ -325,7 +329,8 @@ server <- function(input, output, session) {
               plot.subtitle = element_text(hjust = 0.5, size = 10),
               axis.title = element_text(face = "bold"),
               legend.text = element_text(size = 6),
-              axis.text.x = element_text(angle = 45, hjust = 0.5),
+              axis.text.x = element_text(angle = 45, hjust = 0.5, face = "bold"),
+              axis.text.y = element_text(face = "bold"),
               legend.position = "none")+
         geom_text(aes(label= Actual, 
                       x=date, y= Actual),
@@ -374,10 +379,12 @@ server <- function(input, output, session) {
         labs(x = "Date", y = y_label, 
               title = isolate(paste0("MSB ", input$mshs_metrics , " Monthly Variance to Budget")),
              subtitle = paste0("($ in Thousands)"))+
-        theme(plot.title = element_textbox_simple(size = 20, halign=0.5),
+        theme(plot.title = element_textbox_simple(size = 15, halign=0.5),
               plot.subtitle = element_text(hjust = 0.5, size = 10),
               axis.title = element_text(face='bold'),
               legend.text = element_text(size = 6),
+              axis.text.x = element_text(angle = 0, hjust = 0.5, face = "bold"),
+              axis.text.y = element_text(face = "bold"),
               legend.position = "non")+
         geom_text(aes(label= text_label,
                       x=date, y= Variance, color = sign),
@@ -431,7 +438,7 @@ server <- function(input, output, session) {
       data <- rbind(history, data) %>%
         mutate(Actual = round(Actual, 2))%>%
         arrange(date) %>%
-        slice(tail(row_number(), 24))
+        slice(tail(row_number(), 12))
       
       if((max(data$Actual, na.rm = TRUE))*1.3 < 0){
         max_value <- 0
@@ -460,7 +467,8 @@ server <- function(input, output, session) {
               plot.subtitle = element_text(hjust = 0.5, size = 10),
               axis.title = element_text(face = "bold"),
               legend.text = element_text(size = 6),
-              axis.text.x = element_text(angle = 45, hjust = 0.5),
+              axis.text.x = element_text(angle = 45, hjust = 0.5, face = "bold"),
+              axis.text.y = element_text(face = "bold"),
               legend.position = "none")+
         geom_text(aes(label= Actual, 
                       x=date, y= Actual),
@@ -508,10 +516,12 @@ server <- function(input, output, session) {
         labs(x = "Date", y = y_label, 
              title = isolate(paste0("MSBI ", input$mshs_metrics , " Monthly Variance to Budget")),
              subtitle = paste0("($ in Thousands)"))+
-        theme(plot.title = element_textbox_simple(size = 20, halign=0.5),
+        theme(plot.title = element_textbox_simple(size = 15, halign=0.5),
               plot.subtitle = element_text(hjust = 0.5, size = 10),
               axis.title = element_text(face='bold'),
               legend.text = element_text(size = 6),
+              axis.text.x = element_text(angle = 0, hjust = 0.5, face = "bold"),
+              axis.text.y = element_text(face = "bold"),
               legend.position = "non")+
         geom_text(aes(label= text_label,
                       x=date, y= Variance, color = sign),
@@ -564,7 +574,7 @@ server <- function(input, output, session) {
       data <- rbind(history, data) %>%
         mutate(Actual = round(Actual, 2))%>%
         arrange(date) %>%
-        slice(tail(row_number(), 24))
+        slice(tail(row_number(), 12))
       
       
       if((max(data$Actual, na.rm = TRUE))*1.3 < 0){
@@ -594,7 +604,8 @@ server <- function(input, output, session) {
               plot.subtitle = element_text(hjust = 0.5, size = 10),
               axis.title = element_text(face = "bold"),
               legend.text = element_text(size = 6),
-              axis.text.x = element_text(angle = 45, hjust = 0.5),
+              axis.text.x = element_text(angle = 45, hjust = 0.5, face = "bold"),
+              axis.text.y = element_text(face = "bold"),
               legend.position = "none")+
         geom_text(aes(label= Actual, 
                       x=date, y= Actual),
@@ -642,10 +653,12 @@ server <- function(input, output, session) {
         labs(x = "Date", y = y_label, 
              title = isolate(paste0("MSH ", input$mshs_metrics , " Monthly Variance to Budget")),
              subtitle = paste0("($ in Thousands)"))+
-        theme(plot.title = element_textbox_simple(size = 20, halign=0.5),
+        theme(plot.title = element_textbox_simple(size = 15, halign=0.5),
               plot.subtitle = element_text(hjust = 0.5, size = 10),
               axis.title = element_text(face='bold'),
               legend.text = element_text(size = 6),
+              axis.text.x = element_text(angle = 0, hjust = 0.5, face = "bold"),
+              axis.text.y = element_text(face = "bold"),
               legend.position = "non")+
         geom_text(aes(label= text_label,
                       x=date, y= Variance, color = sign),
@@ -697,7 +710,7 @@ server <- function(input, output, session) {
       data <- rbind(history, data) %>%
         mutate(Actual = round(Actual, 2))%>%
         arrange(date) %>%
-        slice(tail(row_number(), 24))
+        slice(tail(row_number(), 12))
       
       if((max(data$Actual, na.rm = TRUE))*1.3 < 0){
         max_value <- 0
@@ -726,7 +739,8 @@ server <- function(input, output, session) {
               plot.subtitle = element_text(hjust = 0.5, size = 10),
               axis.title = element_text(face = "bold"),
               legend.text = element_text(size = 6),
-              axis.text.x = element_text(angle = 45, hjust = 0.5),
+              axis.text.x = element_text(angle = 45, hjust = 0.5, face = "bold"),
+              axis.text.y = element_text(face = "bold"),
               legend.position = "none")+
         geom_text(aes(label= Actual, 
                       x=date, y= Actual),
@@ -774,9 +788,11 @@ server <- function(input, output, session) {
         labs(x = "Date", y = y_label, 
              title = isolate(paste0("MSM ", input$mshs_metrics , " Monthly Variance to Budget")),
              subtitle = paste0("($ in Thousands)"))+
-        theme(plot.title = element_textbox_simple(size = 20, halign=0.5),
+        theme(plot.title = element_textbox_simple(size = 15, halign=0.5),
               plot.subtitle = element_text(hjust = 0.5, size = 10),
               axis.title = element_text(face='bold'),
+              axis.text.x = element_text(angle = 0, hjust = 0.5, face = "bold"),
+              axis.text.y = element_text(face = "bold"),
               legend.text = element_text(size = 6),
               legend.position = "non")+
         geom_text(aes(label= text_label,
@@ -829,7 +845,7 @@ server <- function(input, output, session) {
       data <- rbind(history, data) %>%
         mutate(Actual = round(Actual, 2))%>%
         arrange(date) %>%
-        slice(tail(row_number(), 24))
+        slice(tail(row_number(), 12))
       
       if((max(data$Actual, na.rm = TRUE))*1.3 < 0){
         max_value <- 0
@@ -858,7 +874,8 @@ server <- function(input, output, session) {
               plot.subtitle = element_text(hjust = 0.5, size = 10),
               axis.title = element_text(face = "bold"),
               legend.text = element_text(size = 6),
-              axis.text.x = element_text(angle = 45, hjust = 0.5),
+              axis.text.x = element_text(angle = 45, hjust = 0.5, face = "bold"),
+              axis.text.y = element_text(face = "bold"),
               legend.position = "none")+
         geom_text(aes(label= Actual, 
                       x=date, y= Actual),
@@ -906,10 +923,12 @@ server <- function(input, output, session) {
         labs(x = "Date", y = y_label, 
              title = isolate(paste0("MSQ ", input$mshs_metrics , " Monthly Variance to Budget")),
              subtitle = paste0("($ in Thousands)"))+
-        theme(plot.title = element_textbox_simple(size = 20, halign=0.5),
+        theme(plot.title = element_textbox_simple(size = 15, halign=0.5),
               plot.subtitle = element_text(hjust = 0.5, size = 10),
               axis.title = element_text(face='bold'),
               legend.text = element_text(size = 6),
+              axis.text.x = element_text(angle = 0, hjust = 0.5, face = "bold"),
+              axis.text.y = element_text(face = "bold"),
               legend.position = "non")+
         geom_text(aes(label= text_label,
                       x=date, y= Variance, color = sign),
@@ -961,7 +980,7 @@ server <- function(input, output, session) {
       data <- rbind(history, data) %>%
         mutate(Actual = round(Actual, 2))%>%
         arrange(date) %>%
-        slice(tail(row_number(), 24))
+        slice(tail(row_number(), 12))
       
       if((max(data$Actual, na.rm = TRUE))*1.3 < 0){
         max_value <- 0
@@ -990,7 +1009,8 @@ server <- function(input, output, session) {
               plot.subtitle = element_text(hjust = 0.5, size = 10),
               axis.title = element_text(face = "bold"),
               legend.text = element_text(size = 6),
-              axis.text.x = element_text(angle = 45, hjust = 0.5),
+              axis.text.x = element_text(angle = 45, hjust = 0.5, face = "bold"),
+              axis.text.y = element_text(face = "bold"),
               legend.position = "none")+
         geom_text(aes(label= Actual, 
                       x=date, y= Actual),
@@ -1038,9 +1058,11 @@ server <- function(input, output, session) {
         labs(x = "Date", y = y_label, 
              title = isolate(paste0("MSSN ", input$mshs_metrics , " Monthly Variance to Budget")),
              subtitle = paste0("($ in Thousands)"))+
-        theme(plot.title = element_textbox_simple(size = 20, halign=0.5),
+        theme(plot.title = element_textbox_simple(size = 15, halign=0.5),
               plot.subtitle = element_text(hjust = 0.5, size = 10),
               axis.title = element_text(face='bold'),
+              axis.text.x = element_text(angle = 0, hjust = 0.5, face = "bold"),
+              axis.text.y = element_text(face = "bold"),
               legend.text = element_text(size = 6),
               legend.position = "non")+
         geom_text(aes(label= text_label,
@@ -1093,7 +1115,7 @@ server <- function(input, output, session) {
       data <- rbind(history, data) %>%
         mutate(Actual = round(Actual, 2))%>%
         arrange(date) %>%
-        slice(tail(row_number(), 24))
+        slice(tail(row_number(), 12))
       
       if((max(data$Actual, na.rm = TRUE))*1.3 < 0){
         max_value <- 0
@@ -1122,7 +1144,8 @@ server <- function(input, output, session) {
               plot.subtitle = element_text(hjust = 0.5, size = 10),
               axis.title = element_text(face = "bold"),
               legend.text = element_text(size = 6),
-              axis.text.x = element_text(angle = 45, hjust = 0.5),
+              axis.text.x = element_text(angle = 45, hjust = 0.5, face = "bold"),
+              axis.text.y = element_text(face = "bold"),
               legend.position = "none")+
         geom_text(aes(label= Actual, 
                       x=date, y= Actual),
@@ -1170,10 +1193,12 @@ server <- function(input, output, session) {
         labs(x = "Date", y = y_label,  
              title = isolate(paste0("MSW ", input$mshs_metrics , " Monthly Variance to Budget")),
              subtitle = paste0("($ in Thousands)"))+
-        theme(plot.title = element_textbox_simple(size = 20, halign=0.5),
+        theme(plot.title = element_textbox_simple(size = 15, halign=0.5),
               plot.subtitle = element_text(hjust = 0.5, size = 10),
               axis.title = element_text(face='bold'),
               legend.text = element_text(size = 6),
+              axis.text.x = element_text(angle = 45, hjust = 0.5, face = "bold"),
+              axis.text.y = element_text(face = "bold"),
               legend.position = "non")+
         geom_text(aes(label= text_label,
                       x=date, y= Variance, color = sign),
@@ -1227,7 +1252,7 @@ server <- function(input, output, session) {
       data <- rbind(history, data) %>%
         mutate(Actual = round(Actual, 2))%>%
         arrange(date) %>%
-        slice(tail(row_number(), 24))
+        slice(tail(row_number(), 12))
       
       if((max(data$Actual, na.rm = TRUE))*1.3 < 0){
         max_value <- 0
@@ -1256,7 +1281,8 @@ server <- function(input, output, session) {
               plot.subtitle = element_text(hjust = 0.5, size = 10),
               axis.title = element_text(face = "bold"),
               legend.text = element_text(size = 6),
-              axis.text.x = element_text(angle = 45, hjust = 0.5),
+              axis.text.x = element_text(angle = 15, hjust = 0.5, face = "bold"),
+              axis.text.y = element_text(face = "bold"),
               legend.position = "none")+
         geom_text(aes(label= Actual, 
                       x=date, y= Actual),
@@ -1305,10 +1331,12 @@ server <- function(input, output, session) {
         labs(x = "Date", y = y_label, 
              title = isolate(paste0("NYEE ", input$mshs_metrics , " Monthly Variance to Budget")),
              subtitle = paste0("($ in Thousands)"))+
-        theme(plot.title = element_textbox_simple(size = 20, halign=0.5),
+        theme(plot.title = element_textbox_simple(size = 15, halign=0.5),
               plot.subtitle = element_text(hjust = 0.5, size = 10),
               axis.title = element_text(face='bold'),
               legend.text = element_text(size = 6),
+              axis.text.x = element_text(angle = 0, hjust = 0.5, face = "bold"),
+              axis.text.y = element_text(face = "bold"),
               legend.position = "non")+
         geom_text(aes(label= text_label,
                       x=date, y= Variance, color = sign),
