@@ -248,7 +248,7 @@ server <- function(input, output, session) {
               axis.text.x = element_text(angle = 0, hjust = 0.5, face = "bold"),
               axis.text.y = element_text(face = "bold"),
               legend.position = "non")+
-        geom_text(aes(label= text_label,
+        geom_text_repel(aes(label= text_label,
                       x=date, y= Variance, color = sign),
                   position = position_dodge(width = 1), fontface = "bold",
                   vjust = 0.5 - sign(data$Variance), size = 4)+
@@ -386,7 +386,7 @@ server <- function(input, output, session) {
               axis.text.x = element_text(angle = 0, hjust = 0.5, face = "bold"),
               axis.text.y = element_text(face = "bold"),
               legend.position = "non")+
-        geom_text(aes(label= text_label,
+        geom_text_repel(aes(label= text_label,
                       x=date, y= Variance, color = sign),
                   position = position_dodge(width = 1), fontface = "bold",
                   vjust = 0.5 - sign(data$Variance), size = 4)+
@@ -523,7 +523,7 @@ server <- function(input, output, session) {
               axis.text.x = element_text(angle = 0, hjust = 0.5, face = "bold"),
               axis.text.y = element_text(face = "bold"),
               legend.position = "non")+
-        geom_text(aes(label= text_label,
+        geom_text_repel(aes(label= text_label,
                       x=date, y= Variance, color = sign),
                   position = position_dodge(width = 1), fontface = "bold",
                   vjust = 0.5 - sign(data$Variance), size = 4)+
@@ -660,7 +660,7 @@ server <- function(input, output, session) {
               axis.text.x = element_text(angle = 0, hjust = 0.5, face = "bold"),
               axis.text.y = element_text(face = "bold"),
               legend.position = "non")+
-        geom_text(aes(label= text_label,
+        geom_text_repel(aes(label= text_label,
                       x=date, y= Variance, color = sign),
                   position = position_dodge(width = 1), fontface = "bold",
                   vjust = 0.5 - sign(data$Variance), size = 4)+
@@ -795,7 +795,7 @@ server <- function(input, output, session) {
               axis.text.y = element_text(face = "bold"),
               legend.text = element_text(size = 6),
               legend.position = "non")+
-        geom_text(aes(label= text_label,
+        geom_text_repel(aes(label= text_label,
                       x=date, y= Variance, color = sign),
                   position = position_dodge(width = 1), fontface = "bold",
                   vjust = 0.5 - sign(data$Variance), size = 4)+
@@ -930,7 +930,7 @@ server <- function(input, output, session) {
               axis.text.x = element_text(angle = 0, hjust = 0.5, face = "bold"),
               axis.text.y = element_text(face = "bold"),
               legend.position = "non")+
-        geom_text(aes(label= text_label,
+        geom_text_repel(aes(label= text_label,
                       x=date, y= Variance, color = sign),
                   position = position_dodge(width = 1), fontface = "bold",
                   vjust = 0.5 - sign(data$Variance), size = 4)+
@@ -1065,7 +1065,7 @@ server <- function(input, output, session) {
               axis.text.y = element_text(face = "bold"),
               legend.text = element_text(size = 6),
               legend.position = "non")+
-        geom_text(aes(label= text_label,
+        geom_text_repel(aes(label= text_label,
                       x=date, y= Variance, color = sign),
                   position = position_dodge(width = 1), fontface = "bold",
                   vjust = 0.5 - sign(data$Variance), size = 4)+
@@ -1200,7 +1200,7 @@ server <- function(input, output, session) {
               axis.text.x = element_text(angle = 45, hjust = 0.5, face = "bold"),
               axis.text.y = element_text(face = "bold"),
               legend.position = "non")+
-        geom_text(aes(label= text_label,
+        geom_text_repel(aes(label= text_label,
                       x=date, y= Variance, color = sign),
                   position = position_dodge(width = 1), fontface = "bold",
                   vjust = 0.5 - sign(data$Variance), size = 4)+
@@ -1338,7 +1338,7 @@ server <- function(input, output, session) {
               axis.text.x = element_text(angle = 0, hjust = 0.5, face = "bold"),
               axis.text.y = element_text(face = "bold"),
               legend.position = "non")+
-        geom_text(aes(label= text_label,
+        geom_text_repel(aes(label= text_label,
                       x=date, y= Variance, color = sign),
                   position = position_dodge(width = 1), fontface = "bold",
                   vjust = 0.5 - sign(data$Variance), size = 4)+
@@ -2820,10 +2820,10 @@ server <- function(input, output, session) {
             legend.justification='center',
             legend.direction='horizontal',
             axis.title = element_text(face = "bold"),
-            legend.text = element_text(size = 6),
+            legend.text = element_text(size = 10),
             legend.title = element_text(size = 10),
-            axis.text.x = element_text(angle = 0, hjust = 0.5, size = 10),
-            axis.text.y = element_text(size = 10),
+            axis.text.x = element_text(angle = 0, hjust = 0.5, size = 10, face = "bold"),
+            axis.text.y = element_text(size = 10, face = "bold"),
             panel.grid.major = element_line(color = "lightgrey"),
             panel.grid.minor = element_line(color = "lightgrey"))+
       scale_x_discrete(limits = month.abb)+
