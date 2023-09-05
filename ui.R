@@ -290,9 +290,19 @@ ui <- dashboardPage(
               tags$head(tags$style(
                HTML(paste("#all_filters_update {background-color: #d80b8c;color: #FFFFFF;",
                                               "font-size: 18px}")))),
+        
+              tags$head(tags$style(
+               HTML(paste("#all_filters_update_var {background-color: #d80b8c;color: #FFFFFF;",
+                           "font-size: 18px}")))),
+        
+              tags$head(tags$style(
+                HTML(paste("#all_filters_update_ytd {background-color: #d80b8c;color: #FFFFFF;",
+                     "font-size: 18px}")))),
+        
               fluidRow(
                 tags$style(
                   HTML(".box.box-solid.box-primary>.box-header {background:#221f72; color:#fff}")),
+                
                 column(12,
                        box(
                          title = NULL, width = 12, status = "primary",

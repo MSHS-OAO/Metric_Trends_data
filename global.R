@@ -360,3 +360,71 @@ metric_choices <- metric_choices[- index]
 
 ratio_date_option <- sort(c( unique(Exp_Rev_Ratio$date), date_options), 
                           decreasing = TRUE)
+
+
+
+
+# graph functions
+ratio_graph <- function(data, site, min, max) {
+  
+  ggplot(data)  + 
+    geom_rect(xmin= 0, xmax= Inf , ymin = 1, ymax= Inf, fill= "#8f8ce0", alpha=0.02)+
+    geom_line(aes(x=date, y= Actual, group = 1), 
+              colour = "#212070", stat="identity", linewidth = 1.25)+
+    geom_point(mapping = aes(date, Actual),
+               colour = "#212070", size = 3) +
+    labs(x = "Date", y = "Expense to Revenue Ratio" , 
+         title = paste0(site, " Expense to Revenue Ratio" )
+    )+
+    geom_hline(aes(yintercept= 1), colour="#990000", linetype="dashed")+
+    geom_hline(aes(yintercept = 0))+
+    theme(plot.title = element_text(hjust = 0.5, size = 20),
+          plot.subtitle = element_text(hjust = 0.5, size = 10),
+          axis.title = element_text(face = "bold"),
+          legend.text = element_text(size = 6),
+          axis.text.x = element_text(angle = 45, hjust = 0.5, face = "bold"),
+          axis.text.y = element_text(face = "bold"),
+          legend.position = "none")+
+    geom_text(aes(label= Actual, 
+                  x=date, y= Actual),
+              position = position_dodge(width = 1), fontface = "bold",
+              vjust = 0.5 - sign(data$Actual), size = 4)+
+    scale_y_continuous(limits=c(min, max))
+}
+
+
+graph_style <- function(data, site, metric,  min, max, text, y_label, ratio){
+  p1 <- ggplot(data)  + 
+    geom_bar(aes(x=date, y= Variance), stat="identity", fill= "#b2b3b2")+
+    labs(x = "Date", y = y_label, 
+         title = paste0(site, " ", metric , " Monthly Variance to Budget"),
+         subtitle = paste0("($ in Thousands)"))+
+    theme(plot.title = element_textbox_simple(size = 15, halign=0.5),
+          plot.subtitle = element_text(hjust = 0.5, size = 10),
+          axis.title = element_text(face='bold'),
+          legend.text = element_text(size = 6),
+          axis.text.x = element_text(angle = 0, hjust = 0.5, face = "bold"),
+          axis.text.y = element_text(face = "bold"),
+          legend.position = "non")+
+    geom_text_repel(aes(label= text_label,
+                        x=date, y= Variance, color = sign),
+                    position = position_dodge(width = 1), fontface = "bold",
+                    vjust = 0.5 - sign(data$Variance), size = 3)+
+    scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
+    geom_hline(aes(yintercept = 0)) 
+  
+  p1 <- p1 +
+    geom_line(mapping = aes(date, Variance_scaled, group = 1),
+              colour = "#212070", linewidth = 1.0) +
+    geom_point(mapping = aes(date, Variance_scaled),
+               colour = "#212070", size = 1.6) +
+    scale_y_continuous(limits=c(min, max), 
+                       sec.axis = ggplot2::sec_axis(~. / ratio , 
+                                                    labels = scales::label_percent(scale = 1),
+                                                    name = "YTD Variance To Budget Ratio %"))+
+    geom_text_repel(aes(label= paste0(data$ratio_label, "%"), 
+                        x=date, y= Variance_scaled , color = sign.YTD),
+                    position = position_dodge(width = 1), fontface='bold',
+                    vjust = 0.5 - sign(data$Variance.From.Budget.YTD), size = 3 )
+  return(p1)
+  }

@@ -141,8 +141,11 @@ server <- function(input, output, session) {
     data <- mshs_data() %>%
       filter(Site == "MSHS")%>%
       #mutate(date= as.yearmon(date, "%Y-%m"))%>%
-      mutate(sign = ifelse(Variance > 0, "positive", "negative"),
-             sign.YTD = ifelse(Variance.From.Budget.YTD > 0, "positive", "negative"))
+      mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
+             sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
+             text_label = ifelse(Variance <0 , paste0("(", abs(as.numeric(Variance)), ")"), Variance),
+             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
+                                  Variance.From.Budget.YTD))
     
     validate(need(nrow(data) > 0, paste0(isolate(input$mshs_metrics), " is not available for MSHS")))
     
@@ -175,29 +178,7 @@ server <- function(input, output, session) {
         min_value <- (min(data$Actual, na.rm = TRUE))*1.3
       }
       
-      ggplot(data)  + 
-        geom_rect(xmin= 0, xmax= Inf , ymin = 1, ymax= Inf, fill= "#8f8ce0", alpha=0.02)+
-        geom_line(aes(x=date, y= Actual, group = 1), 
-                  colour = "#212070", stat="identity", linewidth = 1.25)+
-        geom_point(mapping = aes(date, Actual),
-                   colour = "#212070", size = 3) +
-        labs(x = "Date", y = "Expense to Revenue Ratio" , 
-             title = isolate(paste0("MSHS Expense to Revenue Ratio" ))
-        )+
-        geom_hline(aes(yintercept= 1), colour="#990000", linetype="dashed")+
-        geom_hline(aes(yintercept = 0))+
-        theme(plot.title = element_text(hjust = 0.5, size = 20),
-              plot.subtitle = element_text(hjust = 0.5, size = 10),
-              axis.title = element_text(face = "bold"),
-              legend.text = element_text(size = 6),
-              axis.text.x = element_text(angle = 45, hjust = 0.5, face = "bold"),
-              axis.text.y = element_text(face = "bold"),
-              legend.position = "none")+
-        geom_text(aes(label= Actual, 
-                      x=date, y= Actual),
-                  position = position_dodge(width = 1), fontface = "bold",
-                  vjust = 0.5 - sign(data$Actual), size = 4)+
-        scale_y_continuous(limits=c(min_value, max_value))
+      ratio_graph(data, site = "MSHS", min = min_value, max = max_value)
       
     } else {
       
@@ -277,11 +258,16 @@ server <- function(input, output, session) {
   
   ### MSB -------------------------------------
   output$msb_plot <- renderPlot({
-    data <- mshs_data() %>%
+    data <- mshs_data()  %>%
       filter(Site == "MSB")%>%
       #mutate(date= as.yearmon(date, "%Y-%m"))%>%
-      mutate(sign = ifelse(Variance > 0, "positive", "negative"),
-             sign.YTD = ifelse(Variance.From.Budget.YTD > 0, "positive", "negative"))
+      mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
+             sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
+             text_label = ifelse(Variance <0 , paste0("(", abs(as.numeric(Variance)), ")"), Variance),
+             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
+                                    Variance.From.Budget.YTD))
+             
+      
     
     validate(need(nrow(data) > 0, paste0(isolate(input$mshs_metrics), " is not available for MSB")))
     
@@ -314,29 +300,8 @@ server <- function(input, output, session) {
         min_value <- (min(data$Actual, na.rm = TRUE))*1.3
       }
       
-      ggplot(data)  + 
-        geom_rect(xmin= 0, xmax= Inf , ymin = 1, ymax= Inf, fill= "#8f8ce0", alpha=0.02)+
-        geom_line(aes(x=date, y= Actual, group = 1), 
-                  colour = "#212070", stat="identity", linewidth = 1.25)+
-        geom_point(mapping = aes(date, Actual),
-                   colour = "#212070", size = 3) +
-        labs(x = "Date", y = "Expense to Revenue Ratio" , 
-             title = isolate(paste0("MSB Expense to Revenue Ratio" ))
-        )+
-        geom_hline(aes(yintercept= 1), colour="#990000", linetype="dashed")+
-        geom_hline(aes(yintercept = 0))+
-        theme(plot.title = element_text(hjust = 0.5, size = 20),
-              plot.subtitle = element_text(hjust = 0.5, size = 10),
-              axis.title = element_text(face = "bold"),
-              legend.text = element_text(size = 6),
-              axis.text.x = element_text(angle = 45, hjust = 0.5, face = "bold"),
-              axis.text.y = element_text(face = "bold"),
-              legend.position = "none")+
-        geom_text(aes(label= Actual, 
-                      x=date, y= Actual),
-                  position = position_dodge(width = 1), fontface = "bold",
-                  vjust = 0.5 - sign(data$Actual), size = 4)+
-        scale_y_continuous(limits=c(min_value, max_value))
+      ratio_graph(data, site = "MSB", min = min_value, max = max_value)
+      
       
     } else {
       
@@ -373,41 +338,44 @@ server <- function(input, output, session) {
         y_label <- "Variance to Budget $"
       }
       
+      metric_choice <- isolate(input$mshs_metrics)
+      graph_style(data, site = "MSB", metric = metric_choice, min =  min_value,
+            max = max_value, text = text_label, y_label = y_label, ratio = ratio)
       
-      p1 <- ggplot(data)  + 
-        geom_bar(aes(x=date, y= Variance), stat="identity", fill= "#06ABEB")+
-        labs(x = "Date", y = y_label, 
-              title = isolate(paste0("MSB ", input$mshs_metrics , " Monthly Variance to Budget")),
-             subtitle = paste0("($ in Thousands)"))+
-        theme(plot.title = element_textbox_simple(size = 15, halign=0.5),
-              plot.subtitle = element_text(hjust = 0.5, size = 10),
-              axis.title = element_text(face='bold'),
-              legend.text = element_text(size = 6),
-              axis.text.x = element_text(angle = 0, hjust = 0.5, face = "bold"),
-              axis.text.y = element_text(face = "bold"),
-              legend.position = "non")+
-        geom_text_repel(aes(label= text_label,
-                      x=date, y= Variance, color = sign),
-                  position = position_dodge(width = 1), fontface = "bold",
-                  vjust = 0.5 - sign(data$Variance), size = 4)+
-        scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
-        geom_hline(aes(yintercept = 0)) 
-      
-      p1 <- p1 +
-        geom_line(mapping = aes(date, Variance_scaled, group = 1),
-                  colour = "#212070", linewidth = 1.25) +
-        geom_point(mapping = aes(date, Variance_scaled),
-                   colour = "#212070", size = 2.6) +
-        scale_y_continuous(limits=c(min_value, max_value), 
-                           sec.axis = ggplot2::sec_axis(~. / ratio , 
-                                                        labels = scales::label_percent(scale = 1),
-                                                        name = "YTD Variance To Budget Ratio %"))+
-        geom_text_repel(aes(label= paste0(`Variance.From.Budget.YTD`, "%"), 
-                            x=date, y= Variance_scaled , color = sign.YTD),
-                        position = position_dodge(width = 1), fontface='bold',
-                        vjust = 0.5 - sign(data$Variance.From.Budget.YTD), size = 4 )
-      
-      p1
+      # p1 <- ggplot(data)  + 
+      #   geom_bar(aes(x=date, y= Variance), stat="identity", fill= "#06ABEB")+
+      #   labs(x = "Date", y = y_label, 
+      #         title = isolate(paste0("MSB ", input$mshs_metrics , " Monthly Variance to Budget")),
+      #        subtitle = paste0("($ in Thousands)"))+
+      #   theme(plot.title = element_textbox_simple(size = 15, halign=0.5),
+      #         plot.subtitle = element_text(hjust = 0.5, size = 10),
+      #         axis.title = element_text(face='bold'),
+      #         legend.text = element_text(size = 6),
+      #         axis.text.x = element_text(angle = 0, hjust = 0.5, face = "bold"),
+      #         axis.text.y = element_text(face = "bold"),
+      #         legend.position = "non")+
+      #   geom_text_repel(aes(label= text_label,
+      #                 x=date, y= Variance, color = sign),
+      #             position = position_dodge(width = 1), fontface = "bold",
+      #             vjust = 0.5 - sign(data$Variance), size = 4)+
+      #   scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
+      #   geom_hline(aes(yintercept = 0)) 
+      # 
+      # p1 <- p1 +
+      #   geom_line(mapping = aes(date, Variance_scaled, group = 1),
+      #             colour = "#212070", linewidth = 1.25) +
+      #   geom_point(mapping = aes(date, Variance_scaled),
+      #              colour = "#212070", size = 2.6) +
+      #   scale_y_continuous(limits=c(min_value, max_value), 
+      #                      sec.axis = ggplot2::sec_axis(~. / ratio , 
+      #                                                   labels = scales::label_percent(scale = 1),
+      #                                                   name = "YTD Variance To Budget Ratio %"))+
+      #   geom_text_repel(aes(label= paste0(`Variance.From.Budget.YTD`, "%"), 
+      #                       x=date, y= Variance_scaled , color = sign.YTD),
+      #                   position = position_dodge(width = 1), fontface='bold',
+      #                   vjust = 0.5 - sign(data$Variance.From.Budget.YTD), size = 4 )
+      # 
+      # p1
       
     }
     
@@ -419,8 +387,11 @@ server <- function(input, output, session) {
     data <- mshs_data() %>%
       filter(Site == "MSBI")%>%
       #mutate(date= as.yearmon(date, "%Y-%m"))%>%
-      mutate(sign = ifelse(Variance > 0, "positive", "negative"),
-             sign.YTD = ifelse(Variance.From.Budget.YTD > 0, "positive", "negative"))
+      mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
+             sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
+             text_label = ifelse(Variance <0 , paste0("(", abs(as.numeric(Variance)), ")"), Variance),
+             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
+                                  Variance.From.Budget.YTD))
     
     validate(need(nrow(data) > 0, paste0(isolate(input$mshs_metrics), " is not available for MSBI")))
     
@@ -452,29 +423,7 @@ server <- function(input, output, session) {
         min_value <- (min(data$Actual, na.rm = TRUE))*1.3
       }
       
-      ggplot(data)  + 
-        geom_rect(xmin= 0, xmax= Inf , ymin = 1, ymax= Inf, fill= "#8f8ce0", alpha=0.02)+
-        geom_line(aes(x=date, y= Actual, group = 1), 
-                  colour = "#212070", stat="identity", linewidth = 1.25)+
-        geom_point(mapping = aes(date, Actual),
-                   colour = "#212070", size = 3) +
-        labs(x = "Date", y = "Expense to Revenue Ratio" , 
-             title = isolate(paste0("MSBI Expense to Revenue Ratio" ))
-        )+
-        geom_hline(aes(yintercept= 1), colour="#990000", linetype="dashed")+
-        geom_hline(aes(yintercept = 0))+
-        theme(plot.title = element_text(hjust = 0.5, size = 20),
-              plot.subtitle = element_text(hjust = 0.5, size = 10),
-              axis.title = element_text(face = "bold"),
-              legend.text = element_text(size = 6),
-              axis.text.x = element_text(angle = 45, hjust = 0.5, face = "bold"),
-              axis.text.y = element_text(face = "bold"),
-              legend.position = "none")+
-        geom_text(aes(label= Actual, 
-                      x=date, y= Actual),
-                  position = position_dodge(width = 1), fontface = "bold",
-                  vjust = 0.5 - sign(data$Actual), size = 4)+
-        scale_y_continuous(limits=c(min_value, max_value))
+      ratio_graph(data, site = "MSBI", min = min_value, max = max_value)
       
     } else {
       
@@ -555,8 +504,11 @@ server <- function(input, output, session) {
     data <- mshs_data() %>%
       filter(Site == "MSH")%>%
       #mutate(date= as.yearmon(date, "%Y-%m"))%>%
-      mutate(sign = ifelse(Variance > 0, "positive", "negative"),
-             sign.YTD = ifelse(Variance.From.Budget.YTD > 0, "positive", "negative"))
+      mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
+             sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
+             text_label = ifelse(Variance <0 , paste0("(", abs(as.numeric(Variance)), ")"), Variance),
+             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
+                                  Variance.From.Budget.YTD))
     
     validate(need(nrow(data) > 0, paste0(isolate(input$mshs_metrics), " is not available for MSH")))
     
@@ -589,29 +541,7 @@ server <- function(input, output, session) {
         min_value <- (min(data$Actual, na.rm = TRUE))*1.3
       }
       
-      ggplot(data)  + 
-        geom_rect(xmin= 0, xmax= Inf , ymin = 1, ymax= Inf, fill= "#8f8ce0", alpha=0.02)+
-        geom_line(aes(x=date, y= Actual, group = 1), 
-                  colour = "#212070", stat="identity", linewidth = 1.25)+
-        geom_point(mapping = aes(date, Actual),
-                   colour = "#212070", size = 3) +
-        labs(x = "Date", y = "Expense to Revenue Ratio" , 
-             title = isolate(paste0("MSH Expense to Revenue Ratio" ))
-        )+
-        geom_hline(aes(yintercept= 1), colour="#990000", linetype="dashed")+
-        geom_hline(aes(yintercept = 0))+
-        theme(plot.title = element_text(hjust = 0.5, size = 20),
-              plot.subtitle = element_text(hjust = 0.5, size = 10),
-              axis.title = element_text(face = "bold"),
-              legend.text = element_text(size = 6),
-              axis.text.x = element_text(angle = 45, hjust = 0.5, face = "bold"),
-              axis.text.y = element_text(face = "bold"),
-              legend.position = "none")+
-        geom_text(aes(label= Actual, 
-                      x=date, y= Actual),
-                  position = position_dodge(width = 1), fontface = "bold",
-                  vjust = 0.5 - sign(data$Actual), size = 4)+
-        scale_y_continuous(limits=c(min_value, max_value))
+      ratio_graph(data, site = "MSH", min = min_value, max = max_value)
       
     } else {
       
@@ -692,8 +622,11 @@ server <- function(input, output, session) {
     data <- mshs_data() %>%
       filter(Site == "MSM")%>%
       #mutate(date= as.yearmon(date, "%Y-%m"))%>%
-      mutate(sign = ifelse(Variance > 0, "positive", "negative"),
-             sign.YTD = ifelse(Variance.From.Budget.YTD > 0, "positive", "negative"))
+      mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
+             sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
+             text_label = ifelse(Variance <0 , paste0("(", abs(as.numeric(Variance)), ")"), Variance),
+             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
+                                  Variance.From.Budget.YTD))
     
     validate(need(nrow(data) > 0, paste0(isolate(input$mshs_metrics), " is not available for MSM")))
     
@@ -724,30 +657,7 @@ server <- function(input, output, session) {
         min_value <- (min(data$Actual, na.rm = TRUE))*1.3
       }
       
-      ggplot(data)  + 
-        geom_rect(xmin= 0, xmax= Inf , ymin = 1, ymax= Inf, fill= "#8f8ce0", alpha=0.02)+
-        geom_line(aes(x=date, y= Actual, group = 1), 
-                  colour = "#212070", stat="identity", linewidth = 1.25)+
-        geom_point(mapping = aes(date, Actual),
-                   colour = "#212070", size = 3) +
-        labs(x = "Date", y = "Expense to Revenue Ratio" , 
-             title = isolate(paste0("MSM Expense to Revenue Ratio" ))
-        )+
-        geom_hline(aes(yintercept= 1), colour="#990000", linetype="dashed")+
-        geom_hline(aes(yintercept = 0))+
-        theme(plot.title = element_textbox_simple(size = 20, halign=0.5),
-              plot.subtitle = element_text(hjust = 0.5, size = 10),
-              axis.title = element_text(face = "bold"),
-              legend.text = element_text(size = 6),
-              axis.text.x = element_text(angle = 45, hjust = 0.5, face = "bold"),
-              axis.text.y = element_text(face = "bold"),
-              legend.position = "none")+
-        geom_text(aes(label= Actual, 
-                      x=date, y= Actual),
-                  position = position_dodge(width = 1), fontface = "bold",
-                  vjust = 0.5 - sign(data$Actual), size = 4)+
-        scale_y_continuous(limits=c(min_value, max_value))
-      
+      ratio_graph(data, site = "MSM", min = min_value, max = max_value)
     } else {
       
       # data <- new_repo %>% filter(Site == "MSB" & Metrics == "CMI")
@@ -827,8 +737,11 @@ server <- function(input, output, session) {
     data <- mshs_data() %>%
       filter(Site == "MSQ")%>%
       #mutate(date= as.yearmon(date, "%Y-%m"))%>%
-      mutate(sign = ifelse(Variance > 0, "positive", "negative"),
-             sign.YTD = ifelse(Variance.From.Budget.YTD > 0, "positive", "negative"))
+      mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
+             sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
+             text_label = ifelse(Variance <0 , paste0("(", abs(as.numeric(Variance)), ")"), Variance),
+             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
+                                  Variance.From.Budget.YTD))
     
     validate(need(nrow(data) > 0, paste0(isolate(input$mshs_metrics), " is not available for MSQ")))
     
@@ -859,29 +772,7 @@ server <- function(input, output, session) {
         min_value <- (min(data$Actual, na.rm = TRUE))*1.3
       }
       
-      ggplot(data)  + 
-        geom_rect(xmin= 0, xmax= Inf , ymin = 1, ymax= Inf, fill= "#8f8ce0", alpha=0.02)+
-        geom_line(aes(x=date, y= Actual, group = 1), 
-                  colour = "#212070", stat="identity", linewidth = 1.25)+
-        geom_point(mapping = aes(date, Actual),
-                   colour = "#212070", size = 3) +
-        labs(x = "Date", y = "Expense to Revenue Ratio" , 
-             title = isolate(paste0("MSQ Expense to Revenue Ratio" ))
-        )+
-        geom_hline(aes(yintercept= 1), colour="#990000", linetype="dashed")+
-        geom_hline(aes(yintercept = 0))+
-        theme(plot.title = element_text(hjust = 0.5, size = 20),
-              plot.subtitle = element_text(hjust = 0.5, size = 10),
-              axis.title = element_text(face = "bold"),
-              legend.text = element_text(size = 6),
-              axis.text.x = element_text(angle = 45, hjust = 0.5, face = "bold"),
-              axis.text.y = element_text(face = "bold"),
-              legend.position = "none")+
-        geom_text(aes(label= Actual, 
-                      x=date, y= Actual),
-                  position = position_dodge(width = 1), fontface = "bold",
-                  vjust = 0.5 - sign(data$Actual), size = 4)+
-        scale_y_continuous(limits=c(min_value, max_value))
+      ratio_graph(data, site = "MSQ", min = min_value, max = max_value)
       
     } else {
       
@@ -962,8 +853,11 @@ server <- function(input, output, session) {
     data <- mshs_data() %>%
       filter(Site == "MSSN")%>%
       #mutate(date= as.yearmon(date, "%Y-%m"))%>%
-      mutate(sign = ifelse(Variance > 0, "positive", "negative"),
-             sign.YTD = ifelse(Variance.From.Budget.YTD > 0, "positive", "negative"))
+      mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
+             sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
+             text_label = ifelse(Variance <0 , paste0("(", abs(as.numeric(Variance)), ")"), Variance),
+             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
+                                  Variance.From.Budget.YTD))
     
     validate(need(nrow(data) > 0, paste0(isolate(input$mshs_metrics), " is not available for MSSN")))
     
@@ -994,29 +888,7 @@ server <- function(input, output, session) {
         min_value <- (min(data$Actual, na.rm = TRUE))*1.3
       }
       
-      ggplot(data)  + 
-        geom_rect(xmin= 0, xmax= Inf , ymin = 1, ymax= Inf, fill= "#8f8ce0", alpha=0.02)+
-        geom_line(aes(x=date, y= Actual, group = 1), 
-                  colour = "#212070", stat="identity", linewidth = 1.25)+
-        geom_point(mapping = aes(date, Actual),
-                   colour = "#212070", size = 3) +
-        labs(x = "Date", y = "Expense to Revenue Ratio" , 
-             title = isolate(paste0("MSSN Expense to Revenue Ratio" ))
-        )+
-        geom_hline(aes(yintercept= 1), colour="#990000", linetype="dashed")+
-        geom_hline(aes(yintercept = 0))+
-        theme(plot.title = element_text(hjust = 0.5, size = 20),
-              plot.subtitle = element_text(hjust = 0.5, size = 10),
-              axis.title = element_text(face = "bold"),
-              legend.text = element_text(size = 6),
-              axis.text.x = element_text(angle = 45, hjust = 0.5, face = "bold"),
-              axis.text.y = element_text(face = "bold"),
-              legend.position = "none")+
-        geom_text(aes(label= Actual, 
-                      x=date, y= Actual),
-                  position = position_dodge(width = 1), fontface = "bold",
-                  vjust = 0.5 - sign(data$Actual), size = 4)+
-        scale_y_continuous(limits=c(min_value, max_value))
+      ratio_graph(data, site = "MSSN", min = min_value, max = max_value)
       
     } else {
       
@@ -1097,8 +969,11 @@ server <- function(input, output, session) {
     data <- mshs_data() %>%
       filter(Site == "MSW")%>%
       #mutate(date= as.yearmon(date, "%Y-%m"))%>%
-      mutate(sign = ifelse(Variance > 0, "positive", "negative"),
-             sign.YTD = ifelse(Variance.From.Budget.YTD > 0, "positive", "negative"))
+      mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
+             sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
+             text_label = ifelse(Variance <0 , paste0("(", abs(as.numeric(Variance)), ")"), Variance),
+             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
+                                  Variance.From.Budget.YTD))
     
     validate(need(nrow(data) > 0, paste0(isolate(input$mshs_metrics), " is not available for MSW")))
     
@@ -1129,29 +1004,7 @@ server <- function(input, output, session) {
         min_value <- (min(data$Actual, na.rm = TRUE))*1.3
       }
       
-      ggplot(data)  + 
-        geom_rect(xmin= 0, xmax= Inf , ymin = 1, ymax= Inf, fill= "#8f8ce0", alpha=0.02)+
-        geom_line(aes(x=date, y= Actual, group = 1), 
-                  colour = "#212070", stat="identity", linewidth = 1.25)+
-        geom_point(mapping = aes(date, Actual),
-                   colour = "#212070", size = 3) +
-        labs(x = "Date", y = "Expense to Revenue Ratio" , 
-             title = isolate(paste0("MSW Expense to Revenue Ratio" ))
-        )+
-        geom_hline(aes(yintercept= 1), colour="#990000", linetype="dashed")+
-        geom_hline(aes(yintercept = 0))+
-        theme(plot.title = element_text(hjust = 0.5, size = 20),
-              plot.subtitle = element_text(hjust = 0.5, size = 10),
-              axis.title = element_text(face = "bold"),
-              legend.text = element_text(size = 6),
-              axis.text.x = element_text(angle = 45, hjust = 0.5, face = "bold"),
-              axis.text.y = element_text(face = "bold"),
-              legend.position = "none")+
-        geom_text(aes(label= Actual, 
-                      x=date, y= Actual),
-                  position = position_dodge(width = 1), fontface = "bold",
-                  vjust = 0.5 - sign(data$Actual), size = 4)+
-        scale_y_continuous(limits=c(min_value, max_value))
+      ratio_graph(data, site = "MSW", min = min_value, max = max_value)
       
     } else {
       
@@ -1233,8 +1086,11 @@ server <- function(input, output, session) {
     data <- mshs_data() %>%
       filter(Site == "NYEE")%>%
       #mutate(date= as.yearmon(date, "%Y-%m"))%>%
-      mutate(sign = ifelse(Variance > 0, "positive", "negative"),
-             sign.YTD = ifelse(Variance.From.Budget.YTD > 0, "positive", "negative"))
+      mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
+             sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
+             text_label = ifelse(Variance <0 , paste0("(", abs(as.numeric(Variance)), ")"), Variance),
+             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
+                                  Variance.From.Budget.YTD))
     
     validate(need(nrow(data) > 0, paste0(isolate(input$mshs_metrics), " is not available for NYEE")))
     
@@ -1266,30 +1122,7 @@ server <- function(input, output, session) {
         min_value <- (min(data$Actual, na.rm = TRUE))*1.3
       }
       
-      ggplot(data)  + 
-        geom_rect(xmin= 0, xmax= Inf , ymin = 1, ymax= Inf, fill= "#8f8ce0", alpha=0.02)+
-        geom_line(aes(x=date, y= Actual, group = 1), 
-                  colour = "#212070", stat="identity", linewidth = 1.25)+
-        geom_point(mapping = aes(date, Actual),
-                   colour = "#212070", size = 3) +
-        labs(x = "Date", y = "Expense to Revenue Ratio" , 
-             title = isolate(paste0("NYEE Expense to Revenue Ratio" ))
-        )+
-        geom_hline(aes(yintercept= 1), colour="#990000", linetype="dashed")+
-        geom_hline(aes(yintercept = 0))+
-        theme(plot.title = element_text(hjust = 0.5, size = 20),
-              plot.subtitle = element_text(hjust = 0.5, size = 10),
-              axis.title = element_text(face = "bold"),
-              legend.text = element_text(size = 6),
-              axis.text.x = element_text(angle = 15, hjust = 0.5, face = "bold"),
-              axis.text.y = element_text(face = "bold"),
-              legend.position = "none")+
-        geom_text(aes(label= Actual, 
-                      x=date, y= Actual),
-                  position = position_dodge(width = 1), fontface = "bold",
-                  vjust = 0.5 - sign(data$Actual), size = 4)+
-        scale_y_continuous(limits=c(min_value, max_value))
-      
+      ratio_graph(data, site = "NYEE", min = min_value, max = max_value)
     } else {
       
       # data <- new_repo %>% filter(Site == "MSB" & Metrics == "CMI")
