@@ -56,8 +56,15 @@ server <- function(input, output, session) {
     paste0("Based on data from ", start_date, " to ", end_date, " for ", hospitals)
   }, ignoreNULL = FALSE)
   
+  all_mshs_text_var <- eventReactive(input$mshs_filters_update_var, {
+    end_date <- isolate(max(input$all_date_range_var))
+    start_date <- isolate(min(input$all_date_range_var))
+    hospitals <- isolate(input$all_hospital_var)
+    paste0("Based on data from ", start_date, " to ", end_date, " for ", hospitals)
+  }, ignoreNULL = FALSE)
+  
   output$all_date_show  <- renderText({
-    all_mshs_text()
+    all_mshs_text_var()
   })
   
   
@@ -114,6 +121,15 @@ server <- function(input, output, session) {
     new_repo %>%
       filter(Site %in% input$all_hospital,
              date %in% input$all_date_range)
+  }, ignoreNULL = FALSE)
+  
+  metric_data_var  <- eventReactive(input$all_filters_update_var,{
+    validate(need(input$all_hospital_var != "", "Please Select a Hospital"),
+             need(input$all_date_range_var != "", "Please Select a Date"))
+    
+    new_repo %>%
+      filter(Site %in% input$all_hospital_var,
+             date %in% input$all_date_range_var)
   }, ignoreNULL = FALSE)
   
   
@@ -1812,12 +1828,12 @@ server <- function(input, output, session) {
   
   # All sites visualization ------------------------------
   
-  output$ratio_plot <- renderPlot({
-    data <- metric_data() %>% 
+  output$ratio_plot_var <- renderPlot({
+    data <- metric_data_var() %>% 
       filter(Metrics == "Expense to Revenue Ratio" ) %>%
       select("month", "year", "Site", "Actual", "Metrics", "date")
     
-    hospital <- isolate(input$all_hospital)
+    hospital <- isolate(input$all_hospital_var)
     
     history <- Exp_Rev_Ratio %>% filter(Site== hospital)
     
@@ -1829,7 +1845,7 @@ server <- function(input, output, session) {
     
     #data <- new_repo %>% filter(Site == "MSHS", Metrics == "Expense to Revenue Ratio")
     
-    validate(need(nrow(data)>0, paste0("Expense to Revenue Ratio is not available for ", isolate(input$all_hospital))))
+    validate(need(nrow(data)>0, paste0("Expense to Revenue Ratio is not available for ", isolate(input$all_hospital_var))))
     
     
     if((max(data$Actual, na.rm = TRUE))*1.3 < 0){
@@ -1850,7 +1866,7 @@ server <- function(input, output, session) {
                 colour = "#212070", stat="identity", linewidth = 1.25)+
       geom_point(mapping = aes(date, Actual), colour = "#212070", size = 3) +
       labs(x = "Date", y = "Expense to Revenue Ratio" , 
-           title = paste0(isolate(input$all_hospital), " Expense to Revenue Ratio")
+           title = paste0(isolate(input$all_hospital_var), " Expense to Revenue Ratio")
       )+
       geom_hline(aes(yintercept= 1), colour="#990000", linetype="dashed")+
       geom_hline(aes(yintercept = 0))+
@@ -1869,8 +1885,8 @@ server <- function(input, output, session) {
   })
   
   
-  output$revenue_plot <- renderPlot({
-    data <-  metric_data() %>%
+  output$revenue_plot_var <- renderPlot({
+    data <-  metric_data_var() %>%
       filter(Metrics ==  "Total Hospital Revenue")%>%
       #mutate(date= as.yearmon(date, "%Y-%m")) %>%
       mutate(sign = ifelse(Variance > 0, "positive", "negative"))
@@ -1878,7 +1894,7 @@ server <- function(input, output, session) {
     # data <- new_repo %>% filter(Site %in% "MSHS", Metrics ==  "Total Hospital Revenue")%>%
     # mutate(sign = ifelse(Variance > 0, "positive", "negative"))
     
-    validate(need(nrow(data)> 0, paste0("Total Hospital Revenue is not available for ",isolate(input$all_hospital))))
+    validate(need(nrow(data)> 0, paste0("Total Hospital Revenue is not available for ",isolate(input$all_hospital_var))))
     
     
     if( (max(data$Variance, na.rm = TRUE))*1.3 < 0){
@@ -1896,7 +1912,7 @@ server <- function(input, output, session) {
     ggplot(data)  + 
       geom_bar(aes(x=date, y= Variance), stat="identity", fill= "#212070")+
       labs(x = "Date", y = "Variance to Budget $", 
-           title = paste0(isolate(input$all_hospital) , " Total Hospital Revenue Monthly Variance to Budget"),
+           title = paste0(isolate(input$all_hospital_var) , " Total Hospital Revenue Monthly Variance to Budget"),
            subtitle = paste0("($ in Thousands)"))+
       theme(plot.title = element_textbox_simple(size = 20, halign=0.5),
             plot.subtitle = element_text(hjust = 0.5, size = 10),
@@ -1912,8 +1928,8 @@ server <- function(input, output, session) {
     
   })
   
-  output$expense_plot <- renderPlot({
-    data <-  metric_data() %>%
+  output$expense_plot_var <- renderPlot({
+    data <-  metric_data_var() %>%
       # mutate(date= as.yearmon(date, "%Y-%m"))
       filter(Metrics %in%  "Total Hospital Expenses")%>%
       mutate(sign = ifelse(Variance > 0, "positive", "negative"))
@@ -1922,7 +1938,7 @@ server <- function(input, output, session) {
     # data <- new_repo %>% filter(Site %in% "MSHS", Metrics ==  "Total Hospital Revenue")%>%
     # mutate(sign = ifelse(Variance > 0, "positive", "negative"))
     
-    validate(need(nrow(data)> 0, paste0("Total Hospital Expenses is not available for ", isolate(input$all_hospital))))
+    validate(need(nrow(data)> 0, paste0("Total Hospital Expenses is not available for ", isolate(input$all_hospital_var))))
     
     if( (max(data$Variance, na.rm = TRUE))*1.3 < 0){
       max_value <- 0
@@ -1939,7 +1955,7 @@ server <- function(input, output, session) {
     ggplot(data)  + 
       geom_bar(aes(x=date, y= Variance), stat="identity", fill= "#212070")+
       labs(x = "Date", y = "Variance to Budget $", 
-           title = paste0(isolate(input$all_hospital) , " Total Hospital Expenses Monthly Variance to Budget"),
+           title = paste0(isolate(input$all_hospital_var) , " Total Hospital Expenses Monthly Variance to Budget"),
            subtitle = paste0("($ in Thousands)"))+
       theme(plot.title = element_textbox_simple(size = 20, halign=0.5),
             plot.subtitle = element_text(hjust = 0.5, size = 10),
@@ -1954,8 +1970,8 @@ server <- function(input, output, session) {
       geom_hline(aes(yintercept = 0))
   })
   
-  output$discharges_plot <- renderPlot({
-    data <-  metric_data() %>%
+  output$discharges_plot_var <- renderPlot({
+    data <-  metric_data_var() %>%
       filter(Metrics %in%  "Discharges")%>%
       # mutate(date= as.yearmon(date, "%Y-%m"))%>%
       mutate(sign = ifelse(Variance > 0, "positive", "negative"))
@@ -1964,7 +1980,7 @@ server <- function(input, output, session) {
     # data <- new_repo %>% filter(Site %in% "MSHS", Metrics ==  "Total Hospital Revenue")%>%
     # mutate(sign = ifelse(Variance > 0, "positive", "negative"))
     
-    validate(need(nrow(data)> 0, paste0("Discharges is not available for ", isolate(input$all_hospital))))
+    validate(need(nrow(data)> 0, paste0("Discharges is not available for ", isolate(input$all_hospital_var))))
     
     
     if( (max(data$Variance, na.rm = TRUE))*1.3 < 0){
@@ -1982,7 +1998,7 @@ server <- function(input, output, session) {
     ggplot(data)  + 
       geom_bar(aes(x=date, y= Variance), stat="identity", fill= "#212070")+
       labs(x = "Date", y = "Variance to Budget", 
-           title = paste0(isolate(input$all_hospital) , " Discharges Monthly Variance to Budget"),
+           title = paste0(isolate(input$all_hospital_var) , " Discharges Monthly Variance to Budget"),
            subtitle = paste0("($ in Thousands)"))+
       theme(plot.title = element_textbox_simple(size = 20, halign=0.5),
             plot.subtitle = element_text(hjust = 0.5, size = 10),
@@ -1997,8 +2013,8 @@ server <- function(input, output, session) {
       geom_hline(aes(yintercept = 0))
   })
   
-  output$cmi_plot <- renderPlot({
-    data <-  metric_data() %>%
+  output$cmi_plot_var <- renderPlot({
+    data <-  metric_data_var() %>%
       filter(Metrics %in%  "CMI")%>%
       # mutate(date= as.yearmon(date, "%Y-%m"))%>%
       mutate(sign = ifelse(Variance > 0, "positive", "negative"))
@@ -2007,7 +2023,7 @@ server <- function(input, output, session) {
     # data <- new_repo %>% filter(Site %in% "MSHS", Metrics ==  "Total Hospital Revenue")%>%
     # mutate(sign = ifelse(Variance > 0, "positive", "negative"))
     
-    validate(need(nrow(data)> 0, paste0("CMI is not available for ", isolate(input$all_hospital))))
+    validate(need(nrow(data)> 0, paste0("CMI is not available for ", isolate(input$all_hospital_var))))
     
     if( (max(data$Variance, na.rm = TRUE))*1.3 < 0){
       max_value <- 0
@@ -2024,7 +2040,7 @@ server <- function(input, output, session) {
     ggplot(data)  + 
       geom_bar(aes(x=date, y= Variance), stat="identity", fill= "#212070")+
       labs(x = "Date", y = "Variance to Budget", 
-           title = paste0(isolate(input$all_hospital) , " CMI Monthly Variance to Budget"),
+           title = paste0(isolate(input$all_hospital_var) , " CMI Monthly Variance to Budget"),
            subtitle = paste0("($ in Thousands)"))+
       theme(plot.title = element_textbox_simple(size = 20, halign=0.5),
             plot.subtitle = element_text(hjust = 0.5, size = 10),
@@ -2039,8 +2055,8 @@ server <- function(input, output, session) {
       geom_hline(aes(yintercept = 0))
   })
   
-  output$alos_plot <- renderPlot({
-    data <-  metric_data() %>%
+  output$alos_plot_var <- renderPlot({
+    data <-  metric_data_var() %>%
       filter(Metrics %in%  "ALOS")%>%
       # mutate(date= as.yearmon(date, "%Y-%m"))%>%
       mutate(sign = ifelse(Variance > 0, "positive", "negative"))
@@ -2049,7 +2065,7 @@ server <- function(input, output, session) {
     # data <- new_repo %>% filter(Site %in% "MSHS", Metrics ==  "Total Hospital Revenue")%>%
     # mutate(sign = ifelse(Variance > 0, "positive", "negative"))
     
-    validate(need(nrow(data)> 0, paste0("ALOS is not available for ", isolate(input$all_hospital))))
+    validate(need(nrow(data)> 0, paste0("ALOS is not available for ", isolate(input$all_hospital_var))))
     
     if( (max(data$Variance, na.rm = TRUE))*1.3 < 0){
       max_value <- 0
@@ -2066,7 +2082,7 @@ server <- function(input, output, session) {
     ggplot(data)  + 
       geom_bar(aes(x=date, y= Variance), stat="identity", fill= "#212070")+
       labs(x = "Date", y = "Variance to Budget", 
-           title = paste0(isolate(input$all_hospital) , " ALOS Monthly Variance to Budget"),
+           title = paste0(isolate(input$all_hospital_var) , " ALOS Monthly Variance to Budget"),
            subtitle = paste0("($ in Thousands)"))+
       theme(plot.title = element_textbox_simple(size = 20, halign=0.5),
             plot.subtitle = element_text(hjust = 0.5, size = 10),
@@ -2081,8 +2097,8 @@ server <- function(input, output, session) {
       geom_hline(aes(yintercept = 0))
   })
   
-  output$outpt_plot <- renderPlot({
-    data <-  metric_data() %>%
+  output$outpt_plot_var <- renderPlot({
+    data <-  metric_data_var() %>%
       filter(Metrics %in%  "Outpatient Revenue")%>%
       # mutate(date= as.yearmon(date, "%Y-%m"))%>%
       mutate(sign = ifelse(Variance > 0, "positive", "negative"))
@@ -2091,7 +2107,7 @@ server <- function(input, output, session) {
     # data <- new_repo %>% filter(Site %in% "MSHS", Metrics ==  "Total Hospital Revenue")%>%
     # mutate(sign = ifelse(Variance > 0, "positive", "negative"))
     
-    validate(need(nrow(data)> 0, paste0("Outpatient Revenue is not available for ", isolate(input$all_hospital))))
+    validate(need(nrow(data)> 0, paste0("Outpatient Revenue is not available for ", isolate(input$all_hospital_var))))
     
     
     if( (max(data$Variance, na.rm = TRUE))*1.3 < 0){
@@ -2109,7 +2125,7 @@ server <- function(input, output, session) {
     ggplot(data)  + 
       geom_bar(aes(x=date, y= Variance), stat="identity", fill= "#212070")+
       labs(x = "Date", y = "Variance to Budget $", 
-           title = paste0(isolate(input$all_hospital) , " Outpatient Revenue Monthly Variance to Budget"),
+           title = paste0(isolate(input$all_hospital_var) , " Outpatient Revenue Monthly Variance to Budget"),
            subtitle = paste0("($ in Thousands)"))+
       theme(plot.title = element_textbox_simple(size = 20, halign=0.5),
             plot.subtitle = element_text(hjust = 0.5, size = 10),
@@ -2124,8 +2140,8 @@ server <- function(input, output, session) {
       geom_hline(aes(yintercept = 0))
   })
   
-  output$operate_plot <- renderPlot({
-    data <-  metric_data() %>%
+  output$operate_plot_var <- renderPlot({
+    data <-  metric_data_var() %>%
       filter(Metrics %in%  "340B/Other Operating Revenue")%>%
       # mutate(date= as.yearmon(date, "%Y-%m"))%>%
       mutate(sign = ifelse(Variance > 0, "positive", "negative"))
@@ -2134,7 +2150,7 @@ server <- function(input, output, session) {
     # data <- new_repo %>% filter(Site %in% "MSHS", Metrics ==  "Total Hospital Revenue")%>%
     # mutate(sign = ifelse(Variance > 0, "positive", "negative"))
     
-    validate(need(nrow(data)> 0, paste0("340B/Other Operating Revenue is not available for ", isolate(input$all_hospital))))
+    validate(need(nrow(data)> 0, paste0("340B/Other Operating Revenue is not available for ", isolate(input$all_hospital_var))))
     
     if( (max(data$Variance, na.rm = TRUE))*1.3 < 0){
       max_value <- 0
@@ -2151,7 +2167,7 @@ server <- function(input, output, session) {
     ggplot(data)  + 
       geom_bar(aes(x=date, y= Variance), stat="identity", fill= "#212070")+
       labs(x = "Date", y = "Variance to Budget $", 
-           title = paste0(isolate(input$all_hospital) , " 340B/Other Operating Revenue Monthly Variance to Budget"),
+           title = paste0(isolate(input$all_hospital_var) , " 340B/Other Operating Revenue Monthly Variance to Budget"),
            subtitle = paste0("($ in Thousands)"))+
       theme(plot.title = element_textbox_simple(size = 20, halign=0.5),
             plot.subtitle = element_text(hjust = 0.5, size = 10),
@@ -2166,8 +2182,8 @@ server <- function(input, output, session) {
       geom_hline(aes(yintercept = 0))
   })
   
-  output$salary_plot <- renderPlot({
-    data <-  metric_data() %>%
+  output$salary_plot_var <- renderPlot({
+    data <-  metric_data_var() %>%
       filter(Metrics %in%  "Salaries and Benefits")%>%
       # mutate(date= as.yearmon(date, "%Y-%m"))%>%
       mutate(sign = ifelse(Variance > 0, "positive", "negative"))
@@ -2176,7 +2192,7 @@ server <- function(input, output, session) {
     # data <- new_repo %>% filter(Site %in% "MSHS", Metrics ==  "Total Hospital Revenue")%>%
     # mutate(sign = ifelse(Variance > 0, "positive", "negative"))
     
-    validate(need(nrow(data)> 0, paste0( "Salaries and Benefits is not available for ", isolate(input$all_hospital))))
+    validate(need(nrow(data)> 0, paste0( "Salaries and Benefits is not available for ", isolate(input$all_hospital_var))))
     
     
     
@@ -2195,7 +2211,7 @@ server <- function(input, output, session) {
     ggplot(data)  + 
       geom_bar(aes(x=date, y= Variance), stat="identity", fill= "#212070")+
       labs(x = "Date", y = "Variance to Budget $", 
-           title = paste0(isolate(input$all_hospital) , " Salaries and Benefits Monthly Variance to Budget"),
+           title = paste0(isolate(input$all_hospital_var) , " Salaries and Benefits Monthly Variance to Budget"),
            subtitle = paste0("($ in Thousands)"))+
       theme(plot.title = element_textbox_simple(size = 20, halign=0.5),
             plot.subtitle = element_text(hjust = 0.5, size = 10),
@@ -2211,8 +2227,8 @@ server <- function(input, output, session) {
   })
   
   
-  output$supply_plot <- renderPlot({
-    data <-  metric_data() %>%
+  output$supply_plot_var <- renderPlot({
+    data <-  metric_data_var() %>%
       filter(Metrics %in%  "Supplies & Expenses")%>%
       # mutate(date= as.yearmon(date, "%Y-%m"))%>%
       mutate(sign = ifelse(Variance > 0, "positive", "negative"))
@@ -2221,7 +2237,7 @@ server <- function(input, output, session) {
     # data <- new_repo %>% filter(Site %in% "MSHS", Metrics ==  "Total Hospital Revenue")%>%
     # mutate(sign = ifelse(Variance > 0, "positive", "negative"))
     
-    validate(need(nrow(data)> 0, paste0("Supplies & Expenses is not available for ", isolate(input$all_hospital))))
+    validate(need(nrow(data)> 0, paste0("Supplies & Expenses is not available for ", isolate(input$all_hospital_var))))
     
     
     if( (max(data$Variance, na.rm = TRUE))*1.3 < 0){
@@ -2239,7 +2255,7 @@ server <- function(input, output, session) {
     ggplot(data)  + 
       geom_bar(aes(x=date, y= Variance), stat="identity", fill= "#212070")+
       labs(x = "Date", y = "Variance to Budget $", 
-           title = paste0(isolate(input$all_hospital) , " Supplies & Expenses Monthly Variance to Budget"),
+           title = paste0(isolate(input$all_hospital_var) , " Supplies & Expenses Monthly Variance to Budget"),
            subtitle = paste0("($ in Thousands)"))+
       theme(plot.title = element_textbox_simple(size = 20, halign=0.5),
             plot.subtitle = element_text(hjust = 0.5, size = 10),
@@ -2255,8 +2271,8 @@ server <- function(input, output, session) {
   })
   
   
-  output$nurse_plot <- renderPlot({
-    data <-  metric_data() %>%
+  output$nurse_plot_var <- renderPlot({
+    data <-  metric_data_var() %>%
       filter(Metrics %in%  "Nursing Agency Costs")%>%
       # mutate(date= as.yearmon(date, "%Y-%m"))%>%
       mutate(sign = ifelse(Variance > 0, "positive", "negative"))
@@ -2265,7 +2281,7 @@ server <- function(input, output, session) {
     # data <- new_repo %>% filter(Site %in% "MSHS", Metrics ==  "Total Hospital Revenue")%>%
     # mutate(sign = ifelse(Variance > 0, "positive", "negative"))
     
-    validate(need(nrow(data)> 0, paste0("Nursing Agency Costs is not available for ", isolate(input$all_hospital))))
+    validate(need(nrow(data)> 0, paste0("Nursing Agency Costs is not available for ", isolate(input$all_hospital_var))))
     
     
     if( (max(data$Variance, na.rm = TRUE))*1.3 < 0){
@@ -2283,7 +2299,7 @@ server <- function(input, output, session) {
     ggplot(data)  + 
       geom_bar(aes(x=date, y= Variance), stat="identity", fill= "#212070")+
       labs(x = "Date", y = "Variance to Budget $", 
-           title = paste0(isolate(input$all_hospital) , " Nursing Agency Costs Monthly Variance to Budget"),
+           title = paste0(isolate(input$all_hospital_var) , " Nursing Agency Costs Monthly Variance to Budget"),
            subtitle = paste0("($ in Thousands)"))+
       theme(plot.title = element_textbox_simple(size = 20, halign=0.5),
             plot.subtitle = element_text(hjust = 0.5, size = 10),
@@ -2299,8 +2315,8 @@ server <- function(input, output, session) {
   })
   
 
-  output$carts_plot <- renderPlot({
-    data <-  metric_data() %>%
+  output$carts_plot_var <- renderPlot({
+    data <-  metric_data_var() %>%
       filter(Metrics %in%  "CARTS")%>%
       # mutate(date= as.yearmon(date, "%Y-%m"))%>%
       mutate(sign = ifelse(Variance > 0, "positive", "negative"))
@@ -2309,7 +2325,7 @@ server <- function(input, output, session) {
     # data <- new_repo %>% filter(Site %in% "MSHS", Metrics ==  "Total Hospital Revenue")%>%
     # mutate(sign = ifelse(Variance > 0, "positive", "negative"))
     
-    validate(need(nrow(data)> 0, paste0("CARTS is not available for ", isolate(input$all_hospital))))
+    validate(need(nrow(data)> 0, paste0("CARTS is not available for ", isolate(input$all_hospital_var))))
     
     
     if( (max(data$Variance, na.rm = TRUE))*1.3 < 0){
@@ -2327,7 +2343,7 @@ server <- function(input, output, session) {
     ggplot(data)  + 
       geom_bar(aes(x=date, y= Variance), stat="identity", fill= "#212070")+
       labs(x = "Date", y = "Variance to Budget $", 
-           title = paste0(isolate(input$all_hospital) , " CARTS Monthly Variance to Budget"),
+           title = paste0(isolate(input$all_hospital_var) , " CARTS Monthly Variance to Budget"),
            subtitle = paste0("($ in Thousands)"))+
       theme(plot.title = element_textbox_simple(size = 20, halign=0.5),
             plot.subtitle = element_text(hjust = 0.5, size = 10),

@@ -96,7 +96,7 @@ ui <- dashboardPage(
               fluidRow(
                 tags$style(HTML(".box.box-solid.box-primary>.box-header {background:#221f72; color:#fff}")),
                 column(12,
-                       tabBox(title = NULL, id = "tabset7", width = "100%", type = 'pills', 
+                       tabBox(title = NULL, id = "tabset1", width = "100%", type = 'pills', 
                       
                     tabsetPanel(id = "tabSwitch",     
                        tabPanel(title = "Health System Summary",
@@ -299,11 +299,15 @@ ui <- dashboardPage(
                 HTML(paste("#all_filters_update_ytd {background-color: #d80b8c;color: #FFFFFF;",
                      "font-size: 18px}")))),
         
-              fluidRow(
-                tags$style(
-                  HTML(".box.box-solid.box-primary>.box-header {background:#221f72; color:#fff}")),
+        fluidRow(
+          tags$style(HTML(".box.box-solid.box-primary>.box-header {background:#221f72; color:#fff}")),
+          column(12,
+            tabBox(title = NULL, id = "tabset2", width = "100%", type = 'pills', 
+                        
+            tabsetPanel(id = "tabSwitch2",     
+              tabPanel(title = "Health System Summary",
                 
-                column(12,
+                fluidRow(
                        box(
                          title = NULL, width = 12, status = "primary",
                          solidHeader = TRUE, collapsible = TRUE,
@@ -333,7 +337,7 @@ ui <- dashboardPage(
                                             "CLICK TO UPDATE", width = "75%"),
                                   br(),
                                   br())))),
-                column(width = 12,
+                fluidRow(
                        box(title = NULL, status = "primary",
                         solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
                            plotOutput("ratio_plot"),  width = 4),
@@ -386,7 +390,100 @@ ui <- dashboardPage(
                         solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
                            plotOutput("carts_plot"),  width = 4))
 
-                ) # close fluidRow
+                ),
+                
+              tabPanel(title = "Monthly Variance to Budget",
+                       fluidRow(
+                         box(
+                           title = NULL, width = 12, status = "primary",
+                           solidHeader = TRUE, collapsible = TRUE,
+                           closable = TRUE, br(),
+                           fluidRow(
+                             box(width = 4, height = "100px",
+                                 title = "Select Hospitals:", solidHeader = FALSE,
+                                 pickerInput("all_hospital_var", label = NULL, multiple = FALSE,
+                                             options = pickerOptions(actionsBox = TRUE), 
+                                             choices = hospital_choices,
+                                             selected = "MSHS")),
+                             
+                             box(width = 4, height = "100px",
+                                 title = "Select Date:",  solidHeader = FALSE,
+                                 pickerInput("all_date_range_var", label = NULL, 
+                                             multiple = TRUE,
+                                             options = pickerOptions(
+                                               actionsBox = TRUE,
+                                               selectedTextFormat = "count > 1", 
+                                               countSelectedText = "{0}/{1} Dates",
+                                               dropupAuto = FALSE),
+                                             choices = date_options, 
+                                             selected = date_options)),
+                             
+                             column(width = 4,
+                                    actionButton("all_filters_update_var", 
+                                                 "CLICK TO UPDATE", width = "75%"),
+                                    br(),
+                                    br())))),
+                       fluidRow(
+                         box(title = NULL, status = "primary",
+                             solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
+                             plotOutput("ratio_plot_var"),  width = 4),
+                         
+                         box(title = NULL, status = "primary", 
+                             solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
+                             plotOutput("revenue_plot_var"),  width = 4),
+                         
+                         box(title = NULL, status = "primary",
+                             solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
+                             plotOutput("expense_plot_var"),  width = 4),
+                         
+                         box(title = NULL, status = "primary", 
+                             solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
+                             plotOutput("discharges_plot_var"),  width = 4),
+                         
+                         
+                         box(title = NULL, status = "primary",
+                             solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
+                             plotOutput("cmi_plot_var"),  width = 4),
+                         
+                         box(title = NULL, status = "primary", 
+                             solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
+                             plotOutput("alos_plot_var"),  width = 4),
+                         
+                         
+                         box(title = NULL, status = "primary",
+                             solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
+                             plotOutput("outpt_plot_var"),  width = 4),
+                         
+                         box(title = NULL, status = "primary", 
+                             solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
+                             plotOutput("operate_plot_var"),  width = 4),
+                         
+                         
+                         box(title = NULL, status = "primary",
+                             solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
+                             plotOutput("salary_plot_var"),  width = 4),
+                         
+                         box(title = NULL, status = "primary", 
+                             solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
+                             plotOutput("supply_plot_var"),  width = 4),
+                         
+                         
+                         box(title = NULL, status = "primary",
+                             solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
+                             plotOutput("nurse_plot_var"),  width = 4),
+                         
+                         box(title = NULL, status = "primary", 
+                             solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
+                             plotOutput("carts_plot_var"),  width = 4))
+                       
+              ),
+              
+                
+                
+                
+                
+                
+                )))) # close fluidRow
               ), # close tabname Site
       
       ## tab Ratio --------------------------------------------
