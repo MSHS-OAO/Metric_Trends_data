@@ -1827,7 +1827,539 @@ server <- function(input, output, session) {
   
   
   # All sites visualization ------------------------------
+  ## summary tab --------------------
   
+  output$ratio_plot <- renderPlot({
+    data <- metric_data() %>% 
+      filter(Metrics == "Expense to Revenue Ratio" ) %>%
+      select("month", "year", "Site", "Actual", "Metrics", "date")
+    
+    hospital <- isolate(input$all_hospital)
+    
+    history <- Exp_Rev_Ratio %>% filter(Site== hospital)
+    
+    
+    data <- rbind(history, data) %>%
+      mutate(Actual = round(Actual, 2))%>%
+      arrange(date) %>%
+      slice(tail(row_number(), 12))
+    
+    #data <- new_repo %>% filter(Site == "MSHS", Metrics == "Expense to Revenue Ratio")
+    
+    validate(need(nrow(data)>0, paste0("Expense to Revenue Ratio is not available for ", isolate(input$all_hospital))))
+    
+    
+    if((max(data$Actual, na.rm = TRUE))*1.3 < 0){
+      max_value <- 0
+    } else {
+      max_value <- (max(data$Actual, na.rm = TRUE))*1.3
+    }
+    
+    if( (min(data$Actual, na.rm = TRUE))*1.3 > 0){
+      min_value <- 0
+    } else {
+      min_value <- (min(data$Actual, na.rm = TRUE))*1.3
+    }
+    
+    ratio_graph(data, site = hospital, min= min_value, max= max_value) 
+    
+  })
+  
+  
+  output$revenue_plot <- renderPlot({
+    metric_choice <-  "Total Hospital Revenue"
+    
+    data <-  metric_data() %>%
+      filter(Metrics ==  metric_choice)%>%
+      mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
+             sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
+             text_label = ifelse(Variance <0 , paste0("(", abs(as.numeric(Variance)), ")"), Variance),
+             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
+                                  Variance.From.Budget.YTD))
+    
+    validate(need(nrow(data)>0, paste0(metric_choice, " is not available for ", isolate(input$all_hospital))))
+    
+    #define a scale for second axis
+    ratio <- max(abs(data$Variance), na.rm = TRUE)/ max(abs(data$Variance.From.Budget.YTD), na.rm = TRUE)
+    
+    if (ratio %in% c("Inf", "-Inf", "NaN")) {
+      ratio <- 0
+    }
+    
+    data <- data %>% mutate(Variance_scaled = Variance.From.Budget.YTD * ratio)
+    
+    
+    if((max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3 < 0){
+      max_value <- 0
+    } else {
+      max_value <- (max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3
+    }
+    
+    if((min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3 > 0){
+      min_value <- 0
+    } else {
+      min_value <- (min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3
+    }
+    
+    # Define labels for metrics    
+    text_label <- paste0("$", data$`Variance`)
+    y_label <- "Variance to Budget $"
+ 
+    graph_style(data, site = isolate(input$all_hospital), metric = metric_choice, min =  min_value,
+                max = max_value, text = text_label, y_label = y_label, ratio = ratio)
+  })
+  
+  
+  output$expense_plot <- renderPlot({
+    
+    metric_choice <-  "Total Hospital Expenses"
+    data <-  metric_data() %>%
+      # mutate(date= as.yearmon(date, "%Y-%m"))
+      filter(Metrics %in%   metric_choice)%>%
+      mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
+             sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
+             text_label = ifelse(Variance <0 , paste0("(", abs(as.numeric(Variance)), ")"), Variance),
+             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
+                                  Variance.From.Budget.YTD))
+    
+    validate(need(nrow(data)>0, paste0( metric_choice, " is not available for ", isolate(input$all_hospital))))
+    
+    #define a scale for second axis
+    ratio <- max(abs(data$Variance), na.rm = TRUE)/ max(abs(data$Variance.From.Budget.YTD), na.rm = TRUE)
+    
+    if (ratio %in% c("Inf", "-Inf", "NaN")) {
+      ratio <- 0
+    }
+    
+    data <- data %>% mutate(Variance_scaled = Variance.From.Budget.YTD * ratio)
+    
+    
+    if((max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3 < 0){
+      max_value <- 0
+    } else {
+      max_value <- (max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3
+    }
+    
+    if((min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3 > 0){
+      min_value <- 0
+    } else {
+      min_value <- (min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3
+    }
+    
+    # Define labels for metrics    
+    text_label <- paste0("$", data$`Variance`)
+    y_label <- "Variance to Budget $"
+    
+   
+    graph_style(data, site = isolate(input$all_hospital), metric = metric_choice, min =  min_value,
+                max = max_value, text = text_label, y_label = y_label, ratio = ratio)
+  })
+  
+  output$discharges_plot <- renderPlot({
+    
+    metric_choice <-  "Discharges"
+    
+    data <-  metric_data() %>%
+      # mutate(date= as.yearmon(date, "%Y-%m"))
+      filter(Metrics %in%  metric_choice)%>%
+      mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
+             sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
+             text_label = ifelse(Variance <0 , paste0("(", abs(as.numeric(Variance)), ")"), Variance),
+             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
+                                  Variance.From.Budget.YTD))
+    
+    validate(need(nrow(data)>0, paste0(metric_choice, " is not available for ", isolate(input$all_hospital))))
+    
+    #define a scale for second axis
+    ratio <- max(abs(data$Variance), na.rm = TRUE)/ max(abs(data$Variance.From.Budget.YTD), na.rm = TRUE)
+    
+    if (ratio %in% c("Inf", "-Inf", "NaN")) {
+      ratio <- 0
+    }
+    
+    data <- data %>% mutate(Variance_scaled = Variance.From.Budget.YTD * ratio)
+    
+    
+    if((max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3 < 0){
+      max_value <- 0
+    } else {
+      max_value <- (max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3
+    }
+    
+    if((min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3 > 0){
+      min_value <- 0
+    } else {
+      min_value <- (min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3
+    }
+    
+    # Define labels for metrics    
+    text_label <- data$`Variance`
+    y_label <- "Variance to Budget"
+    
+    graph_style(data, site = isolate(input$all_hospital), metric = metric_choice, min =  min_value,
+                max = max_value, text = text_label, y_label = y_label, ratio = ratio)
+  })
+  
+  output$cmi_plot <- renderPlot({
+    
+    metric_choice <-  "CMI"
+    data <-  metric_data() %>%
+      # mutate(date= as.yearmon(date, "%Y-%m"))
+      filter(Metrics %in%  metric_choice)%>%
+      mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
+             sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
+             text_label = ifelse(Variance <0 , paste0("(", abs(as.numeric(Variance)), ")"), Variance),
+             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
+                                  Variance.From.Budget.YTD))
+    
+    validate(need(nrow(data)>0, paste0(metric_choice, " is not available for ", isolate(input$all_hospital))))
+    
+    #define a scale for second axis
+    ratio <- max(abs(data$Variance), na.rm = TRUE)/ max(abs(data$Variance.From.Budget.YTD), na.rm = TRUE)
+    
+    if (ratio %in% c("Inf", "-Inf", "NaN")) {
+      ratio <- 0
+    }
+    
+    data <- data %>% mutate(Variance_scaled = Variance.From.Budget.YTD * ratio)
+    
+    
+    if((max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3 < 0){
+      max_value <- 0
+    } else {
+      max_value <- (max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3
+    }
+    
+    if((min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3 > 0){
+      min_value <- 0
+    } else {
+      min_value <- (min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3
+    }
+    
+    # Define labels for metrics    
+    text_label <- data$`Variance`
+    y_label <- "Variance to Budget"
+    
+    graph_style(data, site = isolate(input$all_hospital), metric = metric_choice, min =  min_value,
+                max = max_value, text = text_label, y_label = y_label, ratio = ratio)
+  })
+  
+  
+  output$alos_plot <- renderPlot({
+    metric_choice <-  "ALOS"
+    
+    data <-  metric_data() %>%
+      # mutate(date= as.yearmon(date, "%Y-%m"))
+      filter(Metrics %in%  metric_choice)%>%
+      mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
+             sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
+             text_label = ifelse(Variance <0 , paste0("(", abs(as.numeric(Variance)), ")"), Variance),
+             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
+                                  Variance.From.Budget.YTD))
+    
+    validate(need(nrow(data)>0, paste0(metric_choice, " is not available for ", isolate(input$all_hospital))))
+    
+    #define a scale for second axis
+    ratio <- max(abs(data$Variance), na.rm = TRUE)/ max(abs(data$Variance.From.Budget.YTD), na.rm = TRUE)
+    
+    if (ratio %in% c("Inf", "-Inf", "NaN")) {
+      ratio <- 0
+    }
+    
+    data <- data %>% mutate(Variance_scaled = Variance.From.Budget.YTD * ratio)
+    
+    
+    if((max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3 < 0){
+      max_value <- 0
+    } else {
+      max_value <- (max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3
+    }
+    
+    if((min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3 > 0){
+      min_value <- 0
+    } else {
+      min_value <- (min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3
+    }
+    
+    # Define labels for metrics    
+    text_label <- data$`Variance`
+    y_label <- "Variance to Budget"
+    
+    graph_style(data, site = isolate(input$all_hospital), metric = metric_choice, min =  min_value,
+                max = max_value, text = text_label, y_label = y_label, ratio = ratio)
+  })
+  
+  
+  output$outpt_plot <- renderPlot({
+    
+    metric_choice <-  "Outpatient Revenue"
+    data <-  metric_data() %>%
+      # mutate(date= as.yearmon(date, "%Y-%m"))
+      filter(Metrics %in%  metric_choice)%>%
+      mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
+             sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
+             text_label = ifelse(Variance <0 , paste0("(", abs(as.numeric(Variance)), ")"), Variance),
+             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
+                                  Variance.From.Budget.YTD))
+    
+    validate(need(nrow(data)>0, paste0(metric_choice, " is not available for ", isolate(input$all_hospital))))
+    
+    #define a scale for second axis
+    ratio <- max(abs(data$Variance), na.rm = TRUE)/ max(abs(data$Variance.From.Budget.YTD), na.rm = TRUE)
+    
+    if (ratio %in% c("Inf", "-Inf", "NaN")) {
+      ratio <- 0
+    }
+    
+    data <- data %>% mutate(Variance_scaled = Variance.From.Budget.YTD * ratio)
+    
+    
+    if((max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3 < 0){
+      max_value <- 0
+    } else {
+      max_value <- (max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3
+    }
+    
+    if((min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3 > 0){
+      min_value <- 0
+    } else {
+      min_value <- (min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3
+    }
+    
+    # Define labels for metrics    
+    text_label <- paste0("$", data$`Variance`)
+    y_label <- "Variance to Budget $"
+    
+    
+    graph_style(data, site = isolate(input$all_hospital), metric = metric_choice, min =  min_value,
+                max = max_value, text = text_label, y_label = y_label, ratio = ratio)
+  })
+  
+  output$operate_plot <- renderPlot({
+    
+    metric_choice <-  "340B/Other Operating Revenue"
+    
+    data <-  metric_data() %>%
+      # mutate(date= as.yearmon(date, "%Y-%m"))
+      filter(Metrics %in%  metric_choice)%>%
+      mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
+             sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
+             text_label = ifelse(Variance <0 , paste0("(", abs(as.numeric(Variance)), ")"), Variance),
+             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
+                                  Variance.From.Budget.YTD))
+    
+    validate(need(nrow(data)>0, paste0(metric_choice, " is not available for ", isolate(input$all_hospital))))
+    
+    #define a scale for second axis
+    ratio <- max(abs(data$Variance), na.rm = TRUE)/ max(abs(data$Variance.From.Budget.YTD), na.rm = TRUE)
+    
+    if (ratio %in% c("Inf", "-Inf", "NaN")) {
+      ratio <- 0
+    }
+    
+    data <- data %>% mutate(Variance_scaled = Variance.From.Budget.YTD * ratio)
+    
+    
+    if((max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3 < 0){
+      max_value <- 0
+    } else {
+      max_value <- (max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3
+    }
+    
+    if((min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3 > 0){
+      min_value <- 0
+    } else {
+      min_value <- (min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3
+    }
+    
+    # Define labels for metrics    
+    text_label <- paste0("$", data$`Variance`)
+    y_label <- "Variance to Budget $"
+    
+    graph_style(data, site = isolate(input$all_hospital), metric = metric_choice, min =  min_value,
+                max = max_value, text = text_label, y_label = y_label, ratio = ratio)
+  })
+  
+  output$salary_plot <- renderPlot({
+    
+    metric_choice <-  "Salaries and Benefits"
+    
+    data <-  metric_data() %>%
+      # mutate(date= as.yearmon(date, "%Y-%m"))
+      filter(Metrics %in%  metric_choice)%>%
+      mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
+             sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
+             text_label = ifelse(Variance <0 , paste0("(", abs(as.numeric(Variance)), ")"), Variance),
+             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
+                                  Variance.From.Budget.YTD))
+    
+    validate(need(nrow(data)>0, paste0( metric_choice, " is not available for ", isolate(input$all_hospital))))
+    
+    #define a scale for second axis
+    ratio <- max(abs(data$Variance), na.rm = TRUE)/ max(abs(data$Variance.From.Budget.YTD), na.rm = TRUE)
+    
+    if (ratio %in% c("Inf", "-Inf", "NaN")) {
+      ratio <- 0
+    }
+    
+    data <- data %>% mutate(Variance_scaled = Variance.From.Budget.YTD * ratio)
+    
+    
+    if((max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3 < 0){
+      max_value <- 0
+    } else {
+      max_value <- (max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3
+    }
+    
+    if((min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3 > 0){
+      min_value <- 0
+    } else {
+      min_value <- (min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3
+    }
+    
+    # Define labels for metrics    
+    text_label <- paste0("$", data$`Variance`)
+    y_label <- "Variance to Budget $"
+    
+    graph_style(data, site = isolate(input$all_hospital), metric = metric_choice, min =  min_value,
+                max = max_value, text = text_label, y_label = y_label, ratio = ratio)
+  })
+  
+  output$supply_plot <- renderPlot({
+    
+    metric_choice <-  "Supplies & Expenses"
+    
+    data <-  metric_data() %>%
+      # mutate(date= as.yearmon(date, "%Y-%m"))
+      filter(Metrics %in%  metric_choice)%>%
+      mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
+             sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
+             text_label = ifelse(Variance <0 , paste0("(", abs(as.numeric(Variance)), ")"), Variance),
+             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
+                                  Variance.From.Budget.YTD))
+    
+    validate(need(nrow(data)>0, paste0(metric_choice, " is not available for ", isolate(input$all_hospital))))
+    
+    #define a scale for second axis
+    ratio <- max(abs(data$Variance), na.rm = TRUE)/ max(abs(data$Variance.From.Budget.YTD), na.rm = TRUE)
+    
+    if (ratio %in% c("Inf", "-Inf", "NaN")) {
+      ratio <- 0
+    }
+    
+    data <- data %>% mutate(Variance_scaled = Variance.From.Budget.YTD * ratio)
+    
+    
+    if((max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3 < 0){
+      max_value <- 0
+    } else {
+      max_value <- (max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3
+    }
+    
+    if((min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3 > 0){
+      min_value <- 0
+    } else {
+      min_value <- (min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3
+    }
+    
+    # Define labels for metrics    
+    text_label <- paste0("$", data$`Variance`)
+    y_label <- "Variance to Budget $"
+    
+    graph_style(data, site = isolate(input$all_hospital), metric = metric_choice, min =  min_value,
+                max = max_value, text = text_label, y_label = y_label, ratio = ratio)
+  })
+  
+  output$nurse_plot <- renderPlot({
+    
+    metric_choice <- "Nursing Agency Costs" 
+    data <-  metric_data() %>%
+      # mutate(date= as.yearmon(date, "%Y-%m"))
+      filter(Metrics %in%  metric_choice)%>%
+      mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
+             sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
+             text_label = ifelse(Variance <0 , paste0("(", abs(as.numeric(Variance)), ")"), Variance),
+             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
+                                  Variance.From.Budget.YTD))
+    
+    validate(need(nrow(data)>0, paste0(metric_choice , " is not available for ", isolate(input$all_hospital))))
+    
+    #define a scale for second axis
+    ratio <- max(abs(data$Variance), na.rm = TRUE)/ max(abs(data$Variance.From.Budget.YTD), na.rm = TRUE)
+    
+    if (ratio %in% c("Inf", "-Inf", "NaN")) {
+      ratio <- 0
+    }
+    
+    data <- data %>% mutate(Variance_scaled = Variance.From.Budget.YTD * ratio)
+    
+    
+    if((max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3 < 0){
+      max_value <- 0
+    } else {
+      max_value <- (max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3
+    }
+    
+    if((min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3 > 0){
+      min_value <- 0
+    } else {
+      min_value <- (min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3
+    }
+    
+    # Define labels for metrics    
+    text_label <- paste0("$", data$`Variance`)
+    y_label <- "Variance to Budget $"
+    
+    graph_style(data, site = isolate(input$all_hospital), metric = metric_choice, min =  min_value,
+                max = max_value, text = text_label, y_label = y_label, ratio = ratio)
+  })
+  
+  output$carts_plot <- renderPlot({
+    metric_choice <- "CARTS" 
+    data <-  metric_data() %>%
+      # mutate(date= as.yearmon(date, "%Y-%m"))
+      filter(Metrics %in% metric_choice)%>%
+      mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
+             sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
+             text_label = ifelse(Variance <0 , paste0("(", abs(as.numeric(Variance)), ")"), Variance),
+             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
+                                  Variance.From.Budget.YTD))
+    
+    carts<<- data
+    
+    validate(need(nrow(data)>0, paste0(metric_choice, " is not available for ", isolate(input$all_hospital))))
+    
+    #define a scale for second axis
+    ratio <- max(abs(data$Variance), na.rm = TRUE)/ max(abs(data$Variance.From.Budget.YTD), na.rm = TRUE)
+    
+    if (ratio %in% c("Inf", "-Inf", "NaN")) {
+      ratio <- 0
+    }
+    
+    data <- data %>% mutate(Variance_scaled = Variance.From.Budget.YTD * ratio)
+    
+    
+    if((max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3 < 0){
+      max_value <- 0
+    } else {
+      max_value <- (max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3
+    }
+    
+    if((min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3 > 0){
+      min_value <- 0
+    } else {
+      min_value <- (min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.3
+    }
+    
+    # Define labels for metrics    
+    text_label <- paste0("$", data$`Variance`)
+    y_label <- "Variance to Budget $"
+    
+    graph_style(data, site = isolate(input$all_hospital), metric = metric_choice, min =  min_value,
+                max = max_value, text = text_label, y_label = y_label, ratio = ratio)
+  })
+  
+  ## Monthly Variance tab ----------------------
   output$ratio_plot_var <- renderPlot({
     data <- metric_data_var() %>% 
       filter(Metrics == "Expense to Revenue Ratio" ) %>%
@@ -1841,7 +2373,7 @@ server <- function(input, output, session) {
     data <- rbind(history, data) %>%
       mutate(Actual = round(Actual, 2))%>%
       arrange(date) %>%
-      slice(tail(row_number(), 24))
+      slice(tail(row_number(), 12))
     
     #data <- new_repo %>% filter(Site == "MSHS", Metrics == "Expense to Revenue Ratio")
     
@@ -1860,27 +2392,7 @@ server <- function(input, output, session) {
       min_value <- (min(data$Actual, na.rm = TRUE))*1.3
     }
     
-    ggplot(data)  + 
-      geom_rect(xmin= 0, xmax= Inf , ymin = 1, ymax= Inf, fill= "#8f8ce0", alpha=0.02)+
-      geom_line(aes(x=date, y= Actual, group = 1), 
-                colour = "#212070", stat="identity", linewidth = 1.25)+
-      geom_point(mapping = aes(date, Actual), colour = "#212070", size = 3) +
-      labs(x = "Date", y = "Expense to Revenue Ratio" , 
-           title = paste0(isolate(input$all_hospital_var), " Expense to Revenue Ratio")
-      )+
-      geom_hline(aes(yintercept= 1), colour="#990000", linetype="dashed")+
-      geom_hline(aes(yintercept = 0))+
-      theme(plot.title = element_textbox_simple(size = 20, halign=0.5),
-            plot.subtitle = element_text(hjust = 0.5, size = 10),
-            axis.title = element_text(face = "bold"),
-            legend.text = element_text(size = 6),
-            axis.text.x = element_text(angle = 45, hjust = 0.5),
-            legend.position = "none")+
-      geom_text(aes(label= Actual, 
-                    x=date, y= Actual),
-                position = position_dodge(width = 1),
-                vjust = 0.5 - sign(data$Actual), size = 4)+
-      scale_y_continuous(limits=c(min_value, max_value))
+    ratio_graph(data, site = hospital, min= min_value, max= max_value) 
     
   })
   

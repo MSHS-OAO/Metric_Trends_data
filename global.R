@@ -378,7 +378,7 @@ ratio_graph <- function(data, site, min, max) {
     )+
     geom_hline(aes(yintercept= 1), colour="#990000", linetype="dashed")+
     geom_hline(aes(yintercept = 0))+
-    theme(plot.title = element_text(hjust = 0.5, size = 20),
+    theme(plot.title = element_text(hjust = 0.5, size = 15),
           plot.subtitle = element_text(hjust = 0.5, size = 10),
           axis.title = element_text(face = "bold"),
           legend.text = element_text(size = 6),
