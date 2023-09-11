@@ -406,7 +406,7 @@ graph_style <- function(data, site, metric,  min, max, text, y_label, ratio){
           axis.text.x = element_text(angle = 0, hjust = 0.5, face = "bold"),
           axis.text.y = element_text(face = "bold"),
           legend.position = "non")+
-    geom_text_repel(aes(label= text_label,
+    geom_text_repel(aes(label= text,
                         x=date, y= Variance, color = sign),
                     position = position_dodge(width = 1), fontface = "bold",
                     vjust = 0.5 - sign(data$Variance), size = 3)+
@@ -428,3 +428,54 @@ graph_style <- function(data, site, metric,  min, max, text, y_label, ratio){
                     vjust = 0.5 - sign(data$Variance.From.Budget.YTD), size = 3 )
   return(p1)
   }
+
+
+# graph functions
+ytd_graph <- function(data, site, metric, min, max) {
+  
+  ggplot(data)  + 
+    geom_line(aes(x=date, y= Variance.From.Budget.YTD, group = 1), 
+              colour = "#212070", stat="identity", linewidth = 1.25)+
+    geom_point(mapping = aes(date, Variance.From.Budget.YTD),
+               colour = "#212070", size = 3) +
+    labs(x = "Date", y = "YTD Variance to Budget Ratio %" , 
+         title = paste0(site, " " , metric, " YTD Variance to Budget Ratio" ))+
+    theme(plot.title = element_textbox_simple(size = 15, halign=0.5),
+          plot.subtitle = element_text(hjust = 0.5, size = 10),
+          axis.title = element_text(face = "bold"),
+          legend.text = element_text(size = 6),
+          axis.text.x = element_text(angle = 0, hjust = 0.5, face = "bold"),
+          axis.text.y = element_text(face = "bold"),
+          legend.position = "none")+
+    geom_text(aes(label= paste0(data$ratio_label, "%"), 
+                  x=date, y= Variance.From.Budget.YTD, color= sign.YTD),
+              position = position_dodge(width = 1), fontface = "bold",
+              vjust = 0.5 - sign(data$Variance.From.Budget.YTD), size = 4)+
+    scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
+    scale_y_continuous(limits=c(min, max))+
+    geom_hline(aes(yintercept = 0))
+  
+}
+
+var_graph <- function(data, site, metric, min, max, y_label) {
+  
+  ggplot(data)  + 
+    geom_bar(aes(x=date, y= Variance), stat="identity", fill= "#212070")+
+    labs(x = "Date", y = y_label, 
+         title = paste0(site , " ", metric, " Monthly Variance to Budget"),
+         subtitle = paste0("($ in Thousands)"))+
+    theme(plot.title = element_textbox_simple(size = 15, halign=0.5),
+          plot.subtitle = element_text(hjust = 0.5, size = 10),
+          axis.title = element_text(face = "bold"),
+          legend.text = element_text(size = 6),
+          axis.text.x = element_text(angle = 0, hjust = 0.5, face = "bold"),
+          axis.text.y = element_text(face = "bold"),
+          legend.position = "non")+
+    geom_text(aes(label= paste0("$", data$text_label), x=date, y= Variance, color = sign),
+              position = position_dodge(width = 1), fontface = "bold",
+              vjust = 0.5 - sign(data$Variance)/2, size = 4)+
+    scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
+    scale_y_continuous(limits=c(min, max))+
+    geom_hline(aes(yintercept = 0))
+  
+}

@@ -478,6 +478,91 @@ ui <- dashboardPage(
                        
               ),
               
+              tabPanel(title = "YTD Variance to Budget Ratio",
+                       fluidRow(
+                         box(
+                           title = NULL, width = 12, status = "primary",
+                           solidHeader = TRUE, collapsible = TRUE,
+                           closable = TRUE, br(),
+                           fluidRow(
+                             box(width = 4, height = "100px",
+                                 title = "Select Hospitals:", solidHeader = FALSE,
+                                 pickerInput("all_hospital_ytd", label = NULL, multiple = FALSE,
+                                             options = pickerOptions(actionsBox = TRUE), 
+                                             choices = hospital_choices,
+                                             selected = "MSHS")),
+                             
+                             box(width = 4, height = "100px",
+                                 title = "Select Date:",  solidHeader = FALSE,
+                                 pickerInput("all_date_range_ytd", label = NULL, 
+                                             multiple = TRUE,
+                                             options = pickerOptions(
+                                               actionsBox = TRUE,
+                                               selectedTextFormat = "count > 1", 
+                                               countSelectedText = "{0}/{1} Dates",
+                                               dropupAuto = FALSE),
+                                             choices = date_options, 
+                                             selected = date_options)),
+                             
+                             column(width = 4,
+                                    actionButton("all_filters_update_ytd", 
+                                                 "CLICK TO UPDATE", width = "75%"),
+                                    br(),
+                                    br())))),
+                       fluidRow(
+                         box(title = NULL, status = "primary",
+                             solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
+                             plotOutput("ratio_plot_ytd"),  width = 4),
+                         
+                         box(title = NULL, status = "primary", 
+                             solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
+                             plotOutput("revenue_plot_ytd"),  width = 4),
+                         
+                         box(title = NULL, status = "primary",
+                             solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
+                             plotOutput("expense_plot_ytd"),  width = 4),
+                         
+                         box(title = NULL, status = "primary", 
+                             solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
+                             plotOutput("discharges_plot_ytd"),  width = 4),
+                         
+                         
+                         box(title = NULL, status = "primary",
+                             solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
+                             plotOutput("cmi_plot_ytd"),  width = 4),
+                         
+                         box(title = NULL, status = "primary", 
+                             solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
+                             plotOutput("alos_plot_ytd"),  width = 4),
+                         
+                         
+                         box(title = NULL, status = "primary",
+                             solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
+                             plotOutput("outpt_plot_ytd"),  width = 4),
+                         
+                         box(title = NULL, status = "primary", 
+                             solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
+                             plotOutput("operate_plot_ytd"),  width = 4),
+                         
+                         
+                         box(title = NULL, status = "primary",
+                             solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
+                             plotOutput("salary_plot_ytd"),  width = 4),
+                         
+                         box(title = NULL, status = "primary", 
+                             solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
+                             plotOutput("supply_plot_ytd"),  width = 4),
+                         
+                         
+                         box(title = NULL, status = "primary",
+                             solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
+                             plotOutput("nurse_plot_ytd"),  width = 4),
+                         
+                         box(title = NULL, status = "primary", 
+                             solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
+                             plotOutput("carts_plot_ytd"),  width = 4))
+                       
+              )
                 
                 
                 
