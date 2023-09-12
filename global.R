@@ -457,7 +457,7 @@ ytd_graph <- function(data, site, metric, min, max) {
   
 }
 
-var_graph <- function(data, site, metric, min, max, y_label) {
+var_graph <- function(data, site, metric, min, max, y_label, text) {
   
   ggplot(data)  + 
     geom_bar(aes(x=date, y= Variance), stat="identity", fill= "#212070")+
@@ -471,7 +471,7 @@ var_graph <- function(data, site, metric, min, max, y_label) {
           axis.text.x = element_text(angle = 0, hjust = 0.5, face = "bold"),
           axis.text.y = element_text(face = "bold"),
           legend.position = "non")+
-    geom_text(aes(label= paste0("$", data$text_label), x=date, y= Variance, color = sign),
+    geom_text(aes(label= text, x=date, y= Variance, color = sign),
               position = position_dodge(width = 1), fontface = "bold",
               vjust = 0.5 - sign(data$Variance)/2, size = 4)+
     scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
