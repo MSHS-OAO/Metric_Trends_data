@@ -1698,7 +1698,7 @@ server <- function(input, output, session) {
     }
     
     # Define labels for metrics    
-    text_label <- paste0("$", data$`Variance`)
+    text_label <- paste0("$", data$text_label)
     y_label <- "Variance to Budget $"
  
     graph_style(data, site = isolate(input$all_hospital), metric = metric_choice, min =  min_value,
@@ -1743,7 +1743,7 @@ server <- function(input, output, session) {
     }
     
     # Define labels for metrics    
-    text_label <- paste0("$", data$`Variance`)
+    text_label <- paste0("$", data$text_label)
     y_label <- "Variance to Budget $"
     
    
@@ -1789,7 +1789,7 @@ server <- function(input, output, session) {
     }
     
     # Define labels for metrics    
-    text_label <- data$`Variance`
+    text_label <- data$text_label
     y_label <- "Variance to Budget"
     
     graph_style(data, site = isolate(input$all_hospital), metric = metric_choice, min =  min_value,
@@ -1833,7 +1833,7 @@ server <- function(input, output, session) {
     }
     
     # Define labels for metrics    
-    text_label <- data$`Variance`
+    text_label <- data$text_label
     y_label <- "Variance to Budget"
     
     graph_style(data, site = isolate(input$all_hospital), metric = metric_choice, min =  min_value,
@@ -1878,7 +1878,7 @@ server <- function(input, output, session) {
     }
     
     # Define labels for metrics    
-    text_label <- data$`Variance`
+    text_label <- data$text_label
     y_label <- "Variance to Budget"
     
     graph_style(data, site = isolate(input$all_hospital), metric = metric_choice, min =  min_value,
@@ -1923,7 +1923,7 @@ server <- function(input, output, session) {
     }
     
     # Define labels for metrics    
-    text_label <- paste0("$", data$`Variance`)
+    text_label <- paste0("$", data$text_label)
     y_label <- "Variance to Budget $"
     
     
@@ -1969,7 +1969,7 @@ server <- function(input, output, session) {
     }
     
     # Define labels for metrics    
-    text_label <- paste0("$", data$`Variance`)
+    text_label <- paste0("$", data$text_label)
     y_label <- "Variance to Budget $"
     
     graph_style(data, site = isolate(input$all_hospital), metric = metric_choice, min =  min_value,
@@ -2014,7 +2014,7 @@ server <- function(input, output, session) {
     }
     
     # Define labels for metrics    
-    text_label <- paste0("$", data$`Variance`)
+    text_label <- paste0("$", data$text_label)
     y_label <- "Variance to Budget $"
     
     graph_style(data, site = isolate(input$all_hospital), metric = metric_choice, min =  min_value,
@@ -2059,7 +2059,7 @@ server <- function(input, output, session) {
     }
     
     # Define labels for metrics    
-    text_label <- paste0("$", data$`Variance`)
+    text_label <- paste0("$", data$text_label)
     y_label <- "Variance to Budget $"
     
     graph_style(data, site = isolate(input$all_hospital), metric = metric_choice, min =  min_value,
@@ -2103,7 +2103,7 @@ server <- function(input, output, session) {
     }
     
     # Define labels for metrics    
-    text_label <- paste0("$", data$`Variance`)
+    text_label <- paste0("$", data$text_label)
     y_label <- "Variance to Budget $"
     
     graph_style(data, site = isolate(input$all_hospital), metric = metric_choice, min =  min_value,
@@ -2148,7 +2148,7 @@ server <- function(input, output, session) {
     }
     
     # Define labels for metrics    
-    text_label <- paste0("$", data$`Variance`)
+    text_label <- paste0("$", data$text_label)
     y_label <- "Variance to Budget $"
     
     graph_style(data, site = isolate(input$all_hospital), metric = metric_choice, min =  min_value,
