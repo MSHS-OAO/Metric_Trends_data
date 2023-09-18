@@ -383,7 +383,7 @@ ratio_graph <- function(data, site, min, max) {
           axis.title = element_text(face = "bold"),
           legend.text = element_text(size = 6),
           axis.text.x = element_text(angle = 45, hjust = 0.5, face = "bold"),
-          axis.text.y = element_text(face = "bold"),
+          axis.text.y = element_text(face = "bold", size = 10),
           legend.position = "none")+
     geom_text(aes(label= Actual, 
                   x=date, y= Actual),
@@ -404,7 +404,7 @@ graph_style <- function(data, site, metric,  min, max, text, y_label, ratio){
           axis.title = element_text(face='bold'),
           legend.text = element_text(size = 6),
           axis.text.x = element_text(angle = 0, hjust = 0.5, face = "bold"),
-          axis.text.y = element_text(face = "bold"),
+          axis.text.y = element_text(face = "bold", size = 10),
           legend.position = "non")+
     geom_text_repel(aes(label= text,
                         x=date, y= Variance, color = sign),
@@ -445,7 +445,7 @@ ytd_graph <- function(data, site, metric, min, max) {
           axis.title = element_text(face = "bold"),
           legend.text = element_text(size = 6),
           axis.text.x = element_text(angle = 0, hjust = 0.5, face = "bold"),
-          axis.text.y = element_text(face = "bold"),
+          axis.text.y = element_text(face = "bold",  size = 10),
           legend.position = "none")+
     geom_text(aes(label= paste0(data$ratio_label, "%"), 
                   x=date, y= Variance.From.Budget.YTD, color= sign.YTD),
@@ -469,7 +469,7 @@ var_graph <- function(data, site, metric, min, max, y_label, text) {
           axis.title = element_text(face = "bold"),
           legend.text = element_text(size = 6),
           axis.text.x = element_text(angle = 0, hjust = 0.5, face = "bold"),
-          axis.text.y = element_text(face = "bold"),
+          axis.text.y = element_text(face = "bold",  size = 10),
           legend.position = "non")+
     geom_text(aes(label= text, x=date, y= Variance, color = sign),
               position = position_dodge(width = 1), fontface = "bold",
