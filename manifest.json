@@ -2992,6 +2992,29 @@
         "Built": "R 4.2.3; ; 2023-04-26 16:20:18 UTC; unix"
       }
     },
+    "shinyBS": {
+      "Source": "CRAN",
+      "Repository": "https://hso-packagemanager.mssm.edu/prod-cran/__linux__/focal/2023-04-14",
+      "description": {
+        "Package": "shinyBS",
+        "Type": "Package",
+        "Title": "Twitter Bootstrap Components for Shiny",
+        "Version": "0.61.1",
+        "Date": "2015-03-30",
+        "Author": "Eric Bailey",
+        "Maintainer": "Eric Bailey <ebailey@idem.in.gov>",
+        "Description": "Adds additional Twitter Bootstrap components to Shiny. ",
+        "Imports": "shiny (>= 0.11), htmltools",
+        "URL": "https://ebailey78.github.io/shinyBS",
+        "BugReports": "https://github.com/ebailey78/shinyBS/issues",
+        "License": "GPL-3",
+        "Packaged": "2022-04-17 17:00:11 UTC; hornik",
+        "NeedsCompilation": "no",
+        "Repository": "CRAN",
+        "Date/Publication": "2022-04-17 17:43:50 UTC",
+        "Built": "R 4.2.3; ; 2023-04-26 16:21:35 UTC; unix"
+      }
+    },
     "shinyWidgets": {
       "Source": "CRAN",
       "Repository": "https://hso-packagemanager.mssm.edu/prod-cran/__linux__/focal/2023-04-14",
@@ -3068,6 +3091,32 @@
         "Repository": "CRAN",
         "Date/Publication": "2021-09-30 12:10:06 UTC",
         "Built": "R 4.2.3; ; 2023-04-26 16:20:37 UTC; unix"
+      }
+    },
+    "shinyscreenshot": {
+      "Source": "CRAN",
+      "Repository": "https://hso-packagemanager.mssm.edu/prod-cran/__linux__/focal/2023-04-14",
+      "description": {
+        "Package": "shinyscreenshot",
+        "Title": "Capture Screenshots of Entire Pages or Parts of Pages in 'Shiny'",
+        "Version": "0.2.0",
+        "Authors@R": "c(\n    person(\"Dean\", \"Attali\",\n        email = \"daattali@gmail.com\",\n        role = c(\"aut\", \"cre\"),\n        comment = c(ORCID=\"0000-0002-5645-3493\")),\n    person(\"Niklas\", \"von Hertzen\", email = \"niklasvh@gmail.com\",\n        role = c(\"aut\"), comment = \"html2canvas library\"),\n    person(\"Eli\", \"Grey\", email = \"~@eligrey.com\",\n        role = c(\"aut\"), comment = \"FileSaver library\")\n    )",
+        "Description": "Capture screenshots in 'Shiny' applications. Screenshots can either be\n    of the entire viewable page, or a specific section of the page. The captured\n    image is automatically downloaded as a PNG image, or it can also be saved on\n    the server. Powered by the 'html2canvas' JavaScript library.",
+        "URL": "https://github.com/daattali/shinyscreenshot\nhttps://daattali.com/shiny/shinyscreenshot-demo/",
+        "BugReports": "https://github.com/daattali/shinyscreenshot/issues",
+        "Depends": "R (>= 3.1.0)",
+        "Imports": "base64enc, jsonlite, shiny (>= 1.0.0), uuid",
+        "Suggests": "timevis",
+        "License": "MIT + file LICENSE",
+        "Encoding": "UTF-8",
+        "RoxygenNote": "7.1.1",
+        "NeedsCompilation": "no",
+        "Packaged": "2021-12-20 21:34:01 UTC; Dean-X1C",
+        "Author": "Dean Attali [aut, cre] (<https://orcid.org/0000-0002-5645-3493>),\n  Niklas von Hertzen [aut] (html2canvas library),\n  Eli Grey [aut] (FileSaver library)",
+        "Maintainer": "Dean Attali <daattali@gmail.com>",
+        "Repository": "CRAN",
+        "Date/Publication": "2021-12-20 21:50:02 UTC",
+        "Built": "R 4.2.3; ; 2023-04-26 16:21:38 UTC; unix"
       }
     },
     "shinythemes": {
@@ -3767,13 +3816,16 @@
   },
   "files": {
     "global.R": {
-      "checksum": "26f4e7662e80e3e5d40d3b1daf794c0a"
+      "checksum": "74f8490e7a846c92e2653d0348802063"
+    },
+    "plot.png": {
+      "checksum": "ed59082d3753a568ddb73a52137be7b4"
     },
     "server.R": {
-      "checksum": "79717d1c3e2ca422de6ee8cfe0067756"
+      "checksum": "319e10e6c24c5e42f47fbecd1a38b2b8"
     },
     "ui.R": {
-      "checksum": "d2199833738dc34c4153026cc5e2d092"
+      "checksum": "d60714b7df0db7d2f23d44c4bfca8f3e"
     },
     "www/Sinai_logo_color.png": {
       "checksum": "1d2ba7ac0d235e444e7a5f4f2cc3ece5"
