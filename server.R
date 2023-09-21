@@ -26,6 +26,10 @@ server <- function(input, output, session) {
     paste0("Based on data from ", start_date, " to ", end_date, " for ", metric)
   }, ignoreNULL = FALSE)
   
+  
+  observeEvent(input$download1, {
+    screenshot(filename = "MSHS Metrics Trends Dashboard")
+  })
 
   ### Observeevent to update the text based on different filters
   observeEvent(input$tabSwitch, {

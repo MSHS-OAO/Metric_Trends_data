@@ -5,6 +5,7 @@
 # Import Libraries -------------------------------------------------
 suppressMessages({
 library(tidyverse)
+library(shinyBS)  
 library(readxl)
 library(plotly)
 library(scales)
@@ -14,6 +15,7 @@ library(zoo)
 library(gridExtra)
 library(ggrepel) 
 library(shiny)
+library(shinyscreenshot)
 library(shinythemes)
 library(shinydashboard)
 library(shinycssloaders)

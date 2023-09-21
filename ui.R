@@ -2,7 +2,10 @@
 # ui function
 
 # define title for ui
-header <- dashboardHeader(title = "Metrics Trends Dashboard", titleWidth = 450)
+header <- dashboardHeader(title = "Metrics Trends Dashboard", titleWidth = 450,
+                          tags$li(class = "dropdown", actionButton("download1",
+                                                                   label = icon("download")
+                          )))
 
 # define logos for ui
 header$children[[2]]$children[[2]] <- header$children[[2]]$children[[1]]
@@ -82,7 +85,25 @@ ui <- dashboardPage(
                                          "font-size: 18px; margin-top: -0.2em; margin-bottom: 0.5em; margin-left:",
                                          "20px}"))), hr(),
               
+              tags$head(
+                tags$style(HTML("
+                  #download1 {
+                    background: #212070;
+                    color: #fff;
+                    padding: 8px 15px;
+                    font-size: 24px;
+                    font-family: inherit;
+                    height: 54px;
+                    width: 54px;
+                    line-height: 44px;
+                    outline: none;
+                    box-shadow: none;
+                    border-radius: 50%;
+                    border-color: transparent;}"))),
               
+              bsTooltip("download1", "Download (PNG) current tab.",
+                        "top", options = list(container = "body")),
+
               tags$head(tags$style(HTML(paste("#mshs_filters_update {background-color: #d80b8c;color: #FFFFFF;",
                                               "font-size: 18px}")))),
               
