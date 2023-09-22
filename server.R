@@ -2,6 +2,10 @@
 # Server
 server <- function(input, output, session) {
   
+  observeEvent(input$download1, {
+    screenshot(filename = "MSHS Metrics Trends Dashboard")
+  })
+  
   # Text output ---------------------------------
   ### Text output for Metrics tab -------------------------------
   system_text <- eventReactive(input$mshs_filters_update, {
@@ -27,9 +31,6 @@ server <- function(input, output, session) {
   }, ignoreNULL = FALSE)
   
   
-  observeEvent(input$download1, {
-    screenshot(filename = "MSHS Metrics Trends Dashboard")
-  })
 
   ### Observeevent to update the text based on different filters
   observeEvent(input$tabSwitch, {

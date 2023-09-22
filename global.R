@@ -5,7 +5,6 @@
 # Import Libraries -------------------------------------------------
 suppressMessages({
 library(tidyverse)
-library(shinyBS)  
 library(readxl)
 library(plotly)
 library(scales)
@@ -15,6 +14,7 @@ library(zoo)
 library(gridExtra)
 library(ggrepel) 
 library(shiny)
+library(shinyBS)
 library(shinyscreenshot)
 library(shinythemes)
 library(shinydashboard)
@@ -384,7 +384,7 @@ ratio_graph <- function(data, site, min, max) {
           plot.subtitle = element_text(hjust = 0.5, size = 10),
           axis.title = element_text(face = "bold"),
           legend.text = element_text(size = 6),
-          axis.text.x = element_text(angle = 45, hjust = 0.5, face = "bold"),
+          axis.text.x = element_text(angle = 45, hjust = 1, face = "bold"),
           axis.text.y = element_text(face = "bold", size = 10),
           legend.position = "none")+
     geom_text(aes(label= Actual, 
@@ -405,7 +405,7 @@ graph_style <- function(data, site, metric,  min, max, text, y_label, ratio){
           plot.subtitle = element_text(hjust = 0.5, size = 10),
           axis.title = element_text(face='bold'),
           legend.text = element_text(size = 6),
-          axis.text.x = element_text(angle = 0, hjust = 0.5, face = "bold"),
+          axis.text.x = element_text(angle = 45, hjust = 1, face = "bold"),
           axis.text.y = element_text(face = "bold", size = 10),
           legend.position = "non")+
     geom_text_repel(aes(label= text,
@@ -446,7 +446,7 @@ ytd_graph <- function(data, site, metric, min, max) {
           plot.subtitle = element_text(hjust = 0.5, size = 10),
           axis.title = element_text(face = "bold"),
           legend.text = element_text(size = 6),
-          axis.text.x = element_text(angle = 0, hjust = 0.5, face = "bold"),
+          axis.text.x = element_text(angle = 45, hjust = 1, face = "bold"),
           axis.text.y = element_text(face = "bold",  size = 10),
           legend.position = "none")+
     geom_text(aes(label= paste0(data$ratio_label, "%"), 
@@ -470,7 +470,7 @@ var_graph <- function(data, site, metric, min, max, y_label, text) {
           plot.subtitle = element_text(hjust = 0.5, size = 10),
           axis.title = element_text(face = "bold"),
           legend.text = element_text(size = 6),
-          axis.text.x = element_text(angle = 0, hjust = 0.5, face = "bold"),
+          axis.text.x = element_text(angle = 45, hjust = 1, face = "bold"),
           axis.text.y = element_text(face = "bold",  size = 10),
           legend.position = "non")+
     geom_text(aes(label= text, x=date, y= Variance, color = sign),
