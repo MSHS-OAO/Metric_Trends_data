@@ -195,10 +195,9 @@ server <- function(input, output, session) {
   output$mshs_plot <- renderPlot({
     data <- mshs_data() %>%
       filter(Site == "MSHS")%>%
-      #mutate(date= as.yearmon(date, "%Y-%m"))%>%
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
              sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
-             text_label = ifelse(Variance <0 , paste0("(", abs(as.numeric(Variance)), ")"), Variance),
+             text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)),
              ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
                                   Variance.From.Budget.YTD))
     
@@ -264,10 +263,10 @@ server <- function(input, output, session) {
     # Define different labels for metrics    
       if (isolate(input$mshs_metrics) %in% c("CMI", "ALOS", "Discharges")) {
         text_label <- data$text_label
-        y_label <- "Variance to Budget"
+        y_label <- "Monthly Variance to Budget"
       } else {
         text_label <- paste0("$", data$text_label)
-        y_label <- "Variance to Budget $"
+        y_label <- "Monthly Variance to Budget $"
       }
       
       
@@ -286,7 +285,7 @@ server <- function(input, output, session) {
       #mutate(date= as.yearmon(date, "%Y-%m"))%>%
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
              sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
-             text_label = ifelse(Variance <0 , paste0("(", abs(as.numeric(Variance)), ")"), Variance),
+             text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)),
              ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
                                     Variance.From.Budget.YTD))
              
@@ -355,10 +354,10 @@ server <- function(input, output, session) {
       # Define different labels for metrics    
       if (isolate(input$mshs_metrics) %in% c("CMI", "ALOS", "Discharges")) {
         text_label <- data$text_label
-        y_label <- "Variance to Budget"
+        y_label <- "Monthly Variance to Budget"
       } else {
         text_label <- paste0("$", data$text_label)
-        y_label <- "Variance to Budget $"
+        y_label <- "Monthly Variance to Budget $"
       }
       
       metric_choice <- isolate(input$mshs_metrics)
@@ -377,7 +376,7 @@ server <- function(input, output, session) {
       #mutate(date= as.yearmon(date, "%Y-%m"))%>%
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
              sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
-             text_label = ifelse(Variance <0 , paste0("(", abs(as.numeric(Variance)), ")"), Variance),
+             text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)),
              ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
                                   Variance.From.Budget.YTD))
     
@@ -442,10 +441,10 @@ server <- function(input, output, session) {
       # Define different labels for metrics    
       if (isolate(input$mshs_metrics) %in% c("CMI", "ALOS", "Discharges")) {
         text_label <- data$text_label
-        y_label <- "Variance to Budget"
+        y_label <- "Monthly Variance to Budget"
       } else {
         text_label <- paste0("$", data$text_label)
-        y_label <- "Variance to Budget $"
+        y_label <- "Monthly Variance to Budget $"
       }
       
       metric_choice <- isolate(input$mshs_metrics)
@@ -463,7 +462,7 @@ server <- function(input, output, session) {
       #mutate(date= as.yearmon(date, "%Y-%m"))%>%
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
              sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
-             text_label = ifelse(Variance <0 , paste0("(", abs(as.numeric(Variance)), ")"), Variance),
+             text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)),
              ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
                                   Variance.From.Budget.YTD))
     
@@ -529,10 +528,10 @@ server <- function(input, output, session) {
       # Define different labels for metrics    
       if (isolate(input$mshs_metrics) %in% c("CMI", "ALOS", "Discharges")) {
         text_label <- data$text_label
-        y_label <- "Variance to Budget"
+        y_label <- "Monthly Variance to Budget"
       } else {
         text_label <- paste0("$", data$text_label)
-        y_label <- "Variance to Budget $"
+        y_label <- "Monthly Variance to Budget $"
       }
       
       metric_choice <- isolate(input$mshs_metrics)
@@ -549,7 +548,7 @@ server <- function(input, output, session) {
       #mutate(date= as.yearmon(date, "%Y-%m"))%>%
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
              sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
-             text_label = ifelse(Variance <0 , paste0("(", abs(as.numeric(Variance)), ")"), Variance),
+             text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)),
              ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
                                   Variance.From.Budget.YTD))
     
@@ -612,10 +611,10 @@ server <- function(input, output, session) {
       # Define different labels for metrics    
       if (isolate(input$mshs_metrics) %in% c("CMI", "ALOS", "Discharges")) {
         text_label <- data$text_label
-        y_label <- "Variance to Budget"
+        y_label <- "Monthly Variance to Budget"
       } else {
         text_label <- paste0("$", data$text_label)
-        y_label <- "Variance to Budget $"
+        y_label <- "Monthly Variance to Budget $"
       }
       
       metric_choice <- isolate(input$mshs_metrics)
@@ -633,7 +632,7 @@ server <- function(input, output, session) {
       #mutate(date= as.yearmon(date, "%Y-%m"))%>%
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
              sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
-             text_label = ifelse(Variance <0 , paste0("(", abs(as.numeric(Variance)), ")"), Variance),
+             text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)),
              ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
                                   Variance.From.Budget.YTD))
     
@@ -697,10 +696,10 @@ server <- function(input, output, session) {
       # Define different labels for metrics    
       if (isolate(input$mshs_metrics) %in% c("CMI", "ALOS", "Discharges")) {
         text_label <- data$text_label
-        y_label <- "Variance to Budget"
+        y_label <- "Monthly Variance to Budget"
       } else {
         text_label <- paste0("$", data$text_label)
-        y_label <- "Variance to Budget $"
+        y_label <- "Monthly Variance to Budget $"
       }
       
       metric_choice <- isolate(input$mshs_metrics)
@@ -718,7 +717,7 @@ server <- function(input, output, session) {
       #mutate(date= as.yearmon(date, "%Y-%m"))%>%
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
              sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
-             text_label = ifelse(Variance <0 , paste0("(", abs(as.numeric(Variance)), ")"), Variance),
+             text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)),
              ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
                                   Variance.From.Budget.YTD))
     
@@ -782,10 +781,10 @@ server <- function(input, output, session) {
       # Define different labels for metrics    
       if (isolate(input$mshs_metrics) %in% c("CMI", "ALOS", "Discharges")) {
         text_label <- data$text_label
-        y_label <- "Variance to Budget"
+        y_label <- "Monthly Variance to Budget"
       } else {
         text_label <- paste0("$", data$text_label)
-        y_label <- "Variance to Budget $"
+        y_label <- "Monthly Variance to Budget $"
       }
       
       metric_choice <- isolate(input$mshs_metrics)
@@ -804,7 +803,7 @@ server <- function(input, output, session) {
       #mutate(date= as.yearmon(date, "%Y-%m"))%>%
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
              sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
-             text_label = ifelse(Variance <0 , paste0("(", abs(as.numeric(Variance)), ")"), Variance),
+             text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)),
              ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
                                   Variance.From.Budget.YTD))
     
@@ -868,10 +867,10 @@ server <- function(input, output, session) {
       # Define different labels for metrics    
       if (isolate(input$mshs_metrics) %in% c("CMI", "ALOS", "Discharges")) {
         text_label <- data$text_label
-        y_label <- "Variance to Budget"
+        y_label <- "Monthly Variance to Budget"
       } else {
         text_label <- paste0("$", data$text_label)
-        y_label <- "Variance to Budget $"
+        y_label <- "Monthly Variance to Budget $"
       }
       
       metric_choice <- isolate(input$mshs_metrics)
@@ -891,7 +890,7 @@ server <- function(input, output, session) {
       #mutate(date= as.yearmon(date, "%Y-%m"))%>%
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
              sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
-             text_label = ifelse(Variance <0 , paste0("(", abs(as.numeric(Variance)), ")"), Variance),
+             text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)),
              ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
                                   Variance.From.Budget.YTD))
     
@@ -955,10 +954,10 @@ server <- function(input, output, session) {
       # Define different labels for metrics    
       if (isolate(input$mshs_metrics) %in% c("CMI", "ALOS", "Discharges")) {
         text_label <- data$text_label
-        y_label <- "Variance to Budget"
+        y_label <- "Monthly Variance to Budget"
       } else {
         text_label <- paste0("$", data$text_label)
-        y_label <- "Variance to Budget $"
+        y_label <- "Monthly Variance to Budget $"
       }
       
       
@@ -982,7 +981,7 @@ server <- function(input, output, session) {
       #data <- new_repo %>% filter(Metrics == metric_option)%>%
       filter(Site == hospital)%>%
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
-             text_label = ifelse(Variance <0 , paste0("(", abs(as.numeric(Variance)), ")"), Variance))
+             text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)))
     
     validate(need(nrow(data) > 0, paste0(metric_option , " is not available for ", hospital)))
     
@@ -1002,10 +1001,10 @@ server <- function(input, output, session) {
     # Define different labels for metrics    
     if (metric_option %in% c("CMI", "ALOS", "Discharges")) {
       text_label <- data$text_label
-      y_label <- "Variance to Budget"
+      y_label <- "Monthly Variance to Budget"
     } else {
       text_label <- paste0("$", data$text_label)
-      y_label <- "Variance to Budget $"
+      y_label <- "Monthly Variance to Budget $"
     }
     
     var_graph(data, site= hospital, metric = metric_option, min= min_value, 
@@ -1021,7 +1020,7 @@ server <- function(input, output, session) {
     data <- var_data() %>%
       filter(Site == hospital)%>%
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
-             text_label = ifelse(Variance <0 , paste0("(", abs(as.numeric(Variance)), ")"), Variance))
+             text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)))
     
     validate(need(nrow(data) > 0, paste0(metric_option , " is not available for ", hospital)))
     
@@ -1041,10 +1040,10 @@ server <- function(input, output, session) {
     # Define different labels for metrics    
     if (metric_option %in% c("CMI", "ALOS", "Discharges")) {
       text_label <- data$text_label
-      y_label <- "Variance to Budget"
+      y_label <- "Monthly Variance to Budget"
     } else {
       text_label <- paste0("$", data$text_label)
-      y_label <- "Variance to Budget $"
+      y_label <- "Monthly Variance to Budget $"
     }
     
     var_graph(data, site= hospital, metric = metric_option, min= min_value, 
@@ -1061,7 +1060,7 @@ server <- function(input, output, session) {
     data <- var_data() %>%
       filter(Site == hospital)%>%
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
-             text_label = ifelse(Variance <0 , paste0("(", abs(as.numeric(Variance)), ")"), Variance))
+             text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)))
     
     validate(need(nrow(data) > 0, paste0(metric_option , " is not available for ", hospital)))
     
@@ -1081,10 +1080,10 @@ server <- function(input, output, session) {
     # Define different labels for metrics    
     if (metric_option %in% c("CMI", "ALOS", "Discharges")) {
       text_label <- data$text_label
-      y_label <- "Variance to Budget"
+      y_label <- "Monthly Variance to Budget"
     } else {
       text_label <- paste0("$", data$text_label)
-      y_label <- "Variance to Budget $"
+      y_label <- "Monthly Variance to Budget $"
     }
     
     var_graph(data, site= hospital, metric = metric_option, min= min_value, 
@@ -1102,7 +1101,7 @@ server <- function(input, output, session) {
     data <- var_data() %>%
       filter(Site == hospital)%>%
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
-             text_label = ifelse(Variance <0 , paste0("(", abs(as.numeric(Variance)), ")"), Variance))
+             text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)))
     
     validate(need(nrow(data) > 0, paste0(metric_option , " is not available for ", hospital)))
     
@@ -1122,10 +1121,10 @@ server <- function(input, output, session) {
     # Define different labels for metrics    
     if (metric_option %in% c("CMI", "ALOS", "Discharges")) {
       text_label <- data$text_label
-      y_label <- "Variance to Budget"
+      y_label <- "Monthly Variance to Budget"
     } else {
       text_label <- paste0("$", data$text_label)
-      y_label <- "Variance to Budget $"
+      y_label <- "Monthly Variance to Budget $"
     }
     
     var_graph(data, site= hospital, metric = metric_option, min= min_value, 
@@ -1141,7 +1140,7 @@ server <- function(input, output, session) {
     data <- var_data() %>%
       filter(Site == hospital)%>%
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
-             text_label = ifelse(Variance <0 , paste0("(", abs(as.numeric(Variance)), ")"), Variance))
+             text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)))
     
     validate(need(nrow(data) > 0, paste0(metric_option , " is not available for ", hospital)))
     
@@ -1161,10 +1160,10 @@ server <- function(input, output, session) {
     # Define different labels for metrics    
     if (metric_option %in% c("CMI", "ALOS", "Discharges")) {
       text_label <- data$text_label
-      y_label <- "Variance to Budget"
+      y_label <- "Monthly Variance to Budget"
     } else {
       text_label <- paste0("$", data$text_label)
-      y_label <- "Variance to Budget $"
+      y_label <- "Monthly Variance to Budget $"
     }
     
     var_graph(data, site= hospital, metric = metric_option, min= min_value, 
@@ -1180,7 +1179,7 @@ server <- function(input, output, session) {
     data <- var_data() %>%
       filter(Site == hospital)%>%
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
-             text_label = ifelse(Variance <0 , paste0("(", abs(as.numeric(Variance)), ")"), Variance))
+             text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)))
     
     validate(need(nrow(data) > 0, paste0(metric_option , " is not available for ", hospital)))
     
@@ -1200,10 +1199,10 @@ server <- function(input, output, session) {
     # Define different labels for metrics    
     if (metric_option %in% c("CMI", "ALOS", "Discharges")) {
       text_label <- data$text_label
-      y_label <- "Variance to Budget"
+      y_label <- "Monthly Variance to Budget"
     } else {
       text_label <- paste0("$", data$text_label)
-      y_label <- "Variance to Budget $"
+      y_label <- "Monthly Variance to Budget $"
     }
     
     var_graph(data, site= hospital, metric = metric_option, min= min_value, 
@@ -1219,7 +1218,7 @@ server <- function(input, output, session) {
     data <- var_data() %>%
       filter(Site == hospital)%>%
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
-             text_label = ifelse(Variance <0 , paste0("(", abs(as.numeric(Variance)), ")"), Variance))
+             text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)))
     
     validate(need(nrow(data) > 0, paste0(metric_option , " is not available for ", hospital)))
     
@@ -1239,10 +1238,10 @@ server <- function(input, output, session) {
     # Define different labels for metrics    
     if (metric_option %in% c("CMI", "ALOS", "Discharges")) {
       text_label <- data$text_label
-      y_label <- "Variance to Budget"
+      y_label <- "Monthly Variance to Budget"
     } else {
       text_label <- paste0("$", data$text_label)
-      y_label <- "Variance to Budget $"
+      y_label <- "Monthly Variance to Budget $"
     }
     
     var_graph(data, site= hospital, metric = metric_option, min= min_value, 
@@ -1258,7 +1257,7 @@ server <- function(input, output, session) {
     data <- var_data() %>%
       filter(Site == hospital)%>%
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
-             text_label = ifelse(Variance <0 , paste0("(", abs(as.numeric(Variance)), ")"), Variance))
+             text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)))
     
     validate(need(nrow(data) > 0, paste0(metric_option , " is not available for ", hospital)))
     
@@ -1278,10 +1277,10 @@ server <- function(input, output, session) {
     # Define different labels for metrics    
     if (metric_option %in% c("CMI", "ALOS", "Discharges")) {
       text_label <- data$text_label
-      y_label <- "Variance to Budget"
+      y_label <- "Monthly Variance to Budget"
     } else {
       text_label <- paste0("$", data$text_label)
-      y_label <- "Variance to Budget $"
+      y_label <- "Monthly Variance to Budget $"
     }
     
     var_graph(data, site= hospital, metric = metric_option, min= min_value, 
@@ -1298,7 +1297,7 @@ server <- function(input, output, session) {
     data <- var_data() %>%
       filter(Site == hospital)%>%
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
-             text_label = ifelse(Variance <0 , paste0("(", abs(as.numeric(Variance)), ")"), Variance))
+             text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)))
     
     validate(need(nrow(data) > 0, paste0(metric_option , " is not available for ", hospital)))
     
@@ -1318,10 +1317,10 @@ server <- function(input, output, session) {
     # Define different labels for metrics    
     if (metric_option %in% c("CMI", "ALOS", "Discharges")) {
       text_label <- data$text_label
-      y_label <- "Variance to Budget"
+      y_label <- "Monthly Variance to Budget"
     } else {
       text_label <- paste0("$", data$text_label)
-      y_label <- "Variance to Budget $"
+      y_label <- "Monthly Variance to Budget $"
     }
     
     var_graph(data, site= hospital, metric = metric_option, min= min_value, 
@@ -1674,7 +1673,7 @@ server <- function(input, output, session) {
       filter(Metrics ==  metric_choice)%>%
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
              sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
-             text_label = ifelse(Variance <0 , paste0("(", abs(as.numeric(Variance)), ")"), Variance),
+             text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)),
              ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
                                   Variance.From.Budget.YTD))
     
@@ -1704,7 +1703,7 @@ server <- function(input, output, session) {
     
     # Define labels for metrics    
     text_label <- paste0("$", data$text_label)
-    y_label <- "Variance to Budget $"
+    y_label <- "Monthly Variance to Budget $"
  
     graph_style(data, site = isolate(input$all_hospital), metric = metric_choice, min =  min_value,
                 max = max_value, text = text_label, y_label = y_label, ratio = ratio)
@@ -1719,7 +1718,7 @@ server <- function(input, output, session) {
       filter(Metrics %in%   metric_choice)%>%
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
              sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
-             text_label = ifelse(Variance <0 , paste0("(", abs(as.numeric(Variance)), ")"), Variance),
+             text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)),
              ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
                                   Variance.From.Budget.YTD))
     
@@ -1749,7 +1748,7 @@ server <- function(input, output, session) {
     
     # Define labels for metrics    
     text_label <- paste0("$", data$text_label)
-    y_label <- "Variance to Budget $"
+    y_label <- "Monthly Variance to Budget $"
     
    
     graph_style(data, site = isolate(input$all_hospital), metric = metric_choice, min =  min_value,
@@ -1765,7 +1764,7 @@ server <- function(input, output, session) {
       filter(Metrics %in%  metric_choice)%>%
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
              sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
-             text_label = ifelse(Variance <0 , paste0("(", abs(as.numeric(Variance)), ")"), Variance),
+             text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)),
              ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
                                   Variance.From.Budget.YTD))
     
@@ -1795,7 +1794,7 @@ server <- function(input, output, session) {
     
     # Define labels for metrics    
     text_label <- data$text_label
-    y_label <- "Variance to Budget"
+    y_label <- "Monthly Variance to Budget"
     
     graph_style(data, site = isolate(input$all_hospital), metric = metric_choice, min =  min_value,
                 max = max_value, text = text_label, y_label = y_label, ratio = ratio)
@@ -1809,7 +1808,7 @@ server <- function(input, output, session) {
       filter(Metrics %in%  metric_choice)%>%
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
              sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
-             text_label = ifelse(Variance <0 , paste0("(", abs(as.numeric(Variance)), ")"), Variance),
+             text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)),
              ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
                                   Variance.From.Budget.YTD))
     
@@ -1839,7 +1838,7 @@ server <- function(input, output, session) {
     
     # Define labels for metrics    
     text_label <- data$text_label
-    y_label <- "Variance to Budget"
+    y_label <- "Monthly Variance to Budget"
     
     graph_style(data, site = isolate(input$all_hospital), metric = metric_choice, min =  min_value,
                 max = max_value, text = text_label, y_label = y_label, ratio = ratio)
@@ -1854,7 +1853,7 @@ server <- function(input, output, session) {
       filter(Metrics %in%  metric_choice)%>%
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
              sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
-             text_label = ifelse(Variance <0 , paste0("(", abs(as.numeric(Variance)), ")"), Variance),
+             text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)),
              ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
                                   Variance.From.Budget.YTD))
     
@@ -1884,7 +1883,7 @@ server <- function(input, output, session) {
     
     # Define labels for metrics    
     text_label <- data$text_label
-    y_label <- "Variance to Budget"
+    y_label <- "Monthly Variance to Budget"
     
     graph_style(data, site = isolate(input$all_hospital), metric = metric_choice, min =  min_value,
                 max = max_value, text = text_label, y_label = y_label, ratio = ratio)
@@ -1899,7 +1898,7 @@ server <- function(input, output, session) {
       filter(Metrics %in%  metric_choice)%>%
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
              sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
-             text_label = ifelse(Variance <0 , paste0("(", abs(as.numeric(Variance)), ")"), Variance),
+             text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)),
              ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
                                   Variance.From.Budget.YTD))
     
@@ -1929,7 +1928,7 @@ server <- function(input, output, session) {
     
     # Define labels for metrics    
     text_label <- paste0("$", data$text_label)
-    y_label <- "Variance to Budget $"
+    y_label <- "Monthly Variance to Budget $"
     
     
     graph_style(data, site = isolate(input$all_hospital), metric = metric_choice, min =  min_value,
@@ -1945,7 +1944,7 @@ server <- function(input, output, session) {
       filter(Metrics %in%  metric_choice)%>%
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
              sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
-             text_label = ifelse(Variance <0 , paste0("(", abs(as.numeric(Variance)), ")"), Variance),
+             text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)),
              ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
                                   Variance.From.Budget.YTD))
     
@@ -1975,7 +1974,7 @@ server <- function(input, output, session) {
     
     # Define labels for metrics    
     text_label <- paste0("$", data$text_label)
-    y_label <- "Variance to Budget $"
+    y_label <- "Monthly Variance to Budget $"
     
     graph_style(data, site = isolate(input$all_hospital), metric = metric_choice, min =  min_value,
                 max = max_value, text = text_label, y_label = y_label, ratio = ratio)
@@ -1990,7 +1989,7 @@ server <- function(input, output, session) {
       filter(Metrics %in%  metric_choice)%>%
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
              sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
-             text_label = ifelse(Variance <0 , paste0("(", abs(as.numeric(Variance)), ")"), Variance),
+             text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)),
              ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
                                   Variance.From.Budget.YTD))
     
@@ -2020,7 +2019,7 @@ server <- function(input, output, session) {
     
     # Define labels for metrics    
     text_label <- paste0("$", data$text_label)
-    y_label <- "Variance to Budget $"
+    y_label <- "Monthly Variance to Budget $"
     
     graph_style(data, site = isolate(input$all_hospital), metric = metric_choice, min =  min_value,
                 max = max_value, text = text_label, y_label = y_label, ratio = ratio)
@@ -2035,7 +2034,7 @@ server <- function(input, output, session) {
       filter(Metrics %in%  metric_choice)%>%
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
              sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
-             text_label = ifelse(Variance <0 , paste0("(", abs(as.numeric(Variance)), ")"), Variance),
+             text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)),
              ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
                                   Variance.From.Budget.YTD))
     
@@ -2065,7 +2064,7 @@ server <- function(input, output, session) {
     
     # Define labels for metrics    
     text_label <- paste0("$", data$text_label)
-    y_label <- "Variance to Budget $"
+    y_label <- "Monthly Variance to Budget $"
     
     graph_style(data, site = isolate(input$all_hospital), metric = metric_choice, min =  min_value,
                 max = max_value, text = text_label, y_label = y_label, ratio = ratio)
@@ -2079,7 +2078,7 @@ server <- function(input, output, session) {
       filter(Metrics %in%  metric_choice)%>%
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
              sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
-             text_label = ifelse(Variance <0 , paste0("(", abs(as.numeric(Variance)), ")"), Variance),
+             text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)),
              ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
                                   Variance.From.Budget.YTD))
     
@@ -2109,7 +2108,7 @@ server <- function(input, output, session) {
     
     # Define labels for metrics    
     text_label <- paste0("$", data$text_label)
-    y_label <- "Variance to Budget $"
+    y_label <- "Monthly Variance to Budget $"
     
     graph_style(data, site = isolate(input$all_hospital), metric = metric_choice, min =  min_value,
                 max = max_value, text = text_label, y_label = y_label, ratio = ratio)
@@ -2122,11 +2121,10 @@ server <- function(input, output, session) {
       filter(Metrics %in% metric_choice)%>%
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
              sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
-             text_label = ifelse(Variance <0 , paste0("(", abs(as.numeric(Variance)), ")"), Variance),
+             text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)),
              ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
                                   Variance.From.Budget.YTD))
     
-    carts<<- data
     
     validate(need(nrow(data)>0, paste0(metric_choice, " is not available for ", isolate(input$all_hospital))))
     
@@ -2154,7 +2152,7 @@ server <- function(input, output, session) {
     
     # Define labels for metrics    
     text_label <- paste0("$", data$text_label)
-    y_label <- "Variance to Budget $"
+    y_label <- "Monthly Variance to Budget $"
     
     graph_style(data, site = isolate(input$all_hospital), metric = metric_choice, min =  min_value,
                 max = max_value, text = text_label, y_label = y_label, ratio = ratio)
@@ -2208,7 +2206,7 @@ server <- function(input, output, session) {
    #   data <- new_repo %>% filter(Site == hospital)%>%
       filter(Metrics ==  metric_option)%>%
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
-             text_label = ifelse(Variance <0 , paste0("(", abs(as.numeric(Variance)), ")"), Variance))
+             text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)))
     
     
     
@@ -2227,7 +2225,7 @@ server <- function(input, output, session) {
     min_value <- (min(data$Variance, na.rm = TRUE))*1.2
   }
     
-  y_label <- "Variance to Budget $"
+  y_label <- "Monthly Variance to Budget $"
   text_label <- paste0("$", data$text_label)
   var_graph(data, site =hospital, metric = metric_option, 
             min = min_value, max = max_value, y_label = y_label, text = text_label )
@@ -2242,7 +2240,7 @@ server <- function(input, output, session) {
     data <-  metric_data_var() %>%
       filter(Metrics ==  metric_option)%>%
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
-             text_label = ifelse(Variance <0 , paste0("(", abs(as.numeric(Variance)), ")"), Variance))
+             text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)))
     
     validate(need(nrow(data)> 0, paste0(metric_option, " is not available for ", hospital)))
     
@@ -2259,7 +2257,7 @@ server <- function(input, output, session) {
       min_value <- (min(data$Variance, na.rm = TRUE))*1.2
     }
     
-    y_label <- "Variance to Budget $"
+    y_label <- "Monthly Variance to Budget $"
     text_label <- paste0("$", data$text_label)
     var_graph(data, site =hospital, metric = metric_option, 
               min = min_value, max = max_value, y_label = y_label, text = text_label )
@@ -2273,7 +2271,7 @@ server <- function(input, output, session) {
       data <-  metric_data_var() %>%
         filter(Metrics ==  metric_option)%>%
         mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
-               text_label = ifelse(Variance <0 , paste0("(", abs(as.numeric(Variance)), ")"), Variance))
+               text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)))
       
       validate(need(nrow(data)> 0, paste0(metric_option, " is not available for ", hospital)))
       
@@ -2290,7 +2288,7 @@ server <- function(input, output, session) {
         min_value <- (min(data$Variance, na.rm = TRUE))*1.2
       }
       
-      y_label <- "Variance to Budget"
+      y_label <- "Monthly Variance to Budget"
       text_label <- data$text_label
       var_graph(data, site =hospital, metric = metric_option, 
                 min = min_value, max = max_value, y_label = y_label, text = text_label )
@@ -2304,7 +2302,7 @@ server <- function(input, output, session) {
     data <-  metric_data_var() %>%
       filter(Metrics ==  metric_option)%>%
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
-             text_label = ifelse(Variance <0 , paste0("(", abs(as.numeric(Variance)), ")"), Variance))
+             text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)))
     
     validate(need(nrow(data)> 0, paste0(metric_option, " is not available for ", hospital)))
     
@@ -2321,7 +2319,7 @@ server <- function(input, output, session) {
       min_value <- (min(data$Variance, na.rm = TRUE))*1.2
     }
     
-    y_label <- "Variance to Budget"
+    y_label <- "Monthly Variance to Budget"
     text_label <- data$text_label
     var_graph(data, site =hospital, metric = metric_option, 
               min = min_value, max = max_value, y_label = y_label, text = text_label )
@@ -2335,7 +2333,7 @@ server <- function(input, output, session) {
     data <-  metric_data_var() %>%
       filter(Metrics ==  metric_option)%>%
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
-             text_label = ifelse(Variance <0 , paste0("(", abs(as.numeric(Variance)), ")"), Variance))
+             text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)))
     
     validate(need(nrow(data)> 0, paste0(metric_option, " is not available for ", hospital)))
     
@@ -2352,7 +2350,7 @@ server <- function(input, output, session) {
       min_value <- (min(data$Variance, na.rm = TRUE))*1.2
     }
     
-    y_label <- "Variance to Budget"
+    y_label <- "Monthly Variance to Budget"
     text_label <- data$text_label
     var_graph(data, site =hospital, metric = metric_option, 
               min = min_value, max = max_value, y_label = y_label, text = text_label )
@@ -2367,7 +2365,7 @@ server <- function(input, output, session) {
     data <-  metric_data_var() %>%
       filter(Metrics ==  metric_option)%>%
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
-             text_label = ifelse(Variance <0 , paste0("(", abs(as.numeric(Variance)), ")"), Variance))
+             text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)))
     
     validate(need(nrow(data)> 0, paste0(metric_option, " is not available for ", hospital)))
     
@@ -2384,7 +2382,7 @@ server <- function(input, output, session) {
       min_value <- (min(data$Variance, na.rm = TRUE))*1.2
     }
     
-    y_label <- "Variance to Budget $"
+    y_label <- "Monthly Variance to Budget $"
     text_label <- paste0("$", data$text_label)
     var_graph(data, site =hospital, metric = metric_option, 
               min = min_value, max = max_value, y_label = y_label, text = text_label )
@@ -2398,7 +2396,7 @@ server <- function(input, output, session) {
     data <-  metric_data_var() %>%
       filter(Metrics ==  metric_option)%>%
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
-             text_label = ifelse(Variance <0 , paste0("(", abs(as.numeric(Variance)), ")"), Variance))
+             text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)))
     
     validate(need(nrow(data)> 0, paste0(metric_option, " is not available for ", hospital)))
     
@@ -2414,7 +2412,7 @@ server <- function(input, output, session) {
       min_value <- (min(data$Variance, na.rm = TRUE))*1.2
     }
     
-    y_label <- "Variance to Budget $"
+    y_label <- "Monthly Variance to Budget $"
     text_label <- paste0("$", data$text_label)
     var_graph(data, site =hospital, metric = metric_option, 
               min = min_value, max = max_value, y_label = y_label, text = text_label )
@@ -2428,7 +2426,7 @@ server <- function(input, output, session) {
       data <-  metric_data_var() %>%
         filter(Metrics ==  metric_option)%>%
         mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
-               text_label = ifelse(Variance <0 , paste0("(", abs(as.numeric(Variance)), ")"), Variance))
+               text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)))
       
       validate(need(nrow(data)> 0, paste0(metric_option, " is not available for ", hospital)))
       
@@ -2444,7 +2442,7 @@ server <- function(input, output, session) {
         min_value <- (min(data$Variance, na.rm = TRUE))*1.2
       }
       
-      y_label <- "Variance to Budget $"
+      y_label <- "Monthly Variance to Budget $"
       text_label <- paste0("$", data$text_label)
       var_graph(data, site =hospital, metric = metric_option, 
                 min = min_value, max = max_value, y_label = y_label, text = text_label )
@@ -2458,7 +2456,7 @@ server <- function(input, output, session) {
       data <-  metric_data_var() %>%
         filter(Metrics ==  metric_option)%>%
         mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
-               text_label = ifelse(Variance <0 , paste0("(", abs(as.numeric(Variance)), ")"), Variance))
+               text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)))
       
       validate(need(nrow(data)> 0, paste0(metric_option, " is not available for ", hospital)))
       
@@ -2474,7 +2472,7 @@ server <- function(input, output, session) {
         min_value <- (min(data$Variance, na.rm = TRUE))*1.2
       }
       
-      y_label <- "Variance to Budget $"
+      y_label <- "Monthly Variance to Budget $"
       text_label <- paste0("$", data$text_label)
       var_graph(data, site =hospital, metric = metric_option, 
                 min = min_value, max = max_value, y_label = y_label, text = text_label )
@@ -2488,7 +2486,7 @@ server <- function(input, output, session) {
       data <-  metric_data_var() %>%
         filter(Metrics ==  metric_option)%>%
         mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
-               text_label = ifelse(Variance <0 , paste0("(", abs(as.numeric(Variance)), ")"), Variance))
+               text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)))
       
       validate(need(nrow(data)> 0, paste0(metric_option, " is not available for ", hospital)))
       
@@ -2504,7 +2502,7 @@ server <- function(input, output, session) {
         min_value <- (min(data$Variance, na.rm = TRUE))*1.2
       }
       
-      y_label <- "Variance to Budget $"
+      y_label <- "Monthly Variance to Budget $"
       text_label <- paste0("$", data$text_label)
       var_graph(data, site =hospital, metric = metric_option, 
                 min = min_value, max = max_value, y_label = y_label, text = text_label )
@@ -2518,7 +2516,7 @@ server <- function(input, output, session) {
     data <-  metric_data_var() %>%
       filter(Metrics ==  metric_option)%>%
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
-             text_label = ifelse(Variance <0 , paste0("(", abs(as.numeric(Variance)), ")"), Variance))
+             text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)))
     
     validate(need(nrow(data)> 0, paste0(metric_option, " is not available for ", hospital)))
     
@@ -2534,7 +2532,7 @@ server <- function(input, output, session) {
       min_value <- (min(data$Variance, na.rm = TRUE))*1.2
     }
     
-    y_label <- "Variance to Budget $"
+    y_label <- "Monthly Variance to Budget $"
     text_label <- paste0("$", data$text_label)
     var_graph(data, site =hospital, metric = metric_option, 
          min = min_value, max = max_value, y_label = y_label, text = text_label )
@@ -2644,7 +2642,7 @@ server <- function(input, output, session) {
     
   })
   
-  output$discharges_plot_ytd<- renderPlot({
+  output$discharges_plot_ytd <- renderPlot({
     
     Metric_option <- "Discharges" 
     

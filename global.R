@@ -399,7 +399,7 @@ graph_style <- function(data, site, metric,  min, max, text, y_label, ratio){
   p1 <- ggplot(data)  + 
     geom_bar(aes(x=date, y= Variance), stat="identity", fill= "#b2b3b2")+
     labs(x = "Date", y = y_label, 
-         title = paste0(site, " ", metric , " Monthly Variance to Budget"),
+         title = paste0(site, " ", metric),
          subtitle = paste0("($ in Thousands)"))+
     theme(plot.title = element_textbox_simple(size = 15, halign=0.5),
           plot.subtitle = element_text(hjust = 0.5, size = 10),
@@ -426,7 +426,7 @@ graph_style <- function(data, site, metric,  min, max, text, y_label, ratio){
                                                     name = "YTD Variance To Budget Ratio %"))+
     geom_text_repel(aes(label= paste0(data$ratio_label, "%"), 
                         x=date, y= Variance_scaled , color = sign.YTD),
-                    position = position_dodge(width = 1), fontface='bold',
+                    position = position_dodge(width = 0.9), fontface='bold',
                     vjust = 0.5 - sign(data$Variance.From.Budget.YTD), size = 3 )
   return(p1)
   }
@@ -441,7 +441,7 @@ ytd_graph <- function(data, site, metric, min, max) {
     geom_point(mapping = aes(date, Variance.From.Budget.YTD),
                colour = "#212070", size = 3) +
     labs(x = "Date", y = "YTD Variance to Budget Ratio %" , 
-         title = paste0(site, " " , metric, " YTD Variance to Budget Ratio" ))+
+         title = paste0(site, " " , metric ))+
     theme(plot.title = element_textbox_simple(size = 15, halign=0.5),
           plot.subtitle = element_text(hjust = 0.5, size = 10),
           axis.title = element_text(face = "bold"),
@@ -464,7 +464,7 @@ var_graph <- function(data, site, metric, min, max, y_label, text) {
   ggplot(data)  + 
     geom_bar(aes(x=date, y= Variance), stat="identity", fill= "#212070")+
     labs(x = "Date", y = y_label, 
-         title = paste0(site , " ", metric, " Monthly Variance to Budget"),
+         title = paste0(site , " ", metric),
          subtitle = paste0("($ in Thousands)"))+
     theme(plot.title = element_textbox_simple(size = 15, halign=0.5),
           plot.subtitle = element_text(hjust = 0.5, size = 10),
