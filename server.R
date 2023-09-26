@@ -117,6 +117,7 @@ server <- function(input, output, session) {
              need(input$mshs_date_range != "", "Please Select a Date"))
     
     new_repo %>%
+      filter(year %in% max(year)) %>%
       filter(Metrics %in% input$mshs_metrics,
              date %in% input$mshs_date_range)
   }, ignoreNULL = FALSE)
@@ -127,6 +128,7 @@ server <- function(input, output, session) {
              need(input$var_date_range != "", "Please Select a Date"))
     
     new_repo %>%
+      filter(year %in% max(year)) %>%
       filter(Metrics %in% input$var_metrics,
              date %in% input$var_date_range)
   }, ignoreNULL = FALSE)
@@ -138,6 +140,7 @@ server <- function(input, output, session) {
              need(input$mshs_date_range_ytd != "", "Please Select a Date"))
     
     new_repo %>%
+      filter(year %in% max(year)) %>%
       filter(Metrics %in% input$mshs_metrics_ytd,
              date %in% input$mshs_date_range_ytd)
   }, ignoreNULL = FALSE)
@@ -149,6 +152,7 @@ server <- function(input, output, session) {
              need(input$all_date_range != "", "Please Select a Date"))
     
     new_repo %>%
+      filter(year %in% max(year)) %>%
       filter(Site %in% input$all_hospital,
              date %in% input$all_date_range)
   }, ignoreNULL = FALSE)
@@ -158,6 +162,7 @@ server <- function(input, output, session) {
              need(input$all_date_range_var != "", "Please Select a Date"))
     
     new_repo %>%
+      filter(year %in% max(year)) %>%
       filter(Site %in% input$all_hospital_var,
              date %in% input$all_date_range_var)
   }, ignoreNULL = FALSE)
@@ -167,6 +172,7 @@ server <- function(input, output, session) {
              need(input$all_date_range_ytd != "", "Please Select a Date"))
     
     new_repo %>%
+      filter(year %in% max(year)) %>%
       filter(Site %in% input$all_hospital_ytd,
              date %in% input$all_date_range_ytd)
   }, ignoreNULL = FALSE)

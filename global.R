@@ -364,7 +364,7 @@ ratio_date_option <- sort(c( unique(Exp_Rev_Ratio$date), date_options),
                           decreasing = TRUE)
 
 
-
+options(ggrepel.max.overlaps = Inf)
 
 # graph functions
 ratio_graph <- function(data, site, min, max) {
@@ -462,7 +462,7 @@ ytd_graph <- function(data, site, metric, min, max) {
 var_graph <- function(data, site, metric, min, max, y_label, text) {
   
   ggplot(data)  + 
-    geom_bar(aes(x=date, y= Variance), stat="identity", fill= "#212070")+
+    geom_bar(aes(x=date, y= Variance), stat="identity", fill= "#b2b3b2")+
     labs(x = "Date", y = y_label, 
          title = paste0(site , " ", metric),
          subtitle = paste0("($ in Thousands)"))+
