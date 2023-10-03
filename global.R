@@ -411,7 +411,8 @@ graph_style <- function(data, site, metric,  min, max, text, y_label, ratio){
     geom_text_repel(aes(label= text,
                         x=date, y= Variance, color = sign),
                     position = position_dodge(width = 1), fontface = "bold",
-                    vjust = 0.5 - sign(data$Variance), size = 3)+
+                    vjust = 0.5- sign(data$Variance)/2, 
+                    size = 3)+
     scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
     geom_hline(aes(yintercept = 0)) 
   
@@ -426,8 +427,8 @@ graph_style <- function(data, site, metric,  min, max, text, y_label, ratio){
                                                     name = "YTD Variance To Budget Ratio %"))+
     geom_text_repel(aes(label= paste0(data$ratio_label, "%"), 
                         x=date, y= Variance_scaled , color = sign.YTD),
-                    position = position_dodge(width = 0.9), fontface='bold',
-                    vjust = 0.5 - sign(data$Variance.From.Budget.YTD), size = 3 )
+                    position = position_dodge(width = 1), fontface='bold',
+                    vjust = 0.5 - sign(data$Variance.From.Budget.YTD)/2, size = 3 )
   return(p1)
   }
 
