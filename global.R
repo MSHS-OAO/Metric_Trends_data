@@ -370,7 +370,7 @@ options(ggrepel.max.overlaps = Inf)
 ratio_graph <- function(data, site, min, max) {
   
   ggplot(data)  + 
-    geom_rect(xmin= 0, xmax= Inf , ymin = 1, ymax= Inf, fill= "#8f8ce0", alpha=0.02)+
+    geom_rect(xmin= 0, xmax= Inf , ymin = 1, ymax= Inf, fill= "#990000", alpha=0.02)+
     geom_line(aes(x=date, y= Actual, group = 1), 
               colour = "#212070", stat="identity", linewidth = 1.25)+
     geom_point(mapping = aes(date, Actual),
@@ -386,6 +386,9 @@ ratio_graph <- function(data, site, min, max) {
           legend.text = element_text(size = 6),
           axis.text.x = element_text(angle = 45, hjust = 1, face = "bold"),
           axis.text.y = element_text(face = "bold", size = 10),
+          panel.background = element_rect(fill = "white", color = "black", size = 0.5),
+          panel.grid.major = element_line(size = 0.5, linetype = 'solid', colour = "grey"),
+          panel.grid.minor = element_line(size = 0.25, colour = "grey"),
           legend.position = "none")+
     geom_text(aes(label= Actual, 
                   x=date, y= Actual),
@@ -407,6 +410,9 @@ graph_style <- function(data, site, metric,  min, max, text, y_label, ratio){
           legend.text = element_text(size = 6),
           axis.text.x = element_text(angle = 45, hjust = 1, face = "bold"),
           axis.text.y = element_text(face = "bold", size = 10),
+          panel.background = element_rect(fill = "white", color = "black", size = 0.5),
+          panel.grid.major = element_line(size = 0.5, linetype = 'solid', colour = "grey"),
+          panel.grid.minor = element_line(size = 0.25, colour = "grey"),
           legend.position = "non")+
     geom_text_repel(aes(label= text,
                         x=date, y= Variance, color = sign),
@@ -449,6 +455,9 @@ ytd_graph <- function(data, site, metric, min, max) {
           legend.text = element_text(size = 6),
           axis.text.x = element_text(angle = 45, hjust = 1, face = "bold"),
           axis.text.y = element_text(face = "bold",  size = 10),
+          panel.background = element_rect(fill = "white", color = "black", size = 0.5),
+          panel.grid.major = element_line(size = 0.5, linetype = 'solid', colour = "grey"),
+          panel.grid.minor = element_line(size = 0.25, colour = "grey"),
           legend.position = "none")+
     geom_text(aes(label= paste0(data$ratio_label, "%"), 
                   x=date, y= Variance.From.Budget.YTD, color= sign.YTD),
@@ -473,6 +482,9 @@ var_graph <- function(data, site, metric, min, max, y_label, text) {
           legend.text = element_text(size = 6),
           axis.text.x = element_text(angle = 45, hjust = 1, face = "bold"),
           axis.text.y = element_text(face = "bold",  size = 10),
+          panel.background = element_rect(fill = "white", color = "black", size = 0.5),
+          panel.grid.major = element_line(size = 0.5, linetype = 'solid', colour = "grey"),
+          panel.grid.minor = element_line(size = 0.25, colour = "grey"),
           legend.position = "non")+
     geom_text(aes(label= text, x=date, y= Variance, color = sign),
               position = position_dodge(width = 1), fontface = "bold",
