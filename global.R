@@ -419,7 +419,7 @@ graph_style <- function(data, site, metric,  min, max, text, y_label, ratio){
                     position = position_dodge(width = 1), fontface = "bold",
                     vjust = 0.5- sign(data$Variance)/2, 
                     size = 3)+
-    scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
+    scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "black"))+
     geom_hline(aes(yintercept = 0)) 
   
   p1 <- p1 +
@@ -463,7 +463,7 @@ ytd_graph <- function(data, site, metric, min, max) {
                   x=date, y= Variance.From.Budget.YTD, color= sign.YTD),
               position = position_dodge(width = 1), fontface = "bold",
               vjust = 0.5 - sign(data$Variance.From.Budget.YTD), size = 4)+
-    scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
+    scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "black"))+
     scale_y_continuous(limits=c(min, max))+
     geom_hline(aes(yintercept = 0))
   
@@ -489,7 +489,7 @@ var_graph <- function(data, site, metric, min, max, y_label, text) {
     geom_text(aes(label= text, x=date, y= Variance, color = sign),
               position = position_dodge(width = 1), fontface = "bold",
               vjust = 0.5 - sign(data$Variance)/2, size = 4)+
-    scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "#228B22"))+
+    scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "black"))+
     scale_y_continuous(limits=c(min, max))+
     geom_hline(aes(yintercept = 0))
   
