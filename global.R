@@ -399,7 +399,9 @@ ratio_graph <- function(data, site, min, max) {
 }
 
 
-graph_style <- function(data, site, metric,  min, max, text, y_label, ratio){
+graph_style <- function(data,site, metric,  min, max, text, y_label, ratio){
+  data_end <- data %>% filter(month == max(month))
+  
   p1 <- ggplot(data)  + 
     geom_bar(aes(x=date, y= Variance), stat="identity", fill= "#b2b3b2")+
     labs(x = "Date", y = y_label, 
@@ -416,11 +418,12 @@ graph_style <- function(data, site, metric,  min, max, text, y_label, ratio){
           panel.grid.major = element_line(size = 0.5, linetype = 'solid', colour = "grey"),
           panel.grid.minor = element_line(size = 0.25, colour = "grey"),
           legend.position = "non")+
-    geom_text_repel(aes(label= text,
-                        x=date, y= Variance, color = sign),
-                    position = position_dodge(width = 1), fontface = "bold",
-                    vjust = 0.5- sign(data$Variance)/2, 
-                    size = 3)+
+    geom_text_repel(aes(label= data_end$text_label, 
+                  x=date, y= Variance, color = sign),
+              data = data_end,
+              position = position_dodge(width = 1), fontface = "bold",
+              vjust = 0.5- sign(data_end$Variance)/2, 
+              size = 3)+
     scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "black"))+
     geom_hline(aes(yintercept = 0)) 
   
@@ -433,12 +436,15 @@ graph_style <- function(data, site, metric,  min, max, text, y_label, ratio){
                        sec.axis = ggplot2::sec_axis(~. / ratio , 
                                                     labels = scales::label_percent(scale = 1),
                                                     name = "YTD Variance To Budget Ratio %"))+
-    geom_text_repel(aes(label= paste0(data$ratio_label, "%"), 
-                        x=date, y= Variance_scaled , color = sign.YTD),
-                    position = position_dodge(width = 1), fontface='bold',
-                    vjust = 0.5 - sign(data$Variance.From.Budget.YTD)/2, size = 3 )
+    geom_text_repel(aes(label= paste0(data_end$ratio_label, "%"),
+                  x=date, y= Variance_scaled, color = sign.YTD),
+              data = data_end,
+              position = position_dodge(width = 1), fontface='bold',
+              vjust = 0.5 - sign(data_end$Variance.From.Budget.YTD)/2, size = 3 )
+  
   return(p1)
-  }
+}
+
 
 
 # graph functions
