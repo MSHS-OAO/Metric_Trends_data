@@ -387,6 +387,7 @@ ratio_graph <- function(data, site, min, max) {
           axis.text.x = element_text(angle = 45, hjust = 1, face = "bold"),
           axis.text.y = element_text(face = "bold", size = 10),
           panel.background = element_rect(fill = "white", color = "black", size = 0.5),
+          panel.grid.major.x = element_blank(),
           panel.grid.major = element_line(size = 0.5, linetype = 'solid', colour = "grey"),
           panel.grid.minor = element_line(size = 0.25, colour = "grey"),
           legend.position = "none")+
@@ -411,6 +412,7 @@ graph_style <- function(data, site, metric,  min, max, text, y_label, ratio){
           axis.text.x = element_text(angle = 45, hjust = 1, face = "bold"),
           axis.text.y = element_text(face = "bold", size = 10),
           panel.background = element_rect(fill = "white", color = "black", size = 0.5),
+          panel.grid.major.x = element_blank(),
           panel.grid.major = element_line(size = 0.5, linetype = 'solid', colour = "grey"),
           panel.grid.minor = element_line(size = 0.25, colour = "grey"),
           legend.position = "non")+
@@ -456,6 +458,7 @@ ytd_graph <- function(data, site, metric, min, max) {
           axis.text.x = element_text(angle = 45, hjust = 1, face = "bold"),
           axis.text.y = element_text(face = "bold",  size = 10),
           panel.background = element_rect(fill = "white", color = "black", size = 0.5),
+          panel.grid.major.x = element_blank(),
           panel.grid.major = element_line(size = 0.5, linetype = 'solid', colour = "grey"),
           panel.grid.minor = element_line(size = 0.25, colour = "grey"),
           legend.position = "none")+
@@ -484,6 +487,7 @@ var_graph <- function(data, site, metric, min, max, y_label, text) {
           axis.text.y = element_text(face = "bold",  size = 10),
           panel.background = element_rect(fill = "white", color = "black", size = 0.5),
           panel.grid.major = element_line(size = 0.5, linetype = 'solid', colour = "grey"),
+          panel.grid.major.x = element_blank(),
           panel.grid.minor = element_line(size = 0.25, colour = "grey"),
           legend.position = "non")+
     geom_text(aes(label= text, x=date, y= Variance, color = sign),
