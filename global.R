@@ -367,8 +367,8 @@ ratio_date_option <- sort(c( unique(Exp_Rev_Ratio$date), date_options),
 options(ggrepel.max.overlaps = Inf)
 
 # graph functions
-ratio_graph <- function(data, site, min, max) {
-  
+# graph functions
+ratio_graph <- function(data, site) {
   ggplot(data)  + 
     geom_rect(xmin= 0, xmax= Inf , ymin = 1, ymax= Inf, fill= "#990000", alpha=0.02)+
     geom_line(aes(x=date, y= Actual, group = 1), 
@@ -395,7 +395,7 @@ ratio_graph <- function(data, site, min, max) {
                   x=date, y= Actual),
               position = position_dodge(width = 1), fontface = "bold",
               vjust = 0.5 - sign(data$Actual), size = 4)+
-    scale_y_continuous(limits=c(min, max))
+    scale_y_continuous(limits=c(0.8, 1.5), breaks = seq(0.8, 1.5, by = 0.1))
 }
 
 

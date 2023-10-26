@@ -224,21 +224,8 @@ server <- function(input, output, session) {
         mutate(Actual = round(Actual, 2))%>%
         arrange(date) %>%
         slice(tail(row_number(), 12))
-      
-      
-      if((max(data$Actual, na.rm = TRUE))*1.2 < 0){
-        max_value <- 0
-      } else {
-        max_value <- (max(data$Actual, na.rm = TRUE))*1.2
-      }
-      
-      if( (min(data$Actual, na.rm = TRUE))*1.2 > 0){
-        min_value <- 0
-      } else {
-        min_value <- (min(data$Actual, na.rm = TRUE))*1.2
-      }
-      
-      ratio_graph(data, site = "MSHS", min = min_value, max = max_value)
+
+      ratio_graph(data, site = "MSHS")
       
     } else {
       
@@ -316,19 +303,8 @@ server <- function(input, output, session) {
         slice(tail(row_number(), 12))
       
       
-      if((max(data$Actual, na.rm = TRUE))*1.2 < 0){
-        max_value <- 0
-      } else {
-        max_value <- (max(data$Actual, na.rm = TRUE))*1.2
-      }
       
-      if( (min(data$Actual, na.rm = TRUE))*1.2 > 0){
-        min_value <- 0
-      } else {
-        min_value <- (min(data$Actual, na.rm = TRUE))*1.2
-      }
-      
-      ratio_graph(data, site = "MSB", min = min_value, max = max_value)
+      ratio_graph(data, site = "MSB")
       
       
     } else {
@@ -404,19 +380,8 @@ server <- function(input, output, session) {
         arrange(date) %>%
         slice(tail(row_number(), 12))
       
-      if((max(data$Actual, na.rm = TRUE))*1.2 < 0){
-        max_value <- 0
-      } else {
-        max_value <- (max(data$Actual, na.rm = TRUE))*1.2
-      }
       
-      if( (min(data$Actual, na.rm = TRUE))*1.2 > 0){
-        min_value <- 0
-      } else {
-        min_value <- (min(data$Actual, na.rm = TRUE))*1.2
-      }
-      
-      ratio_graph(data, site = "MSBI", min = min_value, max = max_value)
+      ratio_graph(data, site = "MSBI")
       
     } else {
       
@@ -491,19 +456,8 @@ server <- function(input, output, session) {
         slice(tail(row_number(), 12))
       
       
-      if((max(data$Actual, na.rm = TRUE))*1.2 < 0){
-        max_value <- 0
-      } else {
-        max_value <- (max(data$Actual, na.rm = TRUE))*1.2
-      }
       
-      if( (min(data$Actual, na.rm = TRUE))*1.2 > 0){
-        min_value <- 0
-      } else {
-        min_value <- (min(data$Actual, na.rm = TRUE))*1.2
-      }
-      
-      ratio_graph(data, site = "MSH", min = min_value, max = max_value)
+      ratio_graph(data, site = "MSH")
       
     } else {
       
@@ -575,19 +529,9 @@ server <- function(input, output, session) {
         arrange(date) %>%
         slice(tail(row_number(), 12))
       
-      if((max(data$Actual, na.rm = TRUE))*1.2 < 0){
-        max_value <- 0
-      } else {
-        max_value <- (max(data$Actual, na.rm = TRUE))*1.2
-      }
+    
       
-      if( (min(data$Actual, na.rm = TRUE))*1.2 > 0){
-        min_value <- 0
-      } else {
-        min_value <- (min(data$Actual, na.rm = TRUE))*1.2
-      }
-      
-      ratio_graph(data, site = "MSM", min = min_value, max = max_value)
+      ratio_graph(data, site = "MSM")
     } else {
       
       # data <- new_repo %>% filter(Site == "MSB" & Metrics == "CMI")
@@ -659,19 +603,8 @@ server <- function(input, output, session) {
         arrange(date) %>%
         slice(tail(row_number(), 12))
       
-      if((max(data$Actual, na.rm = TRUE))*1.2 < 0){
-        max_value <- 0
-      } else {
-        max_value <- (max(data$Actual, na.rm = TRUE))*1.2
-      }
       
-      if( (min(data$Actual, na.rm = TRUE))*1.2 > 0){
-        min_value <- 0
-      } else {
-        min_value <- (min(data$Actual, na.rm = TRUE))*1.2
-      }
-      
-      ratio_graph(data, site = "MSQ", min = min_value, max = max_value)
+      ratio_graph(data, site = "MSQ")
       
     } else {
       
@@ -744,19 +677,8 @@ server <- function(input, output, session) {
         arrange(date) %>%
         slice(tail(row_number(), 12))
       
-      if((max(data$Actual, na.rm = TRUE))*1.2 < 0){
-        max_value <- 0
-      } else {
-        max_value <- (max(data$Actual, na.rm = TRUE))*1.2
-      }
       
-      if( (min(data$Actual, na.rm = TRUE))*1.2 > 0){
-        min_value <- 0
-      } else {
-        min_value <- (min(data$Actual, na.rm = TRUE))*1.2
-      }
-      
-      ratio_graph(data, site = "MSSN", min = min_value, max = max_value)
+      ratio_graph(data, site = "MSSN")
       
     } else {
       
@@ -830,19 +752,8 @@ server <- function(input, output, session) {
         arrange(date) %>%
         slice(tail(row_number(), 12))
       
-      if((max(data$Actual, na.rm = TRUE))*1.2 < 0){
-        max_value <- 0
-      } else {
-        max_value <- (max(data$Actual, na.rm = TRUE))*1.2
-      }
       
-      if( (min(data$Actual, na.rm = TRUE))*1.2 > 0){
-        min_value <- 0
-      } else {
-        min_value <- (min(data$Actual, na.rm = TRUE))*1.2
-      }
-      
-      ratio_graph(data, site = "MSW", min = min_value, max = max_value)
+      ratio_graph(data, site = "MSW")
       
     } else {
       
@@ -918,19 +829,8 @@ server <- function(input, output, session) {
         arrange(date) %>%
         slice(tail(row_number(), 12))
       
-      if((max(data$Actual, na.rm = TRUE))*1.2 < 0){
-        max_value <- 0
-      } else {
-        max_value <- (max(data$Actual, na.rm = TRUE))*1.2
-      }
       
-      if( (min(data$Actual, na.rm = TRUE))*1.2 > 0){
-        min_value <- 0
-      } else {
-        min_value <- (min(data$Actual, na.rm = TRUE))*1.2
-      }
-      
-      ratio_graph(data, site = "NYEE", min = min_value, max = max_value)
+      ratio_graph(data, site = "NYEE")
     } else {
       
       # data <- new_repo %>% filter(Site == "MSB" & Metrics == "CMI")
@@ -1655,19 +1555,7 @@ server <- function(input, output, session) {
     validate(need(nrow(data)>0, paste0("Expense to Revenue Ratio is not available for ", isolate(input$all_hospital))))
     
     
-    if((max(data$Actual, na.rm = TRUE))*1.2 < 0){
-      max_value <- 0
-    } else {
-      max_value <- (max(data$Actual, na.rm = TRUE))*1.2
-    }
-    
-    if( (min(data$Actual, na.rm = TRUE))*1.2 > 0){
-      min_value <- 0
-    } else {
-      min_value <- (min(data$Actual, na.rm = TRUE))*1.2
-    }
-    
-    ratio_graph(data, site = hospital, min= min_value, max= max_value) 
+    ratio_graph(data, site = hospital) 
     
   })
   
@@ -2183,21 +2071,9 @@ server <- function(input, output, session) {
     
     validate(need(nrow(data)>0, paste0("Expense to Revenue Ratio is not available for ", isolate(input$all_hospital_var))))
     
-    
-    if((max(data$Actual, na.rm = TRUE))*1.2 < 0){
-      max_value <- 0
-    } else {
-      max_value <- (max(data$Actual, na.rm = TRUE))*1.2
-    }
-    
-    if( (min(data$Actual, na.rm = TRUE))*1.2 > 0){
-      min_value <- 0
-    } else {
-      min_value <- (min(data$Actual, na.rm = TRUE))*1.2
-    }
-    
+  
    
-    ratio_graph(data, site = hospital, min= min_value, max= max_value) 
+    ratio_graph(data, site = hospital) 
     
   })
   
@@ -2564,19 +2440,8 @@ server <- function(input, output, session) {
     validate(need(nrow(data)>0, paste0("Expense to Revenue Ratio is not available for ", isolate(input$all_hospital_ytd))))
     
     
-    if((max(data$Actual, na.rm = TRUE))*1.2 < 0){
-      max_value <- 0
-    } else {
-      max_value <- (max(data$Actual, na.rm = TRUE))*1.2
-    }
     
-    if( (min(data$Actual, na.rm = TRUE))*1.2 > 0){
-      min_value <- 0
-    } else {
-      min_value <- (min(data$Actual, na.rm = TRUE))*1.2
-    }
-    
-    ratio_graph(data, site = hospital, min= min_value, max= max_value) 
+    ratio_graph(data, site = hospital) 
     
   })
   
