@@ -226,10 +226,18 @@ write.csv(new_repo, paste0(dir, "REPO/Metric_Trends_Data_updated_",
 
 
 # Define date variable
+# new_repo <- new_repo %>%
+#   mutate(month= ifelse(nchar(month) < 2, paste0("0", month), month),
+#          date = paste0(year, "-", month),
+#          month= as.numeric(month)) %>%
+#   arrange(month, year)
+
+
 new_repo <- new_repo %>%
-  mutate(month= ifelse(nchar(month) < 2, paste0("0", month), month),
-         date = paste0(year, "-", month),
-         month= as.numeric(month)) %>%
+  mutate(date = paste0(month.abb[c(month)], "-", substr(year, 3, 4)))
+levels_options <- unique(new_repo$date)
+new_repo <- new_repo %>%
+  mutate(date = factor(date, levels = levels_options))%>%
   arrange(month, year)
 
 # fill na with zero if one of the Actual or Budget is available 
@@ -276,83 +284,23 @@ Exp_Rev_Ratio <- read_excel(paste0(dir,  "REPO/Exp_Rev_Ratio.xlsx"))
 Exp_Rev_Ratio <- Exp_Rev_Ratio %>%
   gather(-c("month", "year"), key = Site, value = Actual) %>%
   mutate(Metrics = "Expense to Revenue Ratio")%>%
-  mutate(month= ifelse(nchar(month) < 2, paste0("0", month), month),
-         date = paste0(year, "-", month),
-         month= as.numeric(month)) %>%
-  arrange(month, year)
+  # mutate(month= ifelse(nchar(month) < 2, paste0("0", month), month),
+  #        date = paste0(year, "-", month),
+  #        month= as.numeric(month)) %>%
+  mutate(date = paste0(month.abb[c(month)], "-", substr(year, 3, 4)))
 
+levels_options <- unique(Exp_Rev_Ratio$date)
+Exp_Rev_Ratio <- Exp_Rev_Ratio %>%
+  mutate(date = factor(date, levels = levels_options))%>%
+  arrange(month, year)    
 
-# Color Theme -----------------------------------------------------------
-
-# Mount Sinai corporate colors
-mount_sinai_colors <- c(
-  `light pink`   = "#fcc9e9",
-  `med pink`     = "#fa93d4",
-  `dark pink`    = "#DC298D",
-  `light purple` = "#c7c6ef",
-  `med purple`   = "#8f8ce0",
-  `light blue`   = "#5cd3ff",
-  `med blue`     = "#06ABEB",
-  `dark blue`    = "#212070",
-  `light grey`   = "#b2b3b2",
-  `dark grey`    = "#686868",
-  `yellow`       = "#E69F00"
-)
-
-# Function to extract Mount Sinai colors as hex codes
-# Use Character names of mount_sinai_colors
-
-mount_sinai_cols <- function(...) {
-  cols <- c(...)
-  
-  if (is.null(cols)) {
-    return(mount_sinai_colors)
-  }
-  
-  mount_sinai_colors[cols]
-}
-
-
-#Create palettes
-mount_sinai_palettes <- list(
-  `all` = mount_sinai_cols(
-    "med blue", "dark pink", "dark blue", "light grey",
-    "light blue", "light pink", "light purple",
-    "med pink", "med purple", "yellow"
-  ),
-  `main` = mount_sinai_cols(
-   "dark blue", "med blue", "dark pink", "dark grey"
-  ),
-  `pink` = mount_sinai_cols("light pink", "dark pink"),
-  `blue` = mount_sinai_cols("light blue", "dark blue"),
-  `grey` = mount_sinai_cols("light grey", "med blue")
-)
-
-mount_sinai_pal <- function(palette = "main", reverse = FALSE, ...) {
-  pal <- mount_sinai_palettes[[palette]]
-  
-  if (reverse) pal <- rev(pal)
-  
-  colorRampPalette(pal, interpolate = "spline", ...)
-}
-
-#Scale Function for ggplot can be used instead of scale_color_manual
-scale_color_mount_sinai <- function(palette = "all", discrete = TRUE, reverse = FALSE, ...) {
-  pal <- mount_sinai_pal(palette = palette, reverse = reverse)
-  
-  if (discrete) {
-    discrete_scale("colour", mount_sinai_palettes, palette = pal, ...)
-  } else {
-    scale_color_gradientn(colours = pal(256), ...)
-  }
-}
 
 
 
 
 # Filter choices -----------------------------------------------
 hospital_choices <- sort(unique(new_repo$Site))
-date_options <- unique(new_repo$date)
+date_options <- as.character(unique(new_repo$date))
 mshs_metric_choices <- sort(unique(new_repo$Metrics))
 
 metric_choices <- sort(unique(new_repo$Metrics))
@@ -360,8 +308,10 @@ index <- which(metric_choices == "Expense to Revenue Ratio")
 metric_choices <- metric_choices[- index]
 
 
-ratio_date_option <- sort(c( unique(Exp_Rev_Ratio$date), date_options), 
+ratio_date_option <- sort(c(unique(Exp_Rev_Ratio$date), unique(new_repo$date)), 
                           decreasing = TRUE)
+
+ratio_date_option <- as.character(ratio_date_option)
 
 
 options(ggrepel.max.overlaps = Inf)

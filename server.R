@@ -207,6 +207,7 @@ server <- function(input, output, session) {
              ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
                                   Variance.From.Budget.YTD))
     
+    
     validate(need(nrow(data) > 0, paste0(isolate(input$mshs_metrics), " is not available for MSHS")))
     
     
@@ -216,6 +217,7 @@ server <- function(input, output, session) {
       
       data <- data %>% 
       select("month", "year", "Site", "Actual", "Metrics", "date")
+      
 
       history <- Exp_Rev_Ratio %>% filter(Site== "MSHS")
       
@@ -224,6 +226,7 @@ server <- function(input, output, session) {
         mutate(Actual = round(Actual, 2))%>%
         arrange(date) %>%
         slice(tail(row_number(), 12))
+      
 
       ratio_graph(data, site = "MSHS")
       
@@ -238,7 +241,7 @@ server <- function(input, output, session) {
         ratio <- 0
       }
       
-      data <- data %>% mutate(Variance_scaled = Variance.From.Budget.YTD * ratio)
+      data <- data %>%mutate(Variance_scaled = Variance.From.Budget.YTD * ratio)
       
       
       if((max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.2 < 0){
@@ -2826,10 +2829,12 @@ server <- function(input, output, session) {
   output$ratio_plot_all <- renderPlot({
     
     data <- ratio_data()
+    
+    ratio_test <<- data
  
     data <- data %>%
       mutate(Actual = round(Actual, 2))%>%
-      arrange(date) %>% 
+      arrange(year, month) %>% 
       mutate(month= month.abb[as.numeric(month)],
                             year = as.factor(year))
 
