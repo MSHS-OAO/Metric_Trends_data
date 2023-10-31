@@ -2829,8 +2829,7 @@ server <- function(input, output, session) {
   output$ratio_plot_all <- renderPlot({
     
     data <- ratio_data()
-    
-    ratio_test <<- data
+
  
     data <- data %>%
       mutate(Actual = round(Actual, 2))%>%
@@ -2843,7 +2842,7 @@ server <- function(input, output, session) {
       geom_bar(position= position_dodge(),stat="identity", width=0.7)+
       scale_fill_manual(values=c("#d80b8c",	"#00aeef","#863198", "#212070"))+
       labs(x = "Date", y = "Expense to Revenue Ratio" , 
-           title = isolate(paste0(input$ratio_hospital, " Expense to Revenue Ratio" ))
+          title = isolate(paste0(input$ratio_hospital, " Expense to Revenue Ratio" ))
       )+
       guides(fill=guide_legend(title="Year"))+
       theme_bw()+
