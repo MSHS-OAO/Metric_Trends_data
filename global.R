@@ -454,3 +454,115 @@ var_graph <- function(data, site, metric, min, max, y_label, text) {
     geom_hline(aes(yintercept = 0))
   
 }
+
+
+# Graph style with breaks
+graph_style_break <- function(data,site, metric, min, max, break_value, 
+                              min_ratio, max_ratio, breaks_ratio, 
+                              text, y_label, ratio){
+  data_end <- data %>% filter(month == max(month))
+  
+  p1 <- ggplot(data)  + 
+    geom_bar(aes(x=date, y= Variance), stat="identity", fill= "#b2b3b2")+
+    labs(x = "Date", y = y_label, 
+         title = paste0(site, " ", metric),
+         subtitle = paste0("($ in Thousands)"))+
+    theme(plot.title = element_textbox_simple(size = 15, halign=0.5),
+          plot.subtitle = element_text(hjust = 0.5, size = 10),
+          axis.title = element_text(face='bold'),
+          legend.text = element_text(size = 6),
+          axis.text.x = element_text(angle = 45, hjust = 1, face = "bold"),
+          axis.text.y = element_text(face = "bold", size = 10),
+          panel.background = element_rect(fill = "white", color = "black", linewidth = 0.5),
+          panel.grid.major.x = element_blank(),
+          panel.grid.major = element_line(linewidth = 0.5, linetype = 'solid', colour = "grey"),
+          panel.grid.minor = element_line(linewidth = 0.25, colour = "grey"),
+          legend.position = "non")+
+    geom_text_repel(aes(label= data_end$text_label, 
+                        x=date, y= Variance, color = sign),
+                    data = data_end,
+                    position = position_dodge(width = 1), fontface = "bold",
+                    vjust = 0.5- sign(data_end$Variance)/2, 
+                    size = 3)+
+    scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "black"))+
+    geom_hline(aes(yintercept = 0)) 
+  
+  p1 <- p1 +
+    geom_line(mapping = aes(date, Variance_scaled, group = 1),
+              colour = "#212070", linewidth = 1.0) +
+    geom_point(mapping = aes(date, Variance_scaled),
+               colour = "#212070", size = 1.6) +
+    scale_y_continuous(limits= c(min, max), breaks = seq(min, max, by = break_value),
+                       sec.axis = ggplot2::sec_axis(~. / ratio , 
+                                                    breaks = seq(min_ratio, max_ratio, by = breaks_ratio),
+                                                    #labels = paste0(data$Variance.From.Budget.YTD, "%"),
+                                                    labels = scales::label_percent(scale = 1),
+                                                    name = "YTD Variance To Budget Ratio %"))+
+    geom_text_repel(aes(label= paste0(data_end$ratio_label, "%"),
+                        x=date, y= Variance_scaled, color = sign.YTD),
+                    data = data_end,
+                    position = position_dodge(width = 1), fontface='bold',
+                    vjust = 0.5 - sign(data_end$Variance.From.Budget.YTD)/2, size = 3 )
+  
+  return(p1)
+}
+
+
+
+# graph functions
+ytd_graph_break <- function(data, site, metric, min, max, breaks) {
+  
+  ggplot(data)  + 
+    geom_line(aes(x=date, y= Variance.From.Budget.YTD, group = 1), 
+              colour = "#212070", stat="identity", linewidth = 1.25)+
+    geom_point(mapping = aes(date, Variance.From.Budget.YTD),
+               colour = "#212070", size = 3) +
+    labs(x = "Date", y = "YTD Variance to Budget Ratio %" , 
+         title = paste0(site, " " , metric ))+
+    theme(plot.title = element_textbox_simple(size = 15, halign=0.5),
+          plot.subtitle = element_text(hjust = 0.5, size = 10),
+          axis.title = element_text(face = "bold"),
+          legend.text = element_text(size = 6),
+          axis.text.x = element_text(angle = 45, hjust = 1, face = "bold"),
+          axis.text.y = element_text(face = "bold",  size = 10),
+          panel.background = element_rect(fill = "white", color = "black", size = 0.5),
+          panel.grid.major.x = element_blank(),
+          panel.grid.major = element_line(size = 0.5, linetype = 'solid', colour = "grey"),
+          panel.grid.minor = element_line(size = 0.25, colour = "grey"),
+          legend.position = "none")+
+    geom_text(aes(label= paste0(data$ratio_label, "%"), 
+                  x=date, y= Variance.From.Budget.YTD, color= sign.YTD),
+              position = position_dodge(width = 1), fontface = "bold",
+              vjust = 0.5 - sign(data$Variance.From.Budget.YTD), size = 4)+
+    scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "black"))+
+    scale_y_continuous(limits=c(min, max), breaks = seq(min, max, by = breaks))+
+    geom_hline(aes(yintercept = 0))
+  
+}
+
+var_graph_break <- function(data, site, metric, min, max, breaks, y_label, text) {
+  
+  ggplot(data)  + 
+    geom_bar(aes(x=date, y= Variance), stat="identity", fill= "#b2b3b2")+
+    labs(x = "Date", y = y_label, 
+         title = paste0(site , " ", metric),
+         subtitle = paste0("($ in Thousands)"))+
+    theme(plot.title = element_textbox_simple(size = 15, halign=0.5),
+          plot.subtitle = element_text(hjust = 0.5, size = 10),
+          axis.title = element_text(face = "bold"),
+          legend.text = element_text(size = 6),
+          axis.text.x = element_text(angle = 45, hjust = 1, face = "bold"),
+          axis.text.y = element_text(face = "bold",  size = 10),
+          panel.background = element_rect(fill = "white", color = "black", size = 0.5),
+          panel.grid.major = element_line(size = 0.5, linetype = 'solid', colour = "grey"),
+          panel.grid.major.x = element_blank(),
+          panel.grid.minor = element_line(size = 0.25, colour = "grey"),
+          legend.position = "non")+
+    geom_text(aes(label= text, x=date, y= Variance, color = sign),
+              position = position_dodge(width = 1), fontface = "bold",
+              vjust = 0.5 - sign(data$Variance)/2, size = 4)+
+    scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "black"))+
+    scale_y_continuous(limits=c(min, max), breaks = seq(min, max, by = breaks))+
+    geom_hline(aes(yintercept = 0))
+  
+}
