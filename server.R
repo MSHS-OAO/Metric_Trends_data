@@ -117,10 +117,12 @@ server <- function(input, output, session) {
              need(input$mshs_date_range != "", "Please Select a Date"))
     
     new_repo %>%
-      filter(year %in% max(year)) %>%
+      #filter(year %in% max(year)) %>%
       filter(Metrics %in% input$mshs_metrics,
              date %in% input$mshs_date_range)
   }, ignoreNULL = FALSE)
+  
+  
   
   ### eventReactive for Metrics Tab: Variance ------------------------------
   var_data  <- eventReactive(input$mshs_filters_update_var, {
@@ -152,7 +154,7 @@ server <- function(input, output, session) {
              need(input$all_date_range != "", "Please Select a Date"))
     
     new_repo %>%
-      filter(year %in% max(year)) %>%
+      #filter(year %in% max(year)) %>%
       filter(Site %in% input$all_hospital,
              date %in% input$all_date_range)
   }, ignoreNULL = FALSE)
@@ -162,7 +164,7 @@ server <- function(input, output, session) {
              need(input$all_date_range_var != "", "Please Select a Date"))
     
     new_repo %>%
-      filter(year %in% max(year)) %>%
+      #filter(year %in% max(year)) %>%
       filter(Site %in% input$all_hospital_var,
              date %in% input$all_date_range_var)
   }, ignoreNULL = FALSE)
@@ -172,7 +174,7 @@ server <- function(input, output, session) {
              need(input$all_date_range_ytd != "", "Please Select a Date"))
     
     new_repo %>%
-      filter(year %in% max(year)) %>%
+     # filter(year %in% max(year)) %>%
       filter(Site %in% input$all_hospital_ytd,
              date %in% input$all_date_range_ytd)
   }, ignoreNULL = FALSE)
@@ -200,6 +202,7 @@ server <- function(input, output, session) {
   ### MSHS -------------------------------------
   output$mshs_plot <- renderPlot({
     data <- mshs_data() %>%
+      filter(year %in% max(year)) %>%
       filter(Site == "MSHS")%>%
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
              sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
@@ -214,12 +217,14 @@ server <- function(input, output, session) {
     if (isolate(input$mshs_metrics) %in% c("Expense to Revenue Ratio")) {
       
       # data <- new_repo %>% filter(Site == "MSHS" & Metrics == "Expense to Revenue Ratio")
-      
-      data <- data %>% 
+     
+      data <- mshs_data() %>% 
+      filter(Site == "MSHS")%>%
       select("month", "year", "Site", "Actual", "Metrics", "date")
+       
+    
       
-
-      history <- Exp_Rev_Ratio %>% filter(Site== "MSHS")
+     history <- Exp_Rev_Ratio %>% filter(Site== "MSHS")
       
       
       data <- rbind(history, data) %>%
@@ -275,6 +280,7 @@ server <- function(input, output, session) {
   ### MSB -------------------------------------
   output$msb_plot <- renderPlot({
     data <- mshs_data()  %>%
+      filter(year %in% max(year)) %>%
       filter(Site == "MSB")%>%
       #mutate(date= as.yearmon(date, "%Y-%m"))%>%
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
@@ -292,7 +298,8 @@ server <- function(input, output, session) {
       
       # data <- new_repo %>% filter(Site == "MSB" & Metrics == "Expense to Revenue Ratio") 
       
-      data <- data %>% 
+      data <- mshs_data() %>% 
+        filter(Site == "MSB")%>%
         select("month", "year", "Site", "Actual", "Metrics", "date")
       
       history <- Exp_Rev_Ratio %>% filter(Site== "MSB")
@@ -355,6 +362,7 @@ server <- function(input, output, session) {
   ### MSBI -------------------------------------
   output$msbi_plot <- renderPlot({
     data <- mshs_data() %>%
+      filter(year %in% max(year)) %>%
       filter(Site == "MSBI")%>%
       #mutate(date= as.yearmon(date, "%Y-%m"))%>%
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
@@ -370,7 +378,8 @@ server <- function(input, output, session) {
       
       # data <- new_repo %>% filter(Site == "MSB" & Metrics == "Expense to Revenue Ratio") 
       
-      data <- data %>% 
+      data <- mshs_data() %>% 
+        filter(Site == "MSBI")%>% 
         select("month", "year", "Site", "Actual", "Metrics", "date")
       
       history <- Exp_Rev_Ratio %>% filter(Site== "MSBI")
@@ -430,6 +439,7 @@ server <- function(input, output, session) {
   ### MSH -------------------------------------
   output$msh_plot <- renderPlot({
     data <- mshs_data() %>%
+      filter(year %in% max(year)) %>%
       filter(Site == "MSH")%>%
       #mutate(date= as.yearmon(date, "%Y-%m"))%>%
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
@@ -445,7 +455,8 @@ server <- function(input, output, session) {
       
       # data <- new_repo %>% filter(Site == "MSB" & Metrics == "Expense to Revenue Ratio") 
       
-      data <- data %>% 
+      data <- mshs_data() %>% 
+        filter(Site == "MSH")%>%
         select("month", "year", "Site", "Actual", "Metrics", "date")
       
       history <- Exp_Rev_Ratio %>% filter(Site== "MSH")
@@ -506,6 +517,7 @@ server <- function(input, output, session) {
   output$msm_plot <- renderPlot({
     data <- mshs_data() %>%
       filter(Site == "MSM")%>%
+      filter(year %in% max(year)) %>%
       #mutate(date= as.yearmon(date, "%Y-%m"))%>%
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
              sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
@@ -519,7 +531,8 @@ server <- function(input, output, session) {
     if (isolate(input$mshs_metrics) %in% c("Expense to Revenue Ratio")) {
       
       # data <- new_repo %>% filter(Site == "MSB" & Metrics == "Expense to Revenue Ratio") 
-      data <- data %>% 
+      data <-  data <- mshs_data() %>% 
+        filter(Site == "MSM")%>%
         select("month", "year", "Site", "Actual", "Metrics", "date")
       
       history <- Exp_Rev_Ratio %>% filter(Site== "MSM")
@@ -580,7 +593,7 @@ server <- function(input, output, session) {
   output$msq_plot <- renderPlot({
     data <- mshs_data() %>%
       filter(Site == "MSQ")%>%
-      #mutate(date= as.yearmon(date, "%Y-%m"))%>%
+      filter(year %in% max(year)) %>%
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
              sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
              text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)),
@@ -593,7 +606,8 @@ server <- function(input, output, session) {
     if (isolate(input$mshs_metrics) %in% c("Expense to Revenue Ratio")) {
       
       # data <- new_repo %>% filter(Site == "MSB" & Metrics == "Expense to Revenue Ratio") 
-      data <- data %>% 
+      data <- mshs_data() %>% 
+        filter(Site == "MSQ")%>% 
         select("month", "year", "Site", "Actual", "Metrics", "date")
       
       history <- Exp_Rev_Ratio %>% filter(Site== "MSQ")
@@ -654,7 +668,7 @@ server <- function(input, output, session) {
   output$mssn_plot <- renderPlot({
     data <- mshs_data() %>%
       filter(Site == "MSSN")%>%
-      #mutate(date= as.yearmon(date, "%Y-%m"))%>%
+      filter(year %in% max(year)) %>%
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
              sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
              text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)),
@@ -667,7 +681,8 @@ server <- function(input, output, session) {
     if (isolate(input$mshs_metrics) %in% c("Expense to Revenue Ratio")) {
       
       # data <- new_repo %>% filter(Site == "MSB" & Metrics == "Expense to Revenue Ratio") 
-      data <- data %>% 
+      data <- mshs_data() %>% 
+        filter(Site == "MSSN")%>%
         select("month", "year", "Site", "Actual", "Metrics", "date")
       
       history <- Exp_Rev_Ratio %>% filter(Site== "MSSN")
@@ -729,7 +744,7 @@ server <- function(input, output, session) {
   output$msw_plot <- renderPlot({
     data <- mshs_data() %>%
       filter(Site == "MSW")%>%
-      #mutate(date= as.yearmon(date, "%Y-%m"))%>%
+      filter(year %in% max(year)) %>%
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
              sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
              text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)),
@@ -742,7 +757,8 @@ server <- function(input, output, session) {
     if (isolate(input$mshs_metrics) %in% c("Expense to Revenue Ratio")) {
       
       # data <- new_repo %>% filter(Site == "MSB" & Metrics == "Expense to Revenue Ratio") 
-      data <- data %>% 
+      data <- mshs_data() %>% 
+        filter(Site == "MSW")%>%
         select("month", "year", "Site", "Actual", "Metrics", "date")
       
       history <- Exp_Rev_Ratio %>% filter(Site== "MSW")
@@ -805,7 +821,7 @@ server <- function(input, output, session) {
   output$nyee_plot <- renderPlot({
     data <- mshs_data() %>%
       filter(Site == "NYEE")%>%
-      #mutate(date= as.yearmon(date, "%Y-%m"))%>%
+      filter(year %in% max(year)) %>%
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
              sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
              text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)),
@@ -819,7 +835,8 @@ server <- function(input, output, session) {
       
       # data <- new_repo %>% filter(Site == "MSB" & Metrics == "Expense to Revenue Ratio") 
       
-      data <- data %>% 
+      data <- mshs_data() %>% 
+        filter(Site == "NYEE")%>%
         select("month", "year", "Site", "Actual", "Metrics", "date")
       
       history <- Exp_Rev_Ratio %>% filter(Site== "NYEE")
@@ -2168,6 +2185,7 @@ server <- function(input, output, session) {
     metric_choice <-  "Total Hospital Revenue"
     
     data <-  metric_data() %>%
+      filter(year %in% max(year)) %>%
       filter(Metrics ==  metric_choice)%>%
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
              sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
@@ -2212,7 +2230,7 @@ server <- function(input, output, session) {
     
     metric_choice <-  "Total Hospital Expenses"
     data <-  metric_data() %>%
-      # mutate(date= as.yearmon(date, "%Y-%m"))
+      filter(year %in% max(year)) %>%
       filter(Metrics %in%   metric_choice)%>%
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
              sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
@@ -2258,7 +2276,7 @@ server <- function(input, output, session) {
     metric_choice <-  "Discharges"
     
     data <-  metric_data() %>%
-      # mutate(date= as.yearmon(date, "%Y-%m"))
+      filter(year %in% max(year)) %>%
       filter(Metrics %in%  metric_choice)%>%
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
              sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
@@ -2302,7 +2320,7 @@ server <- function(input, output, session) {
     
     metric_choice <-  "CMI"
     data <-  metric_data() %>%
-      # mutate(date= as.yearmon(date, "%Y-%m"))
+      filter(year %in% max(year)) %>%
       filter(Metrics %in%  metric_choice)%>%
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
              sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
@@ -2347,7 +2365,7 @@ server <- function(input, output, session) {
     metric_choice <-  "ALOS"
     
     data <-  metric_data() %>%
-      # mutate(date= as.yearmon(date, "%Y-%m"))
+      filter(year %in% max(year)) %>%
       filter(Metrics %in%  metric_choice)%>%
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
              sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
@@ -2392,7 +2410,7 @@ server <- function(input, output, session) {
     
     metric_choice <-  "Outpatient Revenue"
     data <-  metric_data() %>%
-      # mutate(date= as.yearmon(date, "%Y-%m"))
+      filter(year %in% max(year)) %>%
       filter(Metrics %in%  metric_choice)%>%
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
              sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
@@ -2438,7 +2456,7 @@ server <- function(input, output, session) {
     metric_choice <-  "340B/Other Operating Revenue"
     
     data <-  metric_data() %>%
-      # mutate(date= as.yearmon(date, "%Y-%m"))
+      filter(year %in% max(year)) %>%
       filter(Metrics %in%  metric_choice)%>%
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
              sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
@@ -2483,7 +2501,7 @@ server <- function(input, output, session) {
     metric_choice <-  "Salaries and Benefits"
     
     data <-  metric_data() %>%
-      # mutate(date= as.yearmon(date, "%Y-%m"))
+      filter(year %in% max(year)) %>%
       filter(Metrics %in%  metric_choice)%>%
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
              sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
@@ -2528,7 +2546,7 @@ server <- function(input, output, session) {
     metric_choice <-  "Supplies & Expenses"
     
     data <-  metric_data() %>%
-      # mutate(date= as.yearmon(date, "%Y-%m"))
+      filter(year %in% max(year)) %>%
       filter(Metrics %in%  metric_choice)%>%
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
              sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
@@ -2572,7 +2590,7 @@ server <- function(input, output, session) {
     
     metric_choice <- "Nursing Agency Costs" 
     data <-  metric_data() %>%
-      # mutate(date= as.yearmon(date, "%Y-%m"))
+      filter(year %in% max(year)) %>%
       filter(Metrics %in%  metric_choice)%>%
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
              sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
@@ -2615,7 +2633,7 @@ server <- function(input, output, session) {
   output$carts_plot <- renderPlot({
     metric_choice <- "CARTS" 
     data <-  metric_data() %>%
-      # mutate(date= as.yearmon(date, "%Y-%m"))
+      filter(year %in% max(year)) %>%
       filter(Metrics %in% metric_choice)%>%
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
              sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
@@ -2689,6 +2707,7 @@ server <- function(input, output, session) {
     
     
    data <-  metric_data_var() %>%
+     filter(year %in% max(year)) %>%
    #   data <- new_repo %>% filter(Site == hospital)%>%
       filter(Metrics ==  metric_option)%>%
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
@@ -2724,6 +2743,7 @@ server <- function(input, output, session) {
     
     
     data <-  metric_data_var() %>%
+      filter(year %in% max(year)) %>%
       filter(Metrics ==  metric_option)%>%
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
              text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)))
@@ -2755,6 +2775,7 @@ server <- function(input, output, session) {
     hospital <- isolate(input$all_hospital_var)
       
       data <-  metric_data_var() %>%
+        filter(year %in% max(year)) %>%
         filter(Metrics ==  metric_option)%>%
         mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
                text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)))
@@ -2786,6 +2807,7 @@ server <- function(input, output, session) {
     
     
     data <-  metric_data_var() %>%
+      filter(year %in% max(year)) %>%
       filter(Metrics ==  metric_option)%>%
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
              text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)))
@@ -2817,6 +2839,7 @@ server <- function(input, output, session) {
     hospital <- isolate(input$all_hospital_var)
 
     data <-  metric_data_var() %>%
+      filter(year %in% max(year)) %>%
       filter(Metrics ==  metric_option)%>%
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
              text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)))
@@ -2849,6 +2872,7 @@ server <- function(input, output, session) {
     
     
     data <-  metric_data_var() %>%
+      filter(year %in% max(year)) %>%
       filter(Metrics ==  metric_option)%>%
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
              text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)))
@@ -2880,6 +2904,7 @@ server <- function(input, output, session) {
     hospital <- isolate(input$all_hospital_var)
     
     data <-  metric_data_var() %>%
+      filter(year %in% max(year)) %>%
       filter(Metrics ==  metric_option)%>%
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
              text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)))
@@ -2910,6 +2935,7 @@ server <- function(input, output, session) {
       hospital <- isolate(input$all_hospital_var)
       
       data <-  metric_data_var() %>%
+        filter(year %in% max(year)) %>%
         filter(Metrics ==  metric_option)%>%
         mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
                text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)))
@@ -2940,6 +2966,7 @@ server <- function(input, output, session) {
       hospital <- isolate(input$all_hospital_var)
       
       data <-  metric_data_var() %>%
+        filter(year %in% max(year)) %>%
         filter(Metrics ==  metric_option)%>%
         mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
                text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)))
@@ -2970,6 +2997,7 @@ server <- function(input, output, session) {
       hospital <- isolate(input$all_hospital_var)
       
       data <-  metric_data_var() %>%
+        filter(year %in% max(year)) %>%
         filter(Metrics ==  metric_option)%>%
         mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
                text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)))
@@ -3000,6 +3028,7 @@ server <- function(input, output, session) {
     hospital <- isolate(input$all_hospital_var)
     
     data <-  metric_data_var() %>%
+      filter(year %in% max(year)) %>%
       filter(Metrics ==  metric_option)%>%
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
              text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)))
@@ -3054,7 +3083,7 @@ server <- function(input, output, session) {
     Metric_option <- "Total Hospital Revenue"
     
     data <- metric_data_ytd()%>%
-    #data <- new_repo %>% 
+      filter(year %in% max(year)) %>%
       filter(Metrics == Metric_option)%>%
       mutate(sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
              ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
@@ -3088,7 +3117,7 @@ server <- function(input, output, session) {
     Metric_option <- "Total Hospital Expenses"
     
     data <- metric_data_ytd()%>%
-      #data <- new_repo %>% 
+      filter(year %in% max(year)) %>%
       filter(Metrics == Metric_option)%>%
       mutate(sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
              ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
@@ -3122,7 +3151,7 @@ server <- function(input, output, session) {
     Metric_option <- "Discharges" 
     
     data <- metric_data_ytd()%>%
-      #data <- new_repo %>% 
+      filter(year %in% max(year)) %>%
       filter(Metrics == Metric_option)%>%
       mutate(sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
              ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
@@ -3157,7 +3186,7 @@ server <- function(input, output, session) {
     Metric_option <- "CMI"
     
     data <- metric_data_ytd()%>%
-      #data <- new_repo %>% 
+      filter(year %in% max(year)) %>%
       filter(Metrics == Metric_option)%>%
       mutate(sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
              ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
@@ -3192,7 +3221,7 @@ server <- function(input, output, session) {
     Metric_option <- "ALOS"
     
     data <- metric_data_ytd()%>%
-      #data <- new_repo %>% 
+      filter(year %in% max(year)) %>%
       filter(Metrics == Metric_option)%>%
       mutate(sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
              ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
@@ -3227,7 +3256,7 @@ server <- function(input, output, session) {
     Metric_option <- "Outpatient Revenue"
     
     data <- metric_data_ytd()%>%
-      #data <- new_repo %>% 
+      filter(year %in% max(year)) %>%
       filter(Metrics == Metric_option)%>%
       mutate(sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
              ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
@@ -3261,7 +3290,7 @@ server <- function(input, output, session) {
     Metric_option <- "340B/Other Operating Revenue"
     
     data <- metric_data_ytd()%>%
-      #data <- new_repo %>% 
+      filter(year %in% max(year)) %>%
       filter(Metrics == Metric_option)%>%
       mutate(sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
              ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
@@ -3295,7 +3324,7 @@ server <- function(input, output, session) {
     Metric_option <- "Salaries and Benefits" 
     
     data <- metric_data_ytd()%>%
-      #data <- new_repo %>% 
+      filter(year %in% max(year)) %>%
       filter(Metrics == Metric_option)%>%
       mutate(sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
              ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
@@ -3329,7 +3358,7 @@ server <- function(input, output, session) {
     Metric_option <- "Supplies & Expenses" 
     
     data <- metric_data_ytd()%>%
-      #data <- new_repo %>% 
+      filter(year %in% max(year)) %>%
       filter(Metrics == Metric_option)%>%
       mutate(sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
              ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
@@ -3363,7 +3392,7 @@ server <- function(input, output, session) {
     Metric_option <- "Nursing Agency Costs"
     
     data <- metric_data_ytd()%>%
-      #data <- new_repo %>% 
+      filter(year %in% max(year)) %>%
       filter(Metrics == Metric_option)%>%
       mutate(sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
              ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
@@ -3397,7 +3426,7 @@ server <- function(input, output, session) {
     Metric_option <- "CARTS"
     
     data <- metric_data_ytd()%>%
-      #data <- new_repo %>% 
+      filter(year %in% max(year)) %>%
       filter(Metrics == Metric_option)%>%
       mutate(sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
              ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
@@ -3431,9 +3460,6 @@ server <- function(input, output, session) {
     
     data <- ratio_data()
     
-    test_ratio <<- data
-
- 
     data <- data %>%
       mutate(Actual = round(Actual, 2))%>%
       arrange(year, month) %>% 
