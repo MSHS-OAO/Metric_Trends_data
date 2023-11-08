@@ -270,7 +270,7 @@ server <- function(input, output, session) {
       }
       
       metric_choice <- isolate(input$mshs_metrics)
-      graph_style(data, site = "MSB", metric = metric_choice, min =  min_value,
+      graph_style(data, site = "MSHS", metric = metric_choice, min =  min_value,
                   max = max_value, text = text_label, y_label = y_label, ratio = ratio)
  
     }
@@ -3460,6 +3460,8 @@ server <- function(input, output, session) {
     
     data <- ratio_data()
     
+    ratio_test <<- data
+    
     data <- data %>%
       mutate(Actual = round(Actual, 2))%>%
       arrange(year, month) %>% 
@@ -3487,7 +3489,7 @@ server <- function(input, output, session) {
             panel.grid.major = element_line(color = "lightgrey"),
             panel.grid.minor = element_line(color = "lightgrey"))+
       scale_x_discrete(limits = month.abb)+
-      scale_y_continuous(limits = c(0, max(data$Actual)*1.2), breaks= pretty_breaks())+
+      #scale_y_continuous(limits = c(0, max(data$Actual)*1.2), breaks= pretty_breaks())+
       geom_text(aes(label= Actual, x=month, y= Actual), color="#212070",
                 position = position_dodge(width = 1), fontface = "bold",
                 vjust = 0.5 - sign(data$Actual), size = 4)+
