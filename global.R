@@ -313,7 +313,9 @@ ratio_date_option <- sort(c(unique(Exp_Rev_Ratio$date), unique(new_repo$date)),
 
 ratio_date_option <- as.character(ratio_date_option)
 
-print(ratio_date_option)
+print(Exp_Rev_Ratio$date)
+print(new_repo$date)
+
 options(ggrepel.max.overlaps = Inf)
 
 # graph functions
