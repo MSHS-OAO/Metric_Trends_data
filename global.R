@@ -235,10 +235,10 @@ write.csv(new_repo, paste0(dir, "REPO/Metric_Trends_Data_updated_",
 
 new_repo <- new_repo %>%
   mutate(date = paste0(month.abb[c(month)], "-", substr(year, 3, 4)))
-levels_options <- unique(new_repo$date)
-new_repo <- new_repo %>%
-  mutate(date = factor(date, levels = levels_options))%>%
-  arrange(month, year)
+# levels_options <- unique(new_repo$date)
+# new_repo <- new_repo %>%
+#   mutate(date = factor(date, levels = levels_options))%>%
+#   arrange(month, year)
 
 # fill na with zero if one of the Actual or Budget is available 
 new_repo <- new_repo %>% mutate(Actual = ifelse(!is.na(Budget) & is.na(Actual), 0, Actual),
@@ -289,10 +289,10 @@ Exp_Rev_Ratio <- Exp_Rev_Ratio %>%
   #        month= as.numeric(month)) %>%
   mutate(date = paste0(month.abb[c(month)], "-", substr(year, 3, 4)))
 
-levels_options <- unique(Exp_Rev_Ratio$date)
-Exp_Rev_Ratio <- Exp_Rev_Ratio %>%
-  mutate(date = factor(date, levels = levels_options))%>%
-  arrange(month, year)
+# levels_options <- unique(Exp_Rev_Ratio$date)
+# Exp_Rev_Ratio <- Exp_Rev_Ratio %>%
+#   mutate(date = factor(date, levels = levels_options))%>%
+#   arrange(month, year)
 
 
 
