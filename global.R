@@ -308,24 +308,26 @@ index <- which(metric_choices == "Expense to Revenue Ratio")
 metric_choices <- metric_choices[- index]
 
 
-date_combined <- c("Jan-20", "Feb-20", "Mar-20", "Apr-20", "May-20", "Jun-20",
-                   "Jul-20", "Aug-20", "Sep-20", "Oct-20", "Nov-20", "Dec-20",
-                   "Jan-21", "Feb-21", "Mar-21", "Apr-21", "May-21", "Jun-21",
-                   "Jul-21", "Aug-21", "Sep-21", "Oct-21", "Nov-21", "Dec-21",
-                   "Jan-22", "Feb-22", "Mar-22", "Apr-22", "May-22", "Jun-22",
-                   "Jul-22", "Aug-22", "Sep-22", "Oct-22", "Nov-22", "Dec-22")
+ratio_date_option <- c("Aug-23", "Jul-23",
+                   "Jun-23", "May-23", "Apr-23", "Mar-23", "Feb-23", "Jan-23", 
+                   "Dec-22", "Nov-22", "Oct-22", "Sep-22", "Aug-22", "Jul-22",
+                    "Jun-22", "May-22", "Apr-22", "Mar-22", "Feb-22", "Jan-22",
+                   "Dec-21", "Nov-21", "Oct-21", "Sep-21", "Aug-21", "Jul-21",
+                   "Jun-21", "May-21", "Apr-21", "Mar-21", "Feb-21", "Jan-21",
+                   "Dec-20", "Nov-20", "Oct-20", "Sep-20", "Aug-20", "Jul-20",
+                   "Jun-20", "May-20", "Apr-20", "Mar-20", "Feb-20", "Jan-20")
 
-date_combined <- unlist(list(c(Exp_Rev_Ratio$date, new_repo$date)))
+#date_combined <- unlist(list(c(Exp_Rev_Ratio$date, new_repo$date)))
 
 #date_combined <- c(Exp_Rev_Ratio$date, new_repo$date)
-date_combined <- unique(date_combined)
+#date_combined <- unique(date_combined)
 
-print(date_combined)
-
-ratio_date_option <- sort(date_combined, 
-                          decreasing = TRUE)
-
-ratio_date_option <- as.character(ratio_date_option)
+# print(date_combined)
+# 
+# ratio_date_option <- sort(date_combined, 
+#                           decreasing = TRUE)
+# 
+# ratio_date_option <- as.character(ratio_date_option)
 
 print(ratio_date_option)
 
