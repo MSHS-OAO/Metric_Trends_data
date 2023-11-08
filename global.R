@@ -292,7 +292,7 @@ Exp_Rev_Ratio <- Exp_Rev_Ratio %>%
 levels_options <- unique(Exp_Rev_Ratio$date)
 Exp_Rev_Ratio <- Exp_Rev_Ratio %>%
   mutate(date = factor(date, levels = levels_options))%>%
-  arrange(month, year)    
+  arrange(month, year)
 
 
 
@@ -308,13 +308,17 @@ index <- which(metric_choices == "Expense to Revenue Ratio")
 metric_choices <- metric_choices[- index]
 
 
-ratio_date_option <- sort(c(unique(Exp_Rev_Ratio$date), unique(new_repo$date)), 
+date_combined <- c(Exp_Rev_Ratio$date, new_repo$date)
+date_combined <- unique(date_combined)
+
+print(date_combined)
+
+ratio_date_option <- sort(date_combined, 
                           decreasing = TRUE)
 
 ratio_date_option <- as.character(ratio_date_option)
 
-print(Exp_Rev_Ratio$date)
-print(new_repo$date)
+
 
 options(ggrepel.max.overlaps = Inf)
 
