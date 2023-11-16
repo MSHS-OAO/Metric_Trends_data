@@ -200,696 +200,306 @@ server <- function(input, output, session) {
   # Metrics visualization ------------------------------
   # System Summary -----------------------------
   ### MSHS -------------------------------------
-  output$mshs_plot <- renderPlot({
-    data <- mshs_data() %>%
-      filter(year %in% max(year)) %>%
-      filter(Site == "MSHS")%>%
-      mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
-             sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
-             text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)),
-             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
-                                  Variance.From.Budget.YTD))
-    
-    
-    validate(need(nrow(data) > 0, paste0(isolate(input$mshs_metrics), " is not available for MSHS")))
-    
-    
-    if (isolate(input$mshs_metrics) %in% c("Expense to Revenue Ratio")) {
-      
-      # data <- new_repo %>% filter(Site == "MSHS" & Metrics == "Expense to Revenue Ratio")
+  output$mshs_plot <- renderPlotly({
+   
+    metric_option <- isolate(input$mshs_metrics)
+    site_option <- "MSHS"
+
+    if (metric_option %in% c("Expense to Revenue Ratio")) {
      
       data <- mshs_data() %>% 
-      filter(Site == "MSHS")%>%
+      filter(Site == site_option)%>%
       select("month", "year", "Site", "Actual", "Metrics", "date")
        
-    
-      
-     history <- Exp_Rev_Ratio %>% filter(Site== "MSHS")
-      
+      history <- Exp_Rev_Ratio %>% filter(Site== site_option)
       
       data <- rbind(history, data) %>%
         mutate(Actual = round(Actual, 2))%>%
         arrange(date) %>%
         slice(tail(row_number(), 12))
-      
-
-      ratio_graph(data, site = "MSHS")
+      ratio_graph(data, site = site_option)
       
     } else {
+      data <- mshs_data() %>%
+        filter(year %in% max(year)) %>%
+        filter(Site == site_option)%>%
+        mutate(text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)),
+               ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)*100), ")"),
+                                    Variance.From.Budget.YTD))
       
-      # data <- new_repo %>% filter(Site == "MSHS" & Metrics == "CMI")
-      #define a scale for second axis
-      ratio <- max(abs(data$Variance), na.rm = TRUE)/ max(abs(data$Variance.From.Budget.YTD), na.rm = TRUE)
-      
-      if (ratio %in% c("Inf", "-Inf", "NaN")) {
-        ratio <- 0
-      }
-      
-      data <- data %>% mutate(Variance_scaled = Variance.From.Budget.YTD * ratio)
-      
-      
-      if((max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.2 < 0){
-        max_value <- 0
-      } else {
-        max_value <- (max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.2
-      }
-      
-      if((min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.2 > 0){
-        min_value <- 0
-      } else {
-        min_value <- (min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.2
-      }
-      
-      # Define different labels for metrics    
-      if (isolate(input$mshs_metrics) %in% c("CMI", "ALOS", "Discharges")) {
-        text_label <- data$text_label
-        y_label <- "Monthly Variance to Budget"
-      } else {
-        text_label <- paste0("$", data$text_label)
-        y_label <- "Monthly Variance to Budget $"
-      }
-      
-      metric_choice <- isolate(input$mshs_metrics)
-      graph_style(data, site = "MSHS", metric = metric_choice, min =  min_value,
-                  max = max_value, text = text_label, y_label = y_label, ratio = ratio)
- 
+      validate(need(nrow(data) > 0, paste0(metric_option, " is not available for ", site_option)))
+      graph_style_break(data = data, site = site_option, metric= metric_option)
     }
     
   })
   
   ### MSB -------------------------------------
-  output$msb_plot <- renderPlot({
-    data <- mshs_data()  %>%
-      filter(year %in% max(year)) %>%
-      filter(Site == "MSB")%>%
-      #mutate(date= as.yearmon(date, "%Y-%m"))%>%
-      mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
-             sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
-             text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)),
-             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
-                                    Variance.From.Budget.YTD))
-             
-      
+  output$msb_plot <- renderPlotly({
+    metric_option <- isolate(input$mshs_metrics)
+    site_option <- "MSB"
     
-    validate(need(nrow(data) > 0, paste0(isolate(input$mshs_metrics), " is not available for MSB")))
-    
-    
-    if (isolate(input$mshs_metrics) %in% c("Expense to Revenue Ratio")) {
-      
-      # data <- new_repo %>% filter(Site == "MSB" & Metrics == "Expense to Revenue Ratio") 
+    if (metric_option %in% c("Expense to Revenue Ratio")) {
       
       data <- mshs_data() %>% 
-        filter(Site == "MSB")%>%
+        filter(Site == site_option)%>%
         select("month", "year", "Site", "Actual", "Metrics", "date")
       
-      history <- Exp_Rev_Ratio %>% filter(Site== "MSB")
-      
+      history <- Exp_Rev_Ratio %>% filter(Site== site_option)
       
       data <- rbind(history, data) %>%
         mutate(Actual = round(Actual, 2))%>%
         arrange(date) %>%
         slice(tail(row_number(), 12))
-      
-      
-      
-      ratio_graph(data, site = "MSB")
-      
+      ratio_graph(data, site = site_option)
       
     } else {
+      data <- mshs_data() %>%
+        filter(year %in% max(year)) %>%
+        filter(Site == site_option)%>%
+        mutate(text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)),
+               ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)*100), ")"),
+                                    Variance.From.Budget.YTD))
       
-      # data <- new_repo %>% filter(Site == "MSB" & Metrics == "CMI")
-      
-      #define a scale for second axis
-      ratio <- max(abs(data$Variance), na.rm = TRUE)/ max(abs(data$Variance.From.Budget.YTD), na.rm = TRUE)
-      
-      if (ratio %in% c("Inf", "-Inf", "NaN")) {
-        ratio <- 0
-      }
-      
-      data <- data %>% mutate(Variance_scaled = Variance.From.Budget.YTD * ratio)
-      
-      
-      if((max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.2 < 0){
-        max_value <- 0
-      } else {
-        max_value <- (max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.2
-      }
-      
-      if((min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.2 > 0){
-        min_value <- 0
-      } else {
-        min_value <- (min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.2
-      }
-      
-      # Define different labels for metrics    
-      if (isolate(input$mshs_metrics) %in% c("CMI", "ALOS", "Discharges")) {
-        text_label <- data$text_label
-        y_label <- "Monthly Variance to Budget"
-      } else {
-        text_label <- paste0("$", data$text_label)
-        y_label <- "Monthly Variance to Budget $"
-      }
-      
-      metric_choice <- isolate(input$mshs_metrics)
-      graph_style(data, site = "MSB", metric = metric_choice, min =  min_value,
-            max = max_value, text = text_label, y_label = y_label, ratio = ratio)
-      
+      validate(need(nrow(data) > 0, paste0(metric_option, " is not available for ", site_option)))
+      graph_style_break(data = data, site = site_option, metric= metric_option)
     }
+    
     
   })
   
   
   ### MSBI -------------------------------------
-  output$msbi_plot <- renderPlot({
-    data <- mshs_data() %>%
-      filter(year %in% max(year)) %>%
-      filter(Site == "MSBI")%>%
-      #mutate(date= as.yearmon(date, "%Y-%m"))%>%
-      mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
-             sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
-             text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)),
-             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
-                                  Variance.From.Budget.YTD))
+  output$msbi_plot <- renderPlotly({
+    metric_option <- isolate(input$mshs_metrics)
+    site_option <- "MSBI"
     
-    validate(need(nrow(data) > 0, paste0(isolate(input$mshs_metrics), " is not available for MSBI")))
-    
-    
-    if (isolate(input$mshs_metrics) %in% c("Expense to Revenue Ratio")) {
-      
-      # data <- new_repo %>% filter(Site == "MSB" & Metrics == "Expense to Revenue Ratio") 
+    if (metric_option %in% c("Expense to Revenue Ratio")) {
       
       data <- mshs_data() %>% 
-        filter(Site == "MSBI")%>% 
+        filter(Site == site_option)%>%
         select("month", "year", "Site", "Actual", "Metrics", "date")
       
-      history <- Exp_Rev_Ratio %>% filter(Site== "MSBI")
-      
+      history <- Exp_Rev_Ratio %>% filter(Site== site_option)
       
       data <- rbind(history, data) %>%
         mutate(Actual = round(Actual, 2))%>%
         arrange(date) %>%
         slice(tail(row_number(), 12))
-      
-      
-      ratio_graph(data, site = "MSBI")
+      ratio_graph(data, site = site_option)
       
     } else {
+      data <- mshs_data() %>%
+        filter(year %in% max(year)) %>%
+        filter(Site == site_option)%>%
+        mutate(text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)),
+               ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)*100), ")"),
+                                    Variance.From.Budget.YTD))
       
-      # data <- new_repo %>% filter(Site == "MSBI" & Metrics == "CMI")
-      
-      #define a scale for second axis
-      ratio <- max(abs(data$Variance), na.rm = TRUE)/ max(abs(data$Variance.From.Budget.YTD), na.rm = TRUE)
-      
-      if (ratio %in% c("Inf", "-Inf", "NaN")) {
-        ratio <- 0
-      }
-      
-      data <- data %>% mutate(Variance_scaled = Variance.From.Budget.YTD * ratio)
-      
-      
-      if((max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.2 < 0){
-        max_value <- 0
-      } else {
-        max_value <- (max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.2
-      }
-      
-      if((min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.2 > 0){
-        min_value <- 0
-      } else {
-        min_value <- (min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.2
-      }
-      
-      # Define different labels for metrics    
-      if (isolate(input$mshs_metrics) %in% c("CMI", "ALOS", "Discharges")) {
-        text_label <- data$text_label
-        y_label <- "Monthly Variance to Budget"
-      } else {
-        text_label <- paste0("$", data$text_label)
-        y_label <- "Monthly Variance to Budget $"
-      }
-      
-      metric_choice <- isolate(input$mshs_metrics)
-      graph_style(data, site = "MSBI", metric = metric_choice, min =  min_value,
-                  max = max_value, text = text_label, y_label = y_label, ratio = ratio)
-      
+      validate(need(nrow(data) > 0, paste0(metric_option, " is not available for ", site_option)))
+      graph_style_break(data = data, site = site_option, metric= metric_option)
     }
     
   })
   
   ### MSH -------------------------------------
-  output$msh_plot <- renderPlot({
-    data <- mshs_data() %>%
-      filter(year %in% max(year)) %>%
-      filter(Site == "MSH")%>%
-      #mutate(date= as.yearmon(date, "%Y-%m"))%>%
-      mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
-             sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
-             text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)),
-             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
-                                  Variance.From.Budget.YTD))
+  output$msh_plot <- renderPlotly({
+    metric_option <- isolate(input$mshs_metrics)
+    site_option <- "MSH"
     
-    validate(need(nrow(data) > 0, paste0(isolate(input$mshs_metrics), " is not available for MSH")))
-    
-    
-    if (isolate(input$mshs_metrics) %in% c("Expense to Revenue Ratio")) {
-      
-      # data <- new_repo %>% filter(Site == "MSB" & Metrics == "Expense to Revenue Ratio") 
+    if (metric_option %in% c("Expense to Revenue Ratio")) {
       
       data <- mshs_data() %>% 
-        filter(Site == "MSH")%>%
+        filter(Site == site_option)%>%
         select("month", "year", "Site", "Actual", "Metrics", "date")
       
-      history <- Exp_Rev_Ratio %>% filter(Site== "MSH")
-      
+      history <- Exp_Rev_Ratio %>% filter(Site== site_option)
       
       data <- rbind(history, data) %>%
         mutate(Actual = round(Actual, 2))%>%
         arrange(date) %>%
         slice(tail(row_number(), 12))
-      
-      
-      
-      ratio_graph(data, site = "MSH")
+      ratio_graph(data, site = site_option)
       
     } else {
+      data <- mshs_data() %>%
+        filter(year %in% max(year)) %>%
+        filter(Site == site_option)%>%
+        mutate(text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)),
+               ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)*100), ")"),
+                                    Variance.From.Budget.YTD))
       
-      # data <- new_repo %>% filter(Site == "MSB" & Metrics == "CMI")
-      
-      #define a scale for second axis
-      ratio <- max(abs(data$Variance), na.rm = TRUE)/ max(abs(data$Variance.From.Budget.YTD), na.rm = TRUE)
-      
-      if (ratio %in% c("Inf", "-Inf", "NaN")) {
-        ratio <- 0
-      }
-      
-      data <- data %>% mutate(Variance_scaled = Variance.From.Budget.YTD * ratio)
-      
-      
-      if((max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.2 < 0){
-        max_value <- 0
-      } else {
-        max_value <- (max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.2
-      }
-      
-      if((min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.2 > 0){
-        min_value <- 0
-      } else {
-        min_value <- (min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.2
-      }
-      
-      # Define different labels for metrics    
-      if (isolate(input$mshs_metrics) %in% c("CMI", "ALOS", "Discharges")) {
-        text_label <- data$text_label
-        y_label <- "Monthly Variance to Budget"
-      } else {
-        text_label <- paste0("$", data$text_label)
-        y_label <- "Monthly Variance to Budget $"
-      }
-      
-      metric_choice <- isolate(input$mshs_metrics)
-      graph_style(data, site = "MSH", metric = metric_choice, min =  min_value,
-                  max = max_value, text = text_label, y_label = y_label, ratio = ratio)
+      validate(need(nrow(data) > 0, paste0(metric_option, " is not available for ", site_option)))
+      graph_style_break(data = data, site = site_option, metric= metric_option)
     }
     
   })
   
   ### MSM -------------------------------------
-  output$msm_plot <- renderPlot({
-    data <- mshs_data() %>%
-      filter(Site == "MSM")%>%
-      filter(year %in% max(year)) %>%
-      #mutate(date= as.yearmon(date, "%Y-%m"))%>%
-      mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
-             sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
-             text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)),
-             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
-                                  Variance.From.Budget.YTD))
+  output$msm_plot <- renderPlotly({
+    metric_option <- isolate(input$mshs_metrics)
+    site_option <- "MSM"
     
-    validate(need(nrow(data) > 0, paste0(isolate(input$mshs_metrics), " is not available for MSM")))
-    
-    
-    if (isolate(input$mshs_metrics) %in% c("Expense to Revenue Ratio")) {
+    if (metric_option %in% c("Expense to Revenue Ratio")) {
       
-      # data <- new_repo %>% filter(Site == "MSB" & Metrics == "Expense to Revenue Ratio") 
-      data <-  data <- mshs_data() %>% 
-        filter(Site == "MSM")%>%
+      data <- mshs_data() %>% 
+        filter(Site == site_option)%>%
         select("month", "year", "Site", "Actual", "Metrics", "date")
       
-      history <- Exp_Rev_Ratio %>% filter(Site== "MSM")
-      
+      history <- Exp_Rev_Ratio %>% filter(Site== site_option)
       
       data <- rbind(history, data) %>%
         mutate(Actual = round(Actual, 2))%>%
         arrange(date) %>%
         slice(tail(row_number(), 12))
+      ratio_graph(data, site = site_option)
       
-    
-      
-      ratio_graph(data, site = "MSM")
     } else {
+      data <- mshs_data() %>%
+        filter(year %in% max(year)) %>%
+        filter(Site == site_option)%>%
+        mutate(text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)),
+               ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)*100), ")"),
+                                    Variance.From.Budget.YTD))
       
-      # data <- new_repo %>% filter(Site == "MSB" & Metrics == "CMI")
-      
-      #define a scale for second axis
-      ratio <- max(abs(data$Variance), na.rm = TRUE)/ max(abs(data$Variance.From.Budget.YTD), na.rm = TRUE)
-      
-      if (ratio %in% c("Inf", "-Inf", "NaN")) {
-        ratio <- 0
-      }
-      
-      data <- data %>% mutate(Variance_scaled = Variance.From.Budget.YTD * ratio)
-      
-      
-      if((max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.2 < 0){
-        max_value <- 0
-      } else {
-        max_value <- (max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.2
-      }
-      
-      if((min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.2 > 0){
-        min_value <- 0
-      } else {
-        min_value <- (min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.2
-      }
-      
-      # Define different labels for metrics    
-      if (isolate(input$mshs_metrics) %in% c("CMI", "ALOS", "Discharges")) {
-        text_label <- data$text_label
-        y_label <- "Monthly Variance to Budget"
-      } else {
-        text_label <- paste0("$", data$text_label)
-        y_label <- "Monthly Variance to Budget $"
-      }
-      
-      metric_choice <- isolate(input$mshs_metrics)
-      graph_style(data, site = "MSM", metric = metric_choice, min =  min_value,
-                  max = max_value, text = text_label, y_label = y_label, ratio = ratio)
-      
+      validate(need(nrow(data) > 0, paste0(metric_option, " is not available for ", site_option)))
+      graph_style_break(data = data, site = site_option, metric= metric_option)
     }
     
   })
   
   ### MSQ -------------------------------------
-  output$msq_plot <- renderPlot({
-    data <- mshs_data() %>%
-      filter(Site == "MSQ")%>%
-      filter(year %in% max(year)) %>%
-      mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
-             sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
-             text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)),
-             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
-                                  Variance.From.Budget.YTD))
+  output$msq_plot <- renderPlotly({
+    metric_option <- isolate(input$mshs_metrics)
+    site_option <- "MSQ"
     
-    validate(need(nrow(data) > 0, paste0(isolate(input$mshs_metrics), " is not available for MSQ")))
-    
-    
-    if (isolate(input$mshs_metrics) %in% c("Expense to Revenue Ratio")) {
+    if (metric_option %in% c("Expense to Revenue Ratio")) {
       
-      # data <- new_repo %>% filter(Site == "MSB" & Metrics == "Expense to Revenue Ratio") 
       data <- mshs_data() %>% 
-        filter(Site == "MSQ")%>% 
+        filter(Site == site_option)%>%
         select("month", "year", "Site", "Actual", "Metrics", "date")
       
-      history <- Exp_Rev_Ratio %>% filter(Site== "MSQ")
-      
+      history <- Exp_Rev_Ratio %>% filter(Site== site_option)
       
       data <- rbind(history, data) %>%
         mutate(Actual = round(Actual, 2))%>%
         arrange(date) %>%
         slice(tail(row_number(), 12))
-      
-      
-      ratio_graph(data, site = "MSQ")
+      ratio_graph(data, site = site_option)
       
     } else {
+      data <- mshs_data() %>%
+        filter(year %in% max(year)) %>%
+        filter(Site == site_option)%>%
+        mutate(text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)),
+               ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)*100), ")"),
+                                    Variance.From.Budget.YTD))
       
-      # data <- new_repo %>% filter(Site == "MSB" & Metrics == "CMI")
-      
-      #define a scale for second axis
-      ratio <- max(abs(data$Variance), na.rm = TRUE)/ max(abs(data$Variance.From.Budget.YTD), na.rm = TRUE)
-      
-      if (ratio %in% c("Inf", "-Inf", "NaN")) {
-        ratio <- 0
-      }
-      
-      data <- data %>% mutate(Variance_scaled = Variance.From.Budget.YTD * ratio)
-      
-      
-      if((max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.2 < 0){
-        max_value <- 0
-      } else {
-        max_value <- (max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.2
-      }
-      
-      if((min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.2 > 0){
-        min_value <- 0
-      } else {
-        min_value <- (min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.2
-      }
-      
-      # Define different labels for metrics    
-      if (isolate(input$mshs_metrics) %in% c("CMI", "ALOS", "Discharges")) {
-        text_label <- data$text_label
-        y_label <- "Monthly Variance to Budget"
-      } else {
-        text_label <- paste0("$", data$text_label)
-        y_label <- "Monthly Variance to Budget $"
-      }
-      
-      metric_choice <- isolate(input$mshs_metrics)
-      graph_style(data, site = "MSQ", metric = metric_choice, min =  min_value,
-                  max = max_value, text = text_label, y_label = y_label, ratio = ratio)
-      
+      validate(need(nrow(data) > 0, paste0(metric_option, " is not available for ", site_option)))
+      graph_style_break(data = data, site = site_option, metric= metric_option)
     }
     
   })
   
   ### MSSN -------------------------------------
-  output$mssn_plot <- renderPlot({
-    data <- mshs_data() %>%
-      filter(Site == "MSSN")%>%
-      filter(year %in% max(year)) %>%
-      mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
-             sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
-             text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)),
-             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
-                                  Variance.From.Budget.YTD))
+  output$mssn_plot <- renderPlotly({
+    metric_option <- isolate(input$mshs_metrics)
+    site_option <- "MSSN"
     
-    validate(need(nrow(data) > 0, paste0(isolate(input$mshs_metrics), " is not available for MSSN")))
-    
-    
-    if (isolate(input$mshs_metrics) %in% c("Expense to Revenue Ratio")) {
+    if (metric_option %in% c("Expense to Revenue Ratio")) {
       
-      # data <- new_repo %>% filter(Site == "MSB" & Metrics == "Expense to Revenue Ratio") 
       data <- mshs_data() %>% 
-        filter(Site == "MSSN")%>%
+        filter(Site == site_option)%>%
         select("month", "year", "Site", "Actual", "Metrics", "date")
       
-      history <- Exp_Rev_Ratio %>% filter(Site== "MSSN")
-      
+      history <- Exp_Rev_Ratio %>% filter(Site== site_option)
       
       data <- rbind(history, data) %>%
         mutate(Actual = round(Actual, 2))%>%
         arrange(date) %>%
         slice(tail(row_number(), 12))
-      
-      
-      ratio_graph(data, site = "MSSN")
+      ratio_graph(data, site = site_option)
       
     } else {
+      data <- mshs_data() %>%
+        filter(year %in% max(year)) %>%
+        filter(Site == site_option)%>%
+        mutate(text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)),
+               ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)*100), ")"),
+                                    Variance.From.Budget.YTD))
       
-      # data <- new_repo %>% filter(Site == "MSB" & Metrics == "CMI")
-      
-      #define a scale for second axis
-      ratio <- max(abs(data$Variance), na.rm = TRUE)/ max(abs(data$Variance.From.Budget.YTD), na.rm = TRUE)
-      
-      if (ratio %in% c("Inf", "-Inf", "NaN")) {
-        ratio <- 0
-      }
-      
-      data <- data %>% mutate(Variance_scaled = Variance.From.Budget.YTD * ratio)
-      
-      
-      if((max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.2 < 0){
-        max_value <- 0
-      } else {
-        max_value <- (max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.2
-      }
-      
-      if((min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.2 > 0){
-        min_value <- 0
-      } else {
-        min_value <- (min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.2
-      }
-      
-      # Define different labels for metrics    
-      if (isolate(input$mshs_metrics) %in% c("CMI", "ALOS", "Discharges")) {
-        text_label <- data$text_label
-        y_label <- "Monthly Variance to Budget"
-      } else {
-        text_label <- paste0("$", data$text_label)
-        y_label <- "Monthly Variance to Budget $"
-      }
-      
-      metric_choice <- isolate(input$mshs_metrics)
-      graph_style(data, site = "MSSN", metric = metric_choice, min =  min_value,
-                  max = max_value, text = text_label, y_label = y_label, ratio = ratio)
-      
-      
+      validate(need(nrow(data) > 0, paste0(metric_option, " is not available for ", site_option)))
+      graph_style_break(data = data, site = site_option, metric= metric_option)
     }
     
   })
   
   ### MSW -------------------------------------
-  output$msw_plot <- renderPlot({
-    data <- mshs_data() %>%
-      filter(Site == "MSW")%>%
-      filter(year %in% max(year)) %>%
-      mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
-             sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
-             text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)),
-             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
-                                  Variance.From.Budget.YTD))
+  output$msw_plot <- renderPlotly({
+    metric_option <- isolate(input$mshs_metrics)
+    site_option <- "MSW"
     
-    validate(need(nrow(data) > 0, paste0(isolate(input$mshs_metrics), " is not available for MSW")))
-    
-    
-    if (isolate(input$mshs_metrics) %in% c("Expense to Revenue Ratio")) {
+    if (metric_option %in% c("Expense to Revenue Ratio")) {
       
-      # data <- new_repo %>% filter(Site == "MSB" & Metrics == "Expense to Revenue Ratio") 
       data <- mshs_data() %>% 
-        filter(Site == "MSW")%>%
+        filter(Site == site_option)%>%
         select("month", "year", "Site", "Actual", "Metrics", "date")
       
-      history <- Exp_Rev_Ratio %>% filter(Site== "MSW")
-      
+      history <- Exp_Rev_Ratio %>% filter(Site== site_option)
       
       data <- rbind(history, data) %>%
         mutate(Actual = round(Actual, 2))%>%
         arrange(date) %>%
         slice(tail(row_number(), 12))
-      
-      
-      ratio_graph(data, site = "MSW")
+      ratio_graph(data, site = site_option)
       
     } else {
+      data <- mshs_data() %>%
+        filter(year %in% max(year)) %>%
+        filter(Site == site_option)%>%
+        mutate(text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)),
+               ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)*100), ")"),
+                                    Variance.From.Budget.YTD))
       
-      # data <- new_repo %>% filter(Site == "MSB" & Metrics == "CMI")
-      
-      #define a scale for second axis
-      ratio <- max(abs(data$Variance), na.rm = TRUE)/ max(abs(data$Variance.From.Budget.YTD), na.rm = TRUE)
-      
-      if (ratio %in% c("Inf", "-Inf", "NaN")) {
-        ratio <- 0
-      }
-      
-      data <- data %>% mutate(Variance_scaled = Variance.From.Budget.YTD * ratio)
-      
-      
-      if((max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.2 < 0){
-        max_value <- 0
-      } else {
-        max_value <- (max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.2
-      }
-      
-      if((min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.2 > 0){
-        min_value <- 0
-      } else {
-        min_value <- (min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.2
-      }
-      
-      # Define different labels for metrics    
-      if (isolate(input$mshs_metrics) %in% c("CMI", "ALOS", "Discharges")) {
-        text_label <- data$text_label
-        y_label <- "Monthly Variance to Budget"
-      } else {
-        text_label <- paste0("$", data$text_label)
-        y_label <- "Monthly Variance to Budget $"
-      }
-      
-      metric_choice <- isolate(input$mshs_metrics)
-      graph_style(data, site = "MSW", metric = metric_choice, min =  min_value,
-                  max = max_value, text = text_label, y_label = y_label, ratio = ratio)
-      
-      
+      validate(need(nrow(data) > 0, paste0(metric_option, " is not available for ", site_option)))
+      graph_style_break(data = data, site = site_option, metric= metric_option)
     }
+    
     
   })
   
   
   ### NYEE -------------------------------------
-  output$nyee_plot <- renderPlot({
-    data <- mshs_data() %>%
-      filter(Site == "NYEE")%>%
-      filter(year %in% max(year)) %>%
-      mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
-             sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
-             text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)),
-             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
-                                  Variance.From.Budget.YTD))
+  output$nyee_plot <- renderPlotly({
+    metric_option <- isolate(input$mshs_metrics)
+    site_option <- "NYEE"
     
-    validate(need(nrow(data) > 0, paste0(isolate(input$mshs_metrics), " is not available for NYEE")))
-    
-    
-    if (isolate(input$mshs_metrics) %in% c("Expense to Revenue Ratio")) {
-      
-      # data <- new_repo %>% filter(Site == "MSB" & Metrics == "Expense to Revenue Ratio") 
+    if (metric_option %in% c("Expense to Revenue Ratio")) {
       
       data <- mshs_data() %>% 
-        filter(Site == "NYEE")%>%
+        filter(Site == site_option)%>%
         select("month", "year", "Site", "Actual", "Metrics", "date")
       
-      history <- Exp_Rev_Ratio %>% filter(Site== "NYEE")
-      
+      history <- Exp_Rev_Ratio %>% filter(Site== site_option)
       
       data <- rbind(history, data) %>%
         mutate(Actual = round(Actual, 2))%>%
         arrange(date) %>%
         slice(tail(row_number(), 12))
       
+      ratio_graph(data, site = site_option)
       
-      ratio_graph(data, site = "NYEE")
     } else {
+      data <- mshs_data() %>%
+        filter(year %in% max(year)) %>%
+        filter(Site == site_option)%>%
+        mutate(text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)),
+               ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)*100), ")"),
+                                    Variance.From.Budget.YTD))
       
-      # data <- new_repo %>% filter(Site == "MSB" & Metrics == "CMI")
-      
-      #define a scale for second axis
-      ratio <- max(abs(data$Variance), na.rm = TRUE)/ max(abs(data$Variance.From.Budget.YTD), na.rm = TRUE)
-      
-      if (ratio %in% c("Inf", "-Inf", "NaN")) {
-        ratio <- 0
-      }
-      
-      data <- data %>% mutate(Variance_scaled = Variance.From.Budget.YTD * ratio)
-      
-      
-      if((max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.2 < 0){
-        max_value <- 0
-      } else {
-        max_value <- (max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.2
-      }
-      
-      if((min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.2 > 0){
-        min_value <- 0
-      } else {
-        min_value <- (min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.2
-      }
-      
-      # Define different labels for metrics    
-      if (isolate(input$mshs_metrics) %in% c("CMI", "ALOS", "Discharges")) {
-        text_label <- data$text_label
-        y_label <- "Monthly Variance to Budget"
-      } else {
-        text_label <- paste0("$", data$text_label)
-        y_label <- "Monthly Variance to Budget $"
-      }
-      
-      
-      metric_choice <- isolate(input$mshs_metrics)
-      graph_style(data, site = "NYEE", metric = metric_choice, min =  min_value,
-                  max = max_value, text = text_label, y_label = y_label, ratio = ratio)
-      
+      validate(need(nrow(data) > 0, paste0(metric_option, " is not available for ", site_option)))
+      graph_style_break(data = data, site = site_option, metric= metric_option)
     }
+
     
   })
   
@@ -908,64 +518,9 @@ server <- function(input, output, session) {
              text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)))
     
     validate(need(nrow(data) > 0, paste0(metric_option , " is not available for ", hospital)))
+
     
-    if(metric_option %in% c("Total Hospital Revenue")) {
-      max_value <- 20000 	
-      min_value <- -30000
-      breaks  <- 5000 
-    } else if(metric_option %in% c("Outpatient Revenue")) {
-      max_value  <- 12000 	
-      min_value  <- -8000
-      breaks  <- 2000 
-    } else if(metric_option %in% c("340B/Other Operating Revenue")) {
-      max_value  <- 6000 	
-      min_value  <- -14000
-      breaks  <- 2000 
-    } else if(metric_option %in% c("Total Hospital Expenses")) {
-      max_value  <- 10000 	
-      min_value  <- -40000
-      breaks  <- 5000 
-    } else if(metric_option %in% c("Salaries and Benefits")) {
-      max_value  <- 10000 	
-      min_value  <- -14000
-      breaks  <- 2000 
-    } else if(metric_option %in% c("Supplies & Expenses")) {
-      max_value  <- 30000 	
-      min_value  <- -25000
-      breaks  <- 5000
-    } else if(metric_option %in% c("CARTS")) {
-      max_value  <- 5000 	
-      min_value  <- -5000
-      breaks  <- 1000 
-    } else if(metric_option %in% c("Nursing Agency Costs")) {
-      max_value  <- 2000 	
-      min_value  <- -8000
-      breaks  <- 2000 
-    } else if(metric_option %in% c("Discharges")) {
-      max_value  <- 750 	
-      min_value  <- -750
-      breaks  <- 150
-    } else if(metric_option %in% c("CMI")) {
-      max_value  <- 0.25	
-      min_value  <- -0.25
-      breaks  <- 0.05
-    } else if(metric_option %in% c("ALOS")) {
-      max_value  <- 2.5	
-      min_value  <- -2.5
-      breaks  <- 0.5
-    }
-    
-    # Define different labels for metrics    
-    if (metric_option %in% c("CMI", "ALOS", "Discharges")) {
-      text_label <- data$text_label
-      y_label <- "Monthly Variance to Budget"
-    } else {
-      text_label <- paste0("$", data$text_label)
-      y_label <- "Monthly Variance to Budget $"
-    }
-    
-    var_graph_break(data, site= hospital, metric = metric_option, min= min_value, 
-              max = max_value, breaks = breaks, y_label= y_label, text = text_label)
+    var_graph_break(data, site= hospital, metric = metric_option)
     
   })
   
@@ -981,64 +536,7 @@ server <- function(input, output, session) {
     
     validate(need(nrow(data) > 0, paste0(metric_option , " is not available for ", hospital)))
     
-    
-    if(metric_option %in% c("Total Hospital Revenue")) {
-      max_value <- 20000 	
-      min_value <- -30000
-      breaks  <- 5000 
-    } else if(metric_option %in% c("Outpatient Revenue")) {
-      max_value  <- 12000 	
-      min_value  <- -8000
-      breaks  <- 2000 
-    } else if(metric_option %in% c("340B/Other Operating Revenue")) {
-      max_value  <- 6000 	
-      min_value  <- -14000
-      breaks  <- 2000 
-    } else if(metric_option %in% c("Total Hospital Expenses")) {
-      max_value  <- 10000 	
-      min_value  <- -40000
-      breaks  <- 5000 
-    } else if(metric_option %in% c("Salaries and Benefits")) {
-      max_value  <- 10000 	
-      min_value  <- -14000
-      breaks  <- 2000 
-    } else if(metric_option %in% c("Supplies & Expenses")) {
-      max_value  <- 30000 	
-      min_value  <- -25000
-      breaks  <- 5000
-    } else if(metric_option %in% c("CARTS")) {
-      max_value  <- 5000 	
-      min_value  <- -5000
-      breaks  <- 1000 
-    } else if(metric_option %in% c("Nursing Agency Costs")) {
-      max_value  <- 2000 	
-      min_value  <- -8000
-      breaks  <- 2000 
-    } else if(metric_option %in% c("Discharges")) {
-      max_value  <- 750 	
-      min_value  <- -750
-      breaks  <- 150
-    } else if(metric_option %in% c("CMI")) {
-      max_value  <- 0.25	
-      min_value  <- -0.25
-      breaks  <- 0.05
-    } else if(metric_option %in% c("ALOS")) {
-      max_value  <- 2.5	
-      min_value  <- -2.5
-      breaks  <- 0.5
-    }
-    
-    # Define different labels for metrics    
-    if (metric_option %in% c("CMI", "ALOS", "Discharges")) {
-      text_label <- data$text_label
-      y_label <- "Monthly Variance to Budget"
-    } else {
-      text_label <- paste0("$", data$text_label)
-      y_label <- "Monthly Variance to Budget $"
-    }
-    
-    var_graph_break(data, site= hospital, metric = metric_option, min= min_value, 
-                    max = max_value, breaks = breaks, y_label= y_label, text = text_label)
+    var_graph_break(data, site= hospital, metric = metric_option)
     
     
   })
@@ -1055,64 +553,7 @@ server <- function(input, output, session) {
     
     validate(need(nrow(data) > 0, paste0(metric_option , " is not available for ", hospital)))
     
-    
-    if(metric_option %in% c("Total Hospital Revenue")) {
-      max_value <- 20000 	
-      min_value <- -30000
-      breaks  <- 5000 
-    } else if(metric_option %in% c("Outpatient Revenue")) {
-      max_value  <- 12000 	
-      min_value  <- -8000
-      breaks  <- 2000 
-    } else if(metric_option %in% c("340B/Other Operating Revenue")) {
-      max_value  <- 6000 	
-      min_value  <- -14000
-      breaks  <- 2000 
-    } else if(metric_option %in% c("Total Hospital Expenses")) {
-      max_value  <- 10000 	
-      min_value  <- -40000
-      breaks  <- 5000 
-    } else if(metric_option %in% c("Salaries and Benefits")) {
-      max_value  <- 10000 	
-      min_value  <- -14000
-      breaks  <- 2000 
-    } else if(metric_option %in% c("Supplies & Expenses")) {
-      max_value  <- 30000 	
-      min_value  <- -25000
-      breaks  <- 5000
-    } else if(metric_option %in% c("CARTS")) {
-      max_value  <- 5000 	
-      min_value  <- -5000
-      breaks  <- 1000 
-    } else if(metric_option %in% c("Nursing Agency Costs")) {
-      max_value  <- 2000 	
-      min_value  <- -8000
-      breaks  <- 2000 
-    } else if(metric_option %in% c("Discharges")) {
-      max_value  <- 750 	
-      min_value  <- -750
-      breaks  <- 150
-    } else if(metric_option %in% c("CMI")) {
-      max_value  <- 0.25	
-      min_value  <- -0.25
-      breaks  <- 0.05
-    } else if(metric_option %in% c("ALOS")) {
-      max_value  <- 2.5	
-      min_value  <- -2.5
-      breaks  <- 0.5
-    }
-    
-    # Define different labels for metrics    
-    if (metric_option %in% c("CMI", "ALOS", "Discharges")) {
-      text_label <- data$text_label
-      y_label <- "Monthly Variance to Budget"
-    } else {
-      text_label <- paste0("$", data$text_label)
-      y_label <- "Monthly Variance to Budget $"
-    }
-    
-    var_graph_break(data, site= hospital, metric = metric_option, min= min_value, 
-                    max = max_value, breaks = breaks, y_label= y_label, text = text_label)
+    var_graph_break(data, site= hospital, metric = metric_option)
     
     
   })
@@ -1131,63 +572,7 @@ server <- function(input, output, session) {
     validate(need(nrow(data) > 0, paste0(metric_option , " is not available for ", hospital)))
     
     
-    if(metric_option %in% c("Total Hospital Revenue")) {
-      max_value <- 20000 	
-      min_value <- -30000
-      breaks  <- 5000 
-    } else if(metric_option %in% c("Outpatient Revenue")) {
-      max_value  <- 12000 	
-      min_value  <- -8000
-      breaks  <- 2000 
-    } else if(metric_option %in% c("340B/Other Operating Revenue")) {
-      max_value  <- 6000 	
-      min_value  <- -14000
-      breaks  <- 2000 
-    } else if(metric_option %in% c("Total Hospital Expenses")) {
-      max_value  <- 10000 	
-      min_value  <- -40000
-      breaks  <- 5000 
-    } else if(metric_option %in% c("Salaries and Benefits")) {
-      max_value  <- 10000 	
-      min_value  <- -14000
-      breaks  <- 2000 
-    } else if(metric_option %in% c("Supplies & Expenses")) {
-      max_value  <- 30000 	
-      min_value  <- -25000
-      breaks  <- 5000
-    } else if(metric_option %in% c("CARTS")) {
-      max_value  <- 5000 	
-      min_value  <- -5000
-      breaks  <- 1000 
-    } else if(metric_option %in% c("Nursing Agency Costs")) {
-      max_value  <- 2000 	
-      min_value  <- -8000
-      breaks  <- 2000 
-    } else if(metric_option %in% c("Discharges")) {
-      max_value  <- 750 	
-      min_value  <- -750
-      breaks  <- 150
-    } else if(metric_option %in% c("CMI")) {
-      max_value  <- 0.25	
-      min_value  <- -0.25
-      breaks  <- 0.05
-    } else if(metric_option %in% c("ALOS")) {
-      max_value  <- 2.5	
-      min_value  <- -2.5
-      breaks  <- 0.5
-    }
-    
-    # Define different labels for metrics    
-    if (metric_option %in% c("CMI", "ALOS", "Discharges")) {
-      text_label <- data$text_label
-      y_label <- "Monthly Variance to Budget"
-    } else {
-      text_label <- paste0("$", data$text_label)
-      y_label <- "Monthly Variance to Budget $"
-    }
-    
-    var_graph_break(data, site= hospital, metric = metric_option, min= min_value, 
-                    max = max_value, breaks = breaks, y_label= y_label, text = text_label)
+    var_graph_break(data, site= hospital, metric = metric_option)
     
   })
   
@@ -1204,63 +589,7 @@ server <- function(input, output, session) {
     validate(need(nrow(data) > 0, paste0(metric_option , " is not available for ", hospital)))
     
     
-    if(metric_option %in% c("Total Hospital Revenue")) {
-      max_value <- 20000 	
-      min_value <- -30000
-      breaks  <- 5000 
-    } else if(metric_option %in% c("Outpatient Revenue")) {
-      max_value  <- 12000 	
-      min_value  <- -8000
-      breaks  <- 2000 
-    } else if(metric_option %in% c("340B/Other Operating Revenue")) {
-      max_value  <- 6000 	
-      min_value  <- -14000
-      breaks  <- 2000 
-    } else if(metric_option %in% c("Total Hospital Expenses")) {
-      max_value  <- 10000 	
-      min_value  <- -40000
-      breaks  <- 5000 
-    } else if(metric_option %in% c("Salaries and Benefits")) {
-      max_value  <- 10000 	
-      min_value  <- -14000
-      breaks  <- 2000 
-    } else if(metric_option %in% c("Supplies & Expenses")) {
-      max_value  <- 30000 	
-      min_value  <- -25000
-      breaks  <- 5000
-    } else if(metric_option %in% c("CARTS")) {
-      max_value  <- 5000 	
-      min_value  <- -5000
-      breaks  <- 1000 
-    } else if(metric_option %in% c("Nursing Agency Costs")) {
-      max_value  <- 2000 	
-      min_value  <- -8000
-      breaks  <- 2000 
-    } else if(metric_option %in% c("Discharges")) {
-      max_value  <- 750 	
-      min_value  <- -750
-      breaks  <- 150
-    } else if(metric_option %in% c("CMI")) {
-      max_value  <- 0.25	
-      min_value  <- -0.25
-      breaks  <- 0.05
-    } else if(metric_option %in% c("ALOS")) {
-      max_value  <- 2.5	
-      min_value  <- -2.5
-      breaks  <- 0.5
-    }
-    
-    # Define different labels for metrics    
-    if (metric_option %in% c("CMI", "ALOS", "Discharges")) {
-      text_label <- data$text_label
-      y_label <- "Monthly Variance to Budget"
-    } else {
-      text_label <- paste0("$", data$text_label)
-      y_label <- "Monthly Variance to Budget $"
-    }
-    
-    var_graph_break(data, site= hospital, metric = metric_option, min= min_value, 
-                    max = max_value, breaks = breaks, y_label= y_label, text = text_label)
+    var_graph_break(data, site= hospital, metric = metric_option)
     
   })
   
@@ -1277,63 +606,7 @@ server <- function(input, output, session) {
     validate(need(nrow(data) > 0, paste0(metric_option , " is not available for ", hospital)))
     
     
-    if(metric_option %in% c("Total Hospital Revenue")) {
-      max_value <- 20000 	
-      min_value <- -30000
-      breaks  <- 5000 
-    } else if(metric_option %in% c("Outpatient Revenue")) {
-      max_value  <- 12000 	
-      min_value  <- -8000
-      breaks  <- 2000 
-    } else if(metric_option %in% c("340B/Other Operating Revenue")) {
-      max_value  <- 6000 	
-      min_value  <- -14000
-      breaks  <- 2000 
-    } else if(metric_option %in% c("Total Hospital Expenses")) {
-      max_value  <- 10000 	
-      min_value  <- -40000
-      breaks  <- 5000 
-    } else if(metric_option %in% c("Salaries and Benefits")) {
-      max_value  <- 10000 	
-      min_value  <- -14000
-      breaks  <- 2000 
-    } else if(metric_option %in% c("Supplies & Expenses")) {
-      max_value  <- 30000 	
-      min_value  <- -25000
-      breaks  <- 5000
-    } else if(metric_option %in% c("CARTS")) {
-      max_value  <- 5000 	
-      min_value  <- -5000
-      breaks  <- 1000 
-    } else if(metric_option %in% c("Nursing Agency Costs")) {
-      max_value  <- 2000 	
-      min_value  <- -8000
-      breaks  <- 2000 
-    } else if(metric_option %in% c("Discharges")) {
-      max_value  <- 750 	
-      min_value  <- -750
-      breaks  <- 150
-    } else if(metric_option %in% c("CMI")) {
-      max_value  <- 0.25	
-      min_value  <- -0.25
-      breaks  <- 0.05
-    } else if(metric_option %in% c("ALOS")) {
-      max_value  <- 2.5	
-      min_value  <- -2.5
-      breaks  <- 0.5
-    }
-    
-    # Define different labels for metrics    
-    if (metric_option %in% c("CMI", "ALOS", "Discharges")) {
-      text_label <- data$text_label
-      y_label <- "Monthly Variance to Budget"
-    } else {
-      text_label <- paste0("$", data$text_label)
-      y_label <- "Monthly Variance to Budget $"
-    }
-    
-    var_graph_break(data, site= hospital, metric = metric_option, min= min_value, 
-                    max = max_value, breaks = breaks, y_label= y_label, text = text_label)
+    var_graph_break(data, site= hospital, metric = metric_option)
     
   })
   
@@ -1350,63 +623,7 @@ server <- function(input, output, session) {
     validate(need(nrow(data) > 0, paste0(metric_option , " is not available for ", hospital)))
     
     
-    if(metric_option %in% c("Total Hospital Revenue")) {
-      max_value <- 20000 	
-      min_value <- -30000
-      breaks  <- 5000 
-    } else if(metric_option %in% c("Outpatient Revenue")) {
-      max_value  <- 12000 	
-      min_value  <- -8000
-      breaks  <- 2000 
-    } else if(metric_option %in% c("340B/Other Operating Revenue")) {
-      max_value  <- 6000 	
-      min_value  <- -14000
-      breaks  <- 2000 
-    } else if(metric_option %in% c("Total Hospital Expenses")) {
-      max_value  <- 10000 	
-      min_value  <- -40000
-      breaks  <- 5000 
-    } else if(metric_option %in% c("Salaries and Benefits")) {
-      max_value  <- 10000 	
-      min_value  <- -14000
-      breaks  <- 2000 
-    } else if(metric_option %in% c("Supplies & Expenses")) {
-      max_value  <- 30000 	
-      min_value  <- -25000
-      breaks  <- 5000
-    } else if(metric_option %in% c("CARTS")) {
-      max_value  <- 5000 	
-      min_value  <- -5000
-      breaks  <- 1000 
-    } else if(metric_option %in% c("Nursing Agency Costs")) {
-      max_value  <- 2000 	
-      min_value  <- -8000
-      breaks  <- 2000 
-    } else if(metric_option %in% c("Discharges")) {
-      max_value  <- 750 	
-      min_value  <- -750
-      breaks  <- 150
-    } else if(metric_option %in% c("CMI")) {
-      max_value  <- 0.25	
-      min_value  <- -0.25
-      breaks  <- 0.05
-    } else if(metric_option %in% c("ALOS")) {
-      max_value  <- 2.5	
-      min_value  <- -2.5
-      breaks  <- 0.5
-    }
-    
-    # Define different labels for metrics    
-    if (metric_option %in% c("CMI", "ALOS", "Discharges")) {
-      text_label <- data$text_label
-      y_label <- "Monthly Variance to Budget"
-    } else {
-      text_label <- paste0("$", data$text_label)
-      y_label <- "Monthly Variance to Budget $"
-    }
-    
-    var_graph_break(data, site= hospital, metric = metric_option, min= min_value, 
-                    max = max_value, breaks = breaks, y_label= y_label, text = text_label)
+    var_graph_break(data, site= hospital, metric = metric_option)
     
   })
   
@@ -1423,63 +640,7 @@ server <- function(input, output, session) {
     validate(need(nrow(data) > 0, paste0(metric_option , " is not available for ", hospital)))
     
     
-    if(metric_option %in% c("Total Hospital Revenue")) {
-      max_value <- 20000 	
-      min_value <- -30000
-      breaks  <- 5000 
-    } else if(metric_option %in% c("Outpatient Revenue")) {
-      max_value  <- 12000 	
-      min_value  <- -8000
-      breaks  <- 2000 
-    } else if(metric_option %in% c("340B/Other Operating Revenue")) {
-      max_value  <- 6000 	
-      min_value  <- -14000
-      breaks  <- 2000 
-    } else if(metric_option %in% c("Total Hospital Expenses")) {
-      max_value  <- 10000 	
-      min_value  <- -40000
-      breaks  <- 5000 
-    } else if(metric_option %in% c("Salaries and Benefits")) {
-      max_value  <- 10000 	
-      min_value  <- -14000
-      breaks  <- 2000 
-    } else if(metric_option %in% c("Supplies & Expenses")) {
-      max_value  <- 30000 	
-      min_value  <- -25000
-      breaks  <- 5000
-    } else if(metric_option %in% c("CARTS")) {
-      max_value  <- 5000 	
-      min_value  <- -5000
-      breaks  <- 1000 
-    } else if(metric_option %in% c("Nursing Agency Costs")) {
-      max_value  <- 2000 	
-      min_value  <- -8000
-      breaks  <- 2000 
-    } else if(metric_option %in% c("Discharges")) {
-      max_value  <- 750 	
-      min_value  <- -750
-      breaks  <- 150
-    } else if(metric_option %in% c("CMI")) {
-      max_value  <- 0.25	
-      min_value  <- -0.25
-      breaks  <- 0.05
-    } else if(metric_option %in% c("ALOS")) {
-      max_value  <- 2.5	
-      min_value  <- -2.5
-      breaks  <- 0.5
-    }
-    
-    # Define different labels for metrics    
-    if (metric_option %in% c("CMI", "ALOS", "Discharges")) {
-      text_label <- data$text_label
-      y_label <- "Monthly Variance to Budget"
-    } else {
-      text_label <- paste0("$", data$text_label)
-      y_label <- "Monthly Variance to Budget $"
-    }
-    
-    var_graph_break(data, site= hospital, metric = metric_option, min= min_value, 
-                    max = max_value, breaks = breaks, y_label= y_label, text = text_label)
+    var_graph_break(data, site= hospital, metric = metric_option)
     
     
   })
@@ -1497,63 +658,7 @@ server <- function(input, output, session) {
     validate(need(nrow(data) > 0, paste0(metric_option , " is not available for ", hospital)))
     
     
-    if(metric_option %in% c("Total Hospital Revenue")) {
-      max_value <- 20000 	
-      min_value <- -30000
-      breaks  <- 5000 
-    } else if(metric_option %in% c("Outpatient Revenue")) {
-      max_value  <- 12000 	
-      min_value  <- -8000
-      breaks  <- 2000 
-    } else if(metric_option %in% c("340B/Other Operating Revenue")) {
-      max_value  <- 6000 	
-      min_value  <- -14000
-      breaks  <- 2000 
-    } else if(metric_option %in% c("Total Hospital Expenses")) {
-      max_value  <- 10000 	
-      min_value  <- -40000
-      breaks  <- 5000 
-    } else if(metric_option %in% c("Salaries and Benefits")) {
-      max_value  <- 10000 	
-      min_value  <- -14000
-      breaks  <- 2000 
-    } else if(metric_option %in% c("Supplies & Expenses")) {
-      max_value  <- 30000 	
-      min_value  <- -25000
-      breaks  <- 5000
-    } else if(metric_option %in% c("CARTS")) {
-      max_value  <- 5000 	
-      min_value  <- -5000
-      breaks  <- 1000 
-    } else if(metric_option %in% c("Nursing Agency Costs")) {
-      max_value  <- 2000 	
-      min_value  <- -8000
-      breaks  <- 2000 
-    } else if(metric_option %in% c("Discharges")) {
-      max_value  <- 750 	
-      min_value  <- -750
-      breaks  <- 150
-    } else if(metric_option %in% c("CMI")) {
-      max_value  <- 0.25	
-      min_value  <- -0.25
-      breaks  <- 0.05
-    } else if(metric_option %in% c("ALOS")) {
-      max_value  <- 2.5	
-      min_value  <- -2.5
-      breaks  <- 0.5
-    }
-    
-    # Define different labels for metrics    
-    if (metric_option %in% c("CMI", "ALOS", "Discharges")) {
-      text_label <- data$text_label
-      y_label <- "Monthly Variance to Budget"
-    } else {
-      text_label <- paste0("$", data$text_label)
-      y_label <- "Monthly Variance to Budget $"
-    }
-    
-    var_graph_break(data, site= hospital, metric = metric_option, min= min_value, 
-                    max = max_value, breaks = breaks, y_label= y_label, text = text_label)
+    var_graph_break(data, site= hospital, metric = metric_option)
     
   })
   
@@ -1567,63 +672,16 @@ server <- function(input, output, session) {
     
     data <- mshs_data_ytd()%>%
       filter(Site == hospital)%>%
-      mutate(sign.YTD = ifelse(Variance.From.Budget.YTD > 0, "positive", "negative"),
-             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
+      mutate(Variance.From.Budget.YTD = Variance.From.Budget.YTD*100,
+            sign.YTD = ifelse(Variance.From.Budget.YTD > 0, "positive", "negative"),
+             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)),")"),
                                   Variance.From.Budget.YTD))
     
     
     validate(need(nrow(data) > 0, paste0(metric_option, " is not available for ", hospital)))
-    
-    
-    
-    if(metric_option %in% c("Total Hospital Revenue")) {
-      min_ratio <- -24
-      max_ratio <- 16
-      breaks_ratio <- 4
-    } else if(metric_option %in% c("Outpatient Revenue")) {
-      min_ratio <- -12
-      max_ratio <- 18
-      breaks_ratio <- 3
-    } else if(metric_option %in% c("340B/Other Operating Revenue")) {
-      min_ratio <- -36
-      max_ratio <- 24
-      breaks_ratio <- 6
-    } else if(metric_option %in% c("Total Hospital Expenses")) {
-      min_ratio <- -24
-      max_ratio <- 6
-      breaks_ratio <- 3
-    } else if(metric_option %in% c("Salaries and Benefits")) {
-      min_ratio <- -12
-      max_ratio <- 10
-      breaks_ratio <- 2
-    } else if(metric_option %in% c("Supplies & Expenses")) {
-      min_ratio <- -25
-      max_ratio <- 30
-      breaks_ratio <- 5
-    } else if(metric_option %in% c("CARTS")) {
-      min_ratio <- -40
-      max_ratio <- 40
-      breaks_ratio <- 8
-    } else if(metric_option %in% c("Nursing Agency Costs")) {
-      min_ratio <- -800
-      max_ratio <- 200
-      breaks_ratio <- 200
-    } else if(metric_option %in% c("Discharges")) {
-      min_ratio <- -25
-      max_ratio <- 25
-      breaks_ratio <- 5
-    } else if(metric_option %in% c("CMI")) {
-      min_ratio <- -10
-      max_ratio <- 10
-      breaks_ratio <- 2
-    } else if(metric_option %in% c("ALOS")) {
-      min_ratio <- -25
-      max_ratio <- 25
-      breaks_ratio <- 5
-    }
-    
-    ytd_graph_break(data, site = hospital, metric = metric_option, 
-              min = min_ratio, max= max_ratio, breaks = breaks_ratio ) 
+
+    ytd_graph_break(data, site = hospital, metric = metric_option)
+             
   })
   
   ### MSB -----------------------
@@ -1634,62 +692,17 @@ server <- function(input, output, session) {
     
     data <- mshs_data_ytd()%>%
       filter(Site == hospital)%>%
-      mutate(sign.YTD = ifelse(Variance.From.Budget.YTD > 0, "positive", "negative"),
+      mutate(Variance.From.Budget.YTD = Variance.From.Budget.YTD*100,
+             sign.YTD = ifelse(Variance.From.Budget.YTD > 0, "positive", "negative"),
              ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
                                   Variance.From.Budget.YTD))
     
     
     validate(need(nrow(data) > 0, paste0(metric_option, " is not available for ", hospital)))
+  
     
-    
-    if(metric_option %in% c("Total Hospital Revenue")) {
-      min_ratio <- -24
-      max_ratio <- 16
-      breaks_ratio <- 4
-    } else if(metric_option %in% c("Outpatient Revenue")) {
-      min_ratio <- -12
-      max_ratio <- 18
-      breaks_ratio <- 3
-    } else if(metric_option %in% c("340B/Other Operating Revenue")) {
-      min_ratio <- -36
-      max_ratio <- 24
-      breaks_ratio <- 6
-    } else if(metric_option %in% c("Total Hospital Expenses")) {
-      min_ratio <- -24
-      max_ratio <- 6
-      breaks_ratio <- 3
-    } else if(metric_option %in% c("Salaries and Benefits")) {
-      min_ratio <- -12
-      max_ratio <- 10
-      breaks_ratio <- 2
-    } else if(metric_option %in% c("Supplies & Expenses")) {
-      min_ratio <- -25
-      max_ratio <- 30
-      breaks_ratio <- 5
-    } else if(metric_option %in% c("CARTS")) {
-      min_ratio <- -40
-      max_ratio <- 40
-      breaks_ratio <- 8
-    } else if(metric_option %in% c("Nursing Agency Costs")) {
-      min_ratio <- -800
-      max_ratio <- 200
-      breaks_ratio <- 200
-    } else if(metric_option %in% c("Discharges")) {
-      min_ratio <- -25
-      max_ratio <- 25
-      breaks_ratio <- 5
-    } else if(metric_option %in% c("CMI")) {
-      min_ratio <- -10
-      max_ratio <- 10
-      breaks_ratio <- 2
-    } else if(metric_option %in% c("ALOS")) {
-      min_ratio <- -25
-      max_ratio <- 25
-      breaks_ratio <- 5
-    }
-    
-    ytd_graph_break(data, site = hospital, metric = metric_option, 
-                    min = min_ratio, max= max_ratio, breaks = breaks_ratio ) 
+    ytd_graph_break(data, site = hospital, metric = metric_option) 
+                 
   })
   
   ### MSBI -----------------------
@@ -1699,62 +712,17 @@ server <- function(input, output, session) {
     
     data <- mshs_data_ytd()%>%
       filter(Site == hospital)%>%
-      mutate(sign.YTD = ifelse(Variance.From.Budget.YTD > 0, "positive", "negative"),
+      mutate(Variance.From.Budget.YTD = Variance.From.Budget.YTD*100,
+             sign.YTD = ifelse(Variance.From.Budget.YTD > 0, "positive", "negative"),
              ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
                                   Variance.From.Budget.YTD))
     
     
     validate(need(nrow(data) > 0, paste0(metric_option, " is not available for ", hospital)))
+  
     
-    
-    if(metric_option %in% c("Total Hospital Revenue")) {
-      min_ratio <- -24
-      max_ratio <- 16
-      breaks_ratio <- 4
-    } else if(metric_option %in% c("Outpatient Revenue")) {
-      min_ratio <- -12
-      max_ratio <- 18
-      breaks_ratio <- 3
-    } else if(metric_option %in% c("340B/Other Operating Revenue")) {
-      min_ratio <- -36
-      max_ratio <- 24
-      breaks_ratio <- 6
-    } else if(metric_option %in% c("Total Hospital Expenses")) {
-      min_ratio <- -24
-      max_ratio <- 6
-      breaks_ratio <- 3
-    } else if(metric_option %in% c("Salaries and Benefits")) {
-      min_ratio <- -12
-      max_ratio <- 10
-      breaks_ratio <- 2
-    } else if(metric_option %in% c("Supplies & Expenses")) {
-      min_ratio <- -25
-      max_ratio <- 30
-      breaks_ratio <- 5
-    } else if(metric_option %in% c("CARTS")) {
-      min_ratio <- -40
-      max_ratio <- 40
-      breaks_ratio <- 8
-    } else if(metric_option %in% c("Nursing Agency Costs")) {
-      min_ratio <- -800
-      max_ratio <- 200
-      breaks_ratio <- 200
-    } else if(metric_option %in% c("Discharges")) {
-      min_ratio <- -25
-      max_ratio <- 25
-      breaks_ratio <- 5
-    } else if(metric_option %in% c("CMI")) {
-      min_ratio <- -10
-      max_ratio <- 10
-      breaks_ratio <- 2
-    } else if(metric_option %in% c("ALOS")) {
-      min_ratio <- -25
-      max_ratio <- 25
-      breaks_ratio <- 5
-    }
-    
-    ytd_graph_break(data, site = hospital, metric = metric_option, 
-                    min = min_ratio, max= max_ratio, breaks = breaks_ratio ) 
+    ytd_graph_break(data, site = hospital, metric = metric_option) 
+                    
   })
   
   ### MSH -----------------------
@@ -1764,7 +732,8 @@ server <- function(input, output, session) {
     
     data <- mshs_data_ytd()%>%
       filter(Site == hospital)%>%
-      mutate(sign.YTD = ifelse(Variance.From.Budget.YTD > 0, "positive", "negative"),
+      mutate(Variance.From.Budget.YTD = Variance.From.Budget.YTD*100,
+             sign.YTD = ifelse(Variance.From.Budget.YTD > 0, "positive", "negative"),
              ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
                                   Variance.From.Budget.YTD))
     
@@ -1772,54 +741,8 @@ server <- function(input, output, session) {
     validate(need(nrow(data) > 0, paste0(metric_option, " is not available for ", hospital)))
     
     
-    if(metric_option %in% c("Total Hospital Revenue")) {
-      min_ratio <- -24
-      max_ratio <- 16
-      breaks_ratio <- 4
-    } else if(metric_option %in% c("Outpatient Revenue")) {
-      min_ratio <- -12
-      max_ratio <- 18
-      breaks_ratio <- 3
-    } else if(metric_option %in% c("340B/Other Operating Revenue")) {
-      min_ratio <- -36
-      max_ratio <- 24
-      breaks_ratio <- 6
-    } else if(metric_option %in% c("Total Hospital Expenses")) {
-      min_ratio <- -24
-      max_ratio <- 6
-      breaks_ratio <- 3
-    } else if(metric_option %in% c("Salaries and Benefits")) {
-      min_ratio <- -12
-      max_ratio <- 10
-      breaks_ratio <- 2
-    } else if(metric_option %in% c("Supplies & Expenses")) {
-      min_ratio <- -25
-      max_ratio <- 30
-      breaks_ratio <- 5
-    } else if(metric_option %in% c("CARTS")) {
-      min_ratio <- -40
-      max_ratio <- 40
-      breaks_ratio <- 8
-    } else if(metric_option %in% c("Nursing Agency Costs")) {
-      min_ratio <- -800
-      max_ratio <- 200
-      breaks_ratio <- 200
-    } else if(metric_option %in% c("Discharges")) {
-      min_ratio <- -25
-      max_ratio <- 25
-      breaks_ratio <- 5
-    } else if(metric_option %in% c("CMI")) {
-      min_ratio <- -10
-      max_ratio <- 10
-      breaks_ratio <- 2
-    } else if(metric_option %in% c("ALOS")) {
-      min_ratio <- -25
-      max_ratio <- 25
-      breaks_ratio <- 5
-    }
-    
-    ytd_graph_break(data, site = hospital, metric = metric_option, 
-                    min = min_ratio, max= max_ratio, breaks = breaks_ratio )  
+    ytd_graph_break(data, site = hospital, metric = metric_option)
+                    
   })
   
   ### MSM -----------------------
@@ -1830,7 +753,8 @@ server <- function(input, output, session) {
     
     data <- mshs_data_ytd()%>%
       filter(Site == hospital)%>%
-      mutate(sign.YTD = ifelse(Variance.From.Budget.YTD > 0, "positive", "negative"),
+      mutate(Variance.From.Budget.YTD = Variance.From.Budget.YTD*100,
+             sign.YTD = ifelse(Variance.From.Budget.YTD > 0, "positive", "negative"),
              ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
                                   Variance.From.Budget.YTD))
     
@@ -1838,54 +762,8 @@ server <- function(input, output, session) {
     validate(need(nrow(data) > 0, paste0(metric_option, " is not available for ", hospital)))
     
     
-    if(metric_option %in% c("Total Hospital Revenue")) {
-      min_ratio <- -24
-      max_ratio <- 16
-      breaks_ratio <- 4
-    } else if(metric_option %in% c("Outpatient Revenue")) {
-      min_ratio <- -12
-      max_ratio <- 18
-      breaks_ratio <- 3
-    } else if(metric_option %in% c("340B/Other Operating Revenue")) {
-      min_ratio <- -36
-      max_ratio <- 24
-      breaks_ratio <- 6
-    } else if(metric_option %in% c("Total Hospital Expenses")) {
-      min_ratio <- -24
-      max_ratio <- 6
-      breaks_ratio <- 3
-    } else if(metric_option %in% c("Salaries and Benefits")) {
-      min_ratio <- -12
-      max_ratio <- 10
-      breaks_ratio <- 2
-    } else if(metric_option %in% c("Supplies & Expenses")) {
-      min_ratio <- -25
-      max_ratio <- 30
-      breaks_ratio <- 5
-    } else if(metric_option %in% c("CARTS")) {
-      min_ratio <- -40
-      max_ratio <- 40
-      breaks_ratio <- 8
-    } else if(metric_option %in% c("Nursing Agency Costs")) {
-      min_ratio <- -800
-      max_ratio <- 200
-      breaks_ratio <- 200
-    } else if(metric_option %in% c("Discharges")) {
-      min_ratio <- -25
-      max_ratio <- 25
-      breaks_ratio <- 5
-    } else if(metric_option %in% c("CMI")) {
-      min_ratio <- -10
-      max_ratio <- 10
-      breaks_ratio <- 2
-    } else if(metric_option %in% c("ALOS")) {
-      min_ratio <- -25
-      max_ratio <- 25
-      breaks_ratio <- 5
-    }
-    
-    ytd_graph_break(data, site = hospital, metric = metric_option, 
-                    min = min_ratio, max= max_ratio, breaks = breaks_ratio )  
+    ytd_graph_break(data, site = hospital, metric = metric_option) 
+                    
   })
   
   ### MSQ -----------------------
@@ -1896,7 +774,8 @@ server <- function(input, output, session) {
     
     data <- mshs_data_ytd()%>%
       filter(Site == hospital)%>%
-      mutate(sign.YTD = ifelse(Variance.From.Budget.YTD > 0, "positive", "negative"),
+      mutate(Variance.From.Budget.YTD = Variance.From.Budget.YTD*100,
+        sign.YTD = ifelse(Variance.From.Budget.YTD > 0, "positive", "negative"),
              ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
                                   Variance.From.Budget.YTD))
     
@@ -1904,54 +783,8 @@ server <- function(input, output, session) {
     validate(need(nrow(data) > 0, paste0(metric_option, " is not available for ", hospital)))
     
     
-    if(metric_option %in% c("Total Hospital Revenue")) {
-      min_ratio <- -24
-      max_ratio <- 16
-      breaks_ratio <- 4
-    } else if(metric_option %in% c("Outpatient Revenue")) {
-      min_ratio <- -12
-      max_ratio <- 18
-      breaks_ratio <- 3
-    } else if(metric_option %in% c("340B/Other Operating Revenue")) {
-      min_ratio <- -36
-      max_ratio <- 24
-      breaks_ratio <- 6
-    } else if(metric_option %in% c("Total Hospital Expenses")) {
-      min_ratio <- -24
-      max_ratio <- 6
-      breaks_ratio <- 3
-    } else if(metric_option %in% c("Salaries and Benefits")) {
-      min_ratio <- -12
-      max_ratio <- 10
-      breaks_ratio <- 2
-    } else if(metric_option %in% c("Supplies & Expenses")) {
-      min_ratio <- -25
-      max_ratio <- 30
-      breaks_ratio <- 5
-    } else if(metric_option %in% c("CARTS")) {
-      min_ratio <- -40
-      max_ratio <- 40
-      breaks_ratio <- 8
-    } else if(metric_option %in% c("Nursing Agency Costs")) {
-      min_ratio <- -800
-      max_ratio <- 200
-      breaks_ratio <- 200
-    } else if(metric_option %in% c("Discharges")) {
-      min_ratio <- -25
-      max_ratio <- 25
-      breaks_ratio <- 5
-    } else if(metric_option %in% c("CMI")) {
-      min_ratio <- -10
-      max_ratio <- 10
-      breaks_ratio <- 2
-    } else if(metric_option %in% c("ALOS")) {
-      min_ratio <- -25
-      max_ratio <- 25
-      breaks_ratio <- 5
-    }
-    
-    ytd_graph_break(data, site = hospital, metric = metric_option, 
-                    min = min_ratio, max= max_ratio, breaks = breaks_ratio )  
+    ytd_graph_break(data, site = hospital, metric = metric_option) 
+                     
   })
   
   ### MSSN -----------------------
@@ -1961,7 +794,8 @@ server <- function(input, output, session) {
     
     data <- mshs_data_ytd()%>%
       filter(Site == hospital)%>%
-      mutate(sign.YTD = ifelse(Variance.From.Budget.YTD > 0, "positive", "negative"),
+      mutate(Variance.From.Budget.YTD = Variance.From.Budget.YTD*100,
+             sign.YTD = ifelse(Variance.From.Budget.YTD > 0, "positive", "negative"),
              ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
                                   Variance.From.Budget.YTD))
     
@@ -1969,54 +803,7 @@ server <- function(input, output, session) {
     validate(need(nrow(data) > 0, paste0(metric_option, " is not available for ", hospital)))
     
     
-    if(metric_option %in% c("Total Hospital Revenue")) {
-      min_ratio <- -24
-      max_ratio <- 16
-      breaks_ratio <- 4
-    } else if(metric_option %in% c("Outpatient Revenue")) {
-      min_ratio <- -12
-      max_ratio <- 18
-      breaks_ratio <- 3
-    } else if(metric_option %in% c("340B/Other Operating Revenue")) {
-      min_ratio <- -36
-      max_ratio <- 24
-      breaks_ratio <- 6
-    } else if(metric_option %in% c("Total Hospital Expenses")) {
-      min_ratio <- -24
-      max_ratio <- 6
-      breaks_ratio <- 3
-    } else if(metric_option %in% c("Salaries and Benefits")) {
-      min_ratio <- -12
-      max_ratio <- 10
-      breaks_ratio <- 2
-    } else if(metric_option %in% c("Supplies & Expenses")) {
-      min_ratio <- -25
-      max_ratio <- 30
-      breaks_ratio <- 5
-    } else if(metric_option %in% c("CARTS")) {
-      min_ratio <- -40
-      max_ratio <- 40
-      breaks_ratio <- 8
-    } else if(metric_option %in% c("Nursing Agency Costs")) {
-      min_ratio <- -800
-      max_ratio <- 200
-      breaks_ratio <- 200
-    } else if(metric_option %in% c("Discharges")) {
-      min_ratio <- -25
-      max_ratio <- 25
-      breaks_ratio <- 5
-    } else if(metric_option %in% c("CMI")) {
-      min_ratio <- -10
-      max_ratio <- 10
-      breaks_ratio <- 2
-    } else if(metric_option %in% c("ALOS")) {
-      min_ratio <- -25
-      max_ratio <- 25
-      breaks_ratio <- 5
-    }
-    
-    ytd_graph_break(data, site = hospital, metric = metric_option, 
-                    min = min_ratio, max= max_ratio, breaks = breaks_ratio ) 
+    ytd_graph_break(data, site = hospital, metric = metric_option) 
     
   })
   
@@ -2028,62 +815,16 @@ server <- function(input, output, session) {
     
     data <- mshs_data_ytd()%>%
       filter(Site == hospital)%>%
-      mutate(sign.YTD = ifelse(Variance.From.Budget.YTD > 0, "positive", "negative"),
+      mutate(Variance.From.Budget.YTD = Variance.From.Budget.YTD*100,
+             sign.YTD = ifelse(Variance.From.Budget.YTD > 0, "positive", "negative"),
              ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
                                   Variance.From.Budget.YTD))
     
     
     validate(need(nrow(data) > 0, paste0(metric_option, " is not available for ", hospital)))
     
-    
-    if(metric_option %in% c("Total Hospital Revenue")) {
-      min_ratio <- -24
-      max_ratio <- 16
-      breaks_ratio <- 4
-    } else if(metric_option %in% c("Outpatient Revenue")) {
-      min_ratio <- -12
-      max_ratio <- 18
-      breaks_ratio <- 3
-    } else if(metric_option %in% c("340B/Other Operating Revenue")) {
-      min_ratio <- -36
-      max_ratio <- 24
-      breaks_ratio <- 6
-    } else if(metric_option %in% c("Total Hospital Expenses")) {
-      min_ratio <- -24
-      max_ratio <- 6
-      breaks_ratio <- 3
-    } else if(metric_option %in% c("Salaries and Benefits")) {
-      min_ratio <- -12
-      max_ratio <- 10
-      breaks_ratio <- 2
-    } else if(metric_option %in% c("Supplies & Expenses")) {
-      min_ratio <- -25
-      max_ratio <- 30
-      breaks_ratio <- 5
-    } else if(metric_option %in% c("CARTS")) {
-      min_ratio <- -40
-      max_ratio <- 40
-      breaks_ratio <- 8
-    } else if(metric_option %in% c("Nursing Agency Costs")) {
-      min_ratio <- -800
-      max_ratio <- 200
-      breaks_ratio <- 200
-    } else if(metric_option %in% c("Discharges")) {
-      min_ratio <- -25
-      max_ratio <- 25
-      breaks_ratio <- 5
-    } else if(metric_option %in% c("CMI")) {
-      min_ratio <- -10
-      max_ratio <- 10
-      breaks_ratio <- 2
-    } else if(metric_option %in% c("ALOS")) {
-      min_ratio <- -25
-      max_ratio <- 25
-      breaks_ratio <- 5
-    }
-    
-    ytd_graph_break(data, site = hospital, metric = metric_option, 
-                    min = min_ratio, max= max_ratio, breaks = breaks_ratio )  
+   
+    ytd_graph_break(data, site = hospital, metric = metric_option)  
   })
 
   ### NYEE -----------------------
@@ -2094,7 +835,8 @@ server <- function(input, output, session) {
     
     data <- mshs_data_ytd()%>%
       filter(Site == hospital)%>%
-      mutate(sign.YTD = ifelse(Variance.From.Budget.YTD > 0, "positive", "negative"),
+      mutate(Variance.From.Budget.YTD = Variance.From.Budget.YTD*100,
+             sign.YTD = ifelse(Variance.From.Budget.YTD > 0, "positive", "negative"),
              ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
                                   Variance.From.Budget.YTD))
     
@@ -2102,61 +844,14 @@ server <- function(input, output, session) {
     validate(need(nrow(data) > 0, paste0(metric_option, " is not available for ", hospital)))
     
     
-    if(metric_option %in% c("Total Hospital Revenue")) {
-      min_ratio <- -24
-      max_ratio <- 16
-      breaks_ratio <- 4
-    } else if(metric_option %in% c("Outpatient Revenue")) {
-      min_ratio <- -12
-      max_ratio <- 18
-      breaks_ratio <- 3
-    } else if(metric_option %in% c("340B/Other Operating Revenue")) {
-      min_ratio <- -36
-      max_ratio <- 24
-      breaks_ratio <- 6
-    } else if(metric_option %in% c("Total Hospital Expenses")) {
-      min_ratio <- -24
-      max_ratio <- 6
-      breaks_ratio <- 3
-    } else if(metric_option %in% c("Salaries and Benefits")) {
-      min_ratio <- -12
-      max_ratio <- 10
-      breaks_ratio <- 2
-    } else if(metric_option %in% c("Supplies & Expenses")) {
-      min_ratio <- -25
-      max_ratio <- 30
-      breaks_ratio <- 5
-    } else if(metric_option %in% c("CARTS")) {
-      min_ratio <- -40
-      max_ratio <- 40
-      breaks_ratio <- 8
-    } else if(metric_option %in% c("Nursing Agency Costs")) {
-      min_ratio <- -800
-      max_ratio <- 200
-      breaks_ratio <- 200
-    } else if(metric_option %in% c("Discharges")) {
-      min_ratio <- -25
-      max_ratio <- 25
-      breaks_ratio <- 5
-    } else if(metric_option %in% c("CMI")) {
-      min_ratio <- -10
-      max_ratio <- 10
-      breaks_ratio <- 2
-    } else if(metric_option %in% c("ALOS")) {
-      min_ratio <- -25
-      max_ratio <- 25
-      breaks_ratio <- 5
-    }
-    
-    ytd_graph_break(data, site = hospital, metric = metric_option, 
-                    min = min_ratio, max= max_ratio, breaks = breaks_ratio ) 
+    ytd_graph_break(data, site = hospital, metric = metric_option) 
   })
   
   
   # All sites visualization ------------------------------
   ## summary tab --------------------
   
-  output$ratio_plot <- renderPlot({
+  output$ratio_plot <- renderPlotly({
     data <- metric_data() %>% 
       filter(Metrics == "Expense to Revenue Ratio" ) %>%
       select("month", "year", "Site", "Actual", "Metrics", "date")
@@ -2675,7 +1370,7 @@ server <- function(input, output, session) {
   })
   
   ## Monthly Variance tab ----------------------
-  output$ratio_plot_var <- renderPlot({
+  output$ratio_plot_var <- renderPlotly({
     data <- metric_data_var() %>% 
       filter(Metrics == "Expense to Revenue Ratio" ) %>%
       select("month", "year", "Site", "Actual", "Metrics", "date")
@@ -3054,7 +1749,7 @@ server <- function(input, output, session) {
   })
   
   ## YTD variance to budget ratio --------------------
-  output$ratio_plot_ytd <- renderPlot({
+  output$ratio_plot_ytd <- renderPlotly({
     data <- metric_data_ytd() %>% 
       filter(Metrics == "Expense to Revenue Ratio" ) %>%
       select("month", "year", "Site", "Actual", "Metrics", "date")

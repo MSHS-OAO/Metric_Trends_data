@@ -150,31 +150,31 @@ ui <- dashboardPage(
                     fluidRow(
                        box(title = NULL, status = "primary",
                            solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
-                           plotOutput("mshs_plot"),  width = 4),
+                           plotlyOutput("mshs_plot"),  width = 4),
                        box(title = NULL, status = "primary",
                            solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
-                           plotOutput("msb_plot"),  width = 4),
+                           plotlyOutput("msb_plot"),  width = 4),
                        box(title = NULL, status = "primary",
                            solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
-                           plotOutput("msbi_plot"),  width = 4),
+                           plotlyOutput("msbi_plot"),  width = 4),
                        box(title = NULL, status = "primary",
                            solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
-                           plotOutput("msh_plot"),  width = 4),
+                           plotlyOutput("msh_plot"),  width = 4),
                        box(title = NULL, status = "primary",
                            solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
-                           plotOutput("msm_plot"),  width = 4),
+                           plotlyOutput("msm_plot"),  width = 4),
                        box(title = NULL, status = "primary",
                            solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
-                           plotOutput("msq_plot"),  width = 4),
+                           plotlyOutput("msq_plot"),  width = 4),
                        box(title = NULL, status = "primary",
                            solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
-                           plotOutput("mssn_plot"),  width = 4),
+                           plotlyOutput("mssn_plot"),  width = 4),
                        box(title = NULL, status = "primary",
                            solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
-                           plotOutput("msw_plot"),  width = 4),
+                           plotlyOutput("msw_plot"),  width = 4),
                        box(title = NULL, status = "primary",
                            solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
-                           plotOutput("nyee_plot"),  width = 4))),
+                           plotlyOutput("nyee_plot"),  width = 4))),
                 
                 
                 tabPanel(title = "Monthly Variance to Budget",
@@ -361,7 +361,7 @@ ui <- dashboardPage(
                 fluidRow(
                        box(title = NULL, status = "primary",
                         solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
-                           plotOutput("ratio_plot"),  width = 4),
+                           plotlyOutput("ratio_plot"),  width = 4),
                        
                        box(title = NULL, status = "primary", 
                         solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
@@ -447,7 +447,7 @@ ui <- dashboardPage(
                        fluidRow(
                          box(title = NULL, status = "primary",
                              solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
-                             plotOutput("ratio_plot_var"),  width = 4),
+                             plotlyOutput("ratio_plot_var"),  width = 4),
                          
                          box(title = NULL, status = "primary", 
                              solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
@@ -533,7 +533,7 @@ ui <- dashboardPage(
                        fluidRow(
                          box(title = NULL, status = "primary",
                              solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
-                             plotOutput("ratio_plot_ytd"),  width = 4),
+                             plotlyOutput("ratio_plot_ytd"),  width = 4),
                          
                          box(title = NULL, status = "primary", 
                              solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
