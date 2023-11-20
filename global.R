@@ -339,7 +339,7 @@ ratio_graph <- function(data, site) {
           axis.title = element_text(face = "bold", size = 8),
           axis.text.x = element_text(angle = 45, hjust = 1, face = "bold", size =8),
           axis.text.y = element_text(face = "bold", size = 8),
-          text = element_text(face = "bold", size = 1.25),
+          #text = element_text(face = "bold", size = 0.7),
           axis.ticks = element_blank(),
           panel.background = element_rect(fill = "white", color = "black", linewidth = 0.5),
           panel.grid.major.x = element_blank(),
@@ -347,7 +347,7 @@ ratio_graph <- function(data, site) {
           panel.grid.minor = element_line(linewidth = 0.25, colour = "grey"),
           legend.position = "none")+
     geom_text(aes(label= Actual, x=date, y= Actual+0.04),
-              position = position_dodge(width = 1), vjust = 0 )+
+              position = position_dodge(width = 1), vjust = 0 , size = 3, face = "bold")+
     scale_y_continuous(limits=c(0.8, 1.5), breaks = seq(0.8, 1.5, by = 0.1)))%>%
     layout(
       xaxis = list(title = "<b> Date <b> ", showline = TRUE, mirror = "ticks", titlefont = list(size = 12),
