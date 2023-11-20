@@ -851,7 +851,7 @@ server <- function(input, output, session) {
   # All sites visualization ------------------------------
   ## summary tab --------------------
   
-  output$ratio_plot <- renderPlotly({
+  output$ratio_plot <- renderPlot({
     data <- metric_data() %>% 
       filter(Metrics == "Expense to Revenue Ratio" ) %>%
       select("month", "year", "Site", "Actual", "Metrics", "date")
@@ -871,7 +871,7 @@ server <- function(input, output, session) {
     validate(need(nrow(data)>0, paste0("Expense to Revenue Ratio is not available for ", isolate(input$all_hospital))))
     
     
-    ratio_graph(data, site = hospital) 
+    ratio_graph_hosp(data, site = hospital) 
     
   })
   
@@ -1370,7 +1370,7 @@ server <- function(input, output, session) {
   })
   
   ## Monthly Variance tab ----------------------
-  output$ratio_plot_var <- renderPlotly({
+  output$ratio_plot_var <- renderPlot({
     data <- metric_data_var() %>% 
       filter(Metrics == "Expense to Revenue Ratio" ) %>%
       select("month", "year", "Site", "Actual", "Metrics", "date")
@@ -1390,7 +1390,7 @@ server <- function(input, output, session) {
     
   
    
-    ratio_graph(data, site = hospital) 
+    ratio_graph_hosp(data, site = hospital) 
     
   })
   
@@ -1749,7 +1749,7 @@ server <- function(input, output, session) {
   })
   
   ## YTD variance to budget ratio --------------------
-  output$ratio_plot_ytd <- renderPlotly({
+  output$ratio_plot_ytd <- renderPlot({
     data <- metric_data_ytd() %>% 
       filter(Metrics == "Expense to Revenue Ratio" ) %>%
       select("month", "year", "Site", "Actual", "Metrics", "date")
@@ -1769,7 +1769,7 @@ server <- function(input, output, session) {
     
     
     
-    ratio_graph(data, site = hospital) 
+    ratio_graph_hosp(data, site = hospital) 
     
   })
   

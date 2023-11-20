@@ -361,7 +361,7 @@ ui <- dashboardPage(
                 fluidRow(
                        box(title = NULL, status = "primary",
                         solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
-                           plotlyOutput("ratio_plot"),  width = 4),
+                           plotOutput("ratio_plot"),  width = 4),
                        
                        box(title = NULL, status = "primary", 
                         solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
@@ -447,7 +447,7 @@ ui <- dashboardPage(
                        fluidRow(
                          box(title = NULL, status = "primary",
                              solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
-                             plotlyOutput("ratio_plot_var"),  width = 4),
+                             plotOutput("ratio_plot_var"),  width = 4),
                          
                          box(title = NULL, status = "primary", 
                              solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
@@ -533,7 +533,7 @@ ui <- dashboardPage(
                        fluidRow(
                          box(title = NULL, status = "primary",
                              solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
-                             plotlyOutput("ratio_plot_ytd"),  width = 4),
+                             plotOutput("ratio_plot_ytd"),  width = 4),
                          
                          box(title = NULL, status = "primary", 
                              solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
