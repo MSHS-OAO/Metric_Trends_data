@@ -885,7 +885,7 @@ server <- function(input, output, session) {
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
              sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
              text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)),
-             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
+             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)*100), ")"),
                                   Variance.From.Budget.YTD))
     
     validate(need(nrow(data)>0, paste0(metric_choice, " is not available for ", isolate(input$all_hospital))))
@@ -930,7 +930,7 @@ server <- function(input, output, session) {
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
              sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
              text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)),
-             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
+             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)*100), ")"),
                                   Variance.From.Budget.YTD))
     
     validate(need(nrow(data)>0, paste0( metric_choice, " is not available for ", isolate(input$all_hospital))))
@@ -976,7 +976,7 @@ server <- function(input, output, session) {
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
              sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
              text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)),
-             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
+             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)*100), ")"),
                                   Variance.From.Budget.YTD))
     
     validate(need(nrow(data)>0, paste0(metric_choice, " is not available for ", isolate(input$all_hospital))))
@@ -1020,7 +1020,7 @@ server <- function(input, output, session) {
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
              sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
              text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)),
-             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
+             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)*100), ")"),
                                   Variance.From.Budget.YTD))
     
     validate(need(nrow(data)>0, paste0(metric_choice, " is not available for ", isolate(input$all_hospital))))
@@ -1065,7 +1065,7 @@ server <- function(input, output, session) {
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
              sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
              text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)),
-             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
+             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)*100), ")"),
                                   Variance.From.Budget.YTD))
     
     validate(need(nrow(data)>0, paste0(metric_choice, " is not available for ", isolate(input$all_hospital))))
@@ -1110,7 +1110,7 @@ server <- function(input, output, session) {
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
              sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
              text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)),
-             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
+             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)*100), ")"),
                                   Variance.From.Budget.YTD))
     
     validate(need(nrow(data)>0, paste0(metric_choice, " is not available for ", isolate(input$all_hospital))))
@@ -1156,7 +1156,7 @@ server <- function(input, output, session) {
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
              sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
              text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)),
-             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
+             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)*100), ")"),
                                   Variance.From.Budget.YTD))
     
     validate(need(nrow(data)>0, paste0(metric_choice, " is not available for ", isolate(input$all_hospital))))
@@ -1201,7 +1201,7 @@ server <- function(input, output, session) {
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
              sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
              text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)),
-             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
+             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)*100), ")"),
                                   Variance.From.Budget.YTD))
     
     validate(need(nrow(data)>0, paste0( metric_choice, " is not available for ", isolate(input$all_hospital))))
@@ -1246,7 +1246,7 @@ server <- function(input, output, session) {
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
              sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
              text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)),
-             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
+             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)*100), ")"),
                                   Variance.From.Budget.YTD))
     
     validate(need(nrow(data)>0, paste0(metric_choice, " is not available for ", isolate(input$all_hospital))))
@@ -1290,7 +1290,7 @@ server <- function(input, output, session) {
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
              sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
              text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)),
-             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
+             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)*100), ")"),
                                   Variance.From.Budget.YTD))
     
     validate(need(nrow(data)>0, paste0(metric_choice , " is not available for ", isolate(input$all_hospital))))
@@ -1333,7 +1333,7 @@ server <- function(input, output, session) {
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
              sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
              text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)),
-             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
+             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)*100), ")"),
                                   Variance.From.Budget.YTD))
     
     
@@ -1781,7 +1781,7 @@ server <- function(input, output, session) {
       filter(year %in% max(year)) %>%
       filter(Metrics == Metric_option)%>%
       mutate(sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
-             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
+             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)*100), ")"),
                                   Variance.From.Budget.YTD))
     
     
@@ -1815,7 +1815,7 @@ server <- function(input, output, session) {
       filter(year %in% max(year)) %>%
       filter(Metrics == Metric_option)%>%
       mutate(sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
-             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
+             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)*100), ")"),
                                   Variance.From.Budget.YTD))
     
     
@@ -1849,7 +1849,7 @@ server <- function(input, output, session) {
       filter(year %in% max(year)) %>%
       filter(Metrics == Metric_option)%>%
       mutate(sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
-             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
+             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)*100), ")"),
                                   Variance.From.Budget.YTD))
     
     
@@ -1884,7 +1884,7 @@ server <- function(input, output, session) {
       filter(year %in% max(year)) %>%
       filter(Metrics == Metric_option)%>%
       mutate(sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
-             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
+             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)*100), ")"),
                                   Variance.From.Budget.YTD))
     
     
@@ -1919,7 +1919,7 @@ server <- function(input, output, session) {
       filter(year %in% max(year)) %>%
       filter(Metrics == Metric_option)%>%
       mutate(sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
-             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
+             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)*100), ")"),
                                   Variance.From.Budget.YTD))
     
     
@@ -1954,7 +1954,7 @@ server <- function(input, output, session) {
       filter(year %in% max(year)) %>%
       filter(Metrics == Metric_option)%>%
       mutate(sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
-             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
+             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)*100), ")"),
                                   Variance.From.Budget.YTD))
     
     
@@ -1988,7 +1988,7 @@ server <- function(input, output, session) {
       filter(year %in% max(year)) %>%
       filter(Metrics == Metric_option)%>%
       mutate(sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
-             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
+             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)*100), ")"),
                                   Variance.From.Budget.YTD))
     
     
@@ -2022,7 +2022,7 @@ server <- function(input, output, session) {
       filter(year %in% max(year)) %>%
       filter(Metrics == Metric_option)%>%
       mutate(sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
-             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
+             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)*100), ")"),
                                   Variance.From.Budget.YTD))
     
     
@@ -2056,7 +2056,7 @@ server <- function(input, output, session) {
       filter(year %in% max(year)) %>%
       filter(Metrics == Metric_option)%>%
       mutate(sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
-             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
+             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)*100), ")"),
                                   Variance.From.Budget.YTD))
     
     
@@ -2090,7 +2090,7 @@ server <- function(input, output, session) {
       filter(year %in% max(year)) %>%
       filter(Metrics == Metric_option)%>%
       mutate(sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
-             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
+             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)*100), ")"),
                                   Variance.From.Budget.YTD))
     
     
@@ -2124,7 +2124,7 @@ server <- function(input, output, session) {
       filter(year %in% max(year)) %>%
       filter(Metrics == Metric_option)%>%
       mutate(sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
-             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)), ")"),
+             ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)*100), ")"),
                                   Variance.From.Budget.YTD))
     
     
@@ -2154,9 +2154,7 @@ server <- function(input, output, session) {
   output$ratio_plot_all <- renderPlot({
     
     data <- ratio_data()
-    
-    ratio_test <<- data
-    
+
     data <- data %>%
       mutate(Actual = round(Actual, 2))%>%
       arrange(year, month) %>% 
