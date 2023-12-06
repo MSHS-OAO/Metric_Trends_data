@@ -331,15 +331,13 @@ ratio_graph <- function(data, site) {
               colour = "#212070", stat="identity", linewidth = 0.5)+
     geom_point(mapping = aes(date, Actual),
                colour = "#212070", size = 1.5) +
-     labs(x = "Date", y = "Expense to Revenue Ratio" ,
-          title = paste0(site, " Expense to Revenue Ratio" ))+
+      labs(title = paste0("<b>", site, " Expense to Revenue Ratio <b>" ))+
     geom_hline(aes(yintercept= 1), colour="#990000", linetype="dashed")+
     geom_hline(aes(yintercept = 0))+
     theme(plot.title = element_text(hjust = 0.5, size = 12),
           axis.title = element_text(face = "bold", size = 8),
           axis.text.x = element_text(angle = 45, hjust = 1, face = "bold", size =8),
           axis.text.y = element_text(face = "bold", size = 8),
-          #text = element_text(face = "bold", size = 0.7),
           axis.ticks = element_blank(),
           panel.background = element_rect(fill = "white", color = "black", linewidth = 0.5),
           panel.grid.major.x = element_blank(),
@@ -347,10 +345,9 @@ ratio_graph <- function(data, site) {
           panel.grid.minor = element_line(linewidth = 0.25, colour = "grey"),
           legend.position = "none")+
     geom_text(aes(label= Actual, x=date, y= Actual+0.04),
-              position = position_dodge(width = 1), vjust = 0 , size = 3, face = "bold")+
+              position = position_dodge(width = 1), vjust = 0 , size = 3)+
     scale_y_continuous(limits=c(0.8, 1.5), breaks = seq(0.8, 1.5, by = 0.1)))%>%
-    layout(
-      xaxis = list(title = "<b> Date <b> ", showline = TRUE, mirror = "ticks", titlefont = list(size = 12),
+    layout( xaxis = list(title = "<b> Date <b> ", showline = TRUE, mirror = "ticks", titlefont = list(size = 12),
                    linewidth = 2, linecolor = "black", showgrid = F),
       yaxis = list(title = "<b> Expense to Revenue Ratio <b>", range = c(0.8, 1.5), titlefont = list(size = 12),
                    showline = TRUE, mirror = "ticks",linewidth = 2, linecolor = "black"))
