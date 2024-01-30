@@ -441,10 +441,10 @@ graph_style_break <- function(data, site, metric){
                         range = y_range, showline = TRUE, mirror = "ticks", linewidth = 2))%>%
     add_text(x = last_data_point$date, y = last_data_point$Variance, 
              text = paste0("<b>", text_label, "<b> "), 
-             textposition = "outside center",  
+             textposition = "outside center", 
              textfont = list(color = text_color, size = 10))%>%
     add_text(x = last_data_point$date, y = last_data_point$Variance.From.Budget.YTD, 
-             text = paste0("<b>", last_data_point$ratio_label,"%", "<b>"),
+             text = paste0("<b>", last_data_point$ratio_label,"%", "<b>"), 
              textposition = "top center", textfont = list(color = text_color_ratio, size = 10))%>%
     layout(margin = list(l = 50, r = 50, t = 50, b = 50),
            annotations = list(
@@ -457,166 +457,301 @@ graph_style_break <- function(data, site, metric){
 }
 
 
+# var_graph_break <- function(data, site, metric) {
+#   
+#   if(metric %in% c("Total Hospital Revenue")) {
+#     max <- 20000 	
+#     min <- -30000
+#     breaks  <- 5000 
+#   } else if(metric %in% c("Outpatient Revenue")) {
+#     max  <- 12000 	
+#     min  <- -8000
+#     breaks  <- 2000 
+#   } else if(metric %in% c("340B/Other Operating Revenue")) {
+#     max  <- 6000 	
+#     min  <- -14000
+#     breaks  <- 2000 
+#   } else if(metric %in% c("Total Hospital Expenses")) {
+#     max  <- 10000 	
+#     min  <- -40000
+#     breaks  <- 5000 
+#   } else if(metric %in% c("Salaries and Benefits")) {
+#     max  <- 10000 	
+#     min  <- -14000
+#     breaks  <- 2000 
+#   } else if(metric %in% c("Supplies & Expenses")) {
+#     max  <- 30000 	
+#     min  <- -25000
+#     breaks  <- 5000
+#   } else if(metric %in% c("CARTS")) {
+#     max  <- 5000 	
+#     min  <- -5000
+#     breaks  <- 1000 
+#   } else if(metric %in% c("Nursing Agency Costs")) {
+#     max  <- 2000 	
+#     min  <- -8000
+#     breaks  <- 2000 
+#   } else if(metric %in% c("Discharges")) {
+#     max  <- 750 	
+#     min  <- -750
+#     breaks  <- 150
+#   } else if(metric %in% c("CMI")) {
+#     max  <- 0.25	
+#     min  <- -0.25
+#     breaks  <- 0.05
+#   } else if(metric %in% c("ALOS")) {
+#     max  <- 2.5	
+#     min  <- -2.5
+#     breaks  <- 0.5
+#   }
+#   
+#   last_data_point <-  data %>% filter(month == max(month))
+#   text_color <- ifelse(last_data_point$Variance < 0, "red", "black")
+#   
+#   # Define different labels for metrics    
+#   if (metric %in% c("CMI", "ALOS", "Discharges")) {
+#     text_label <- last_data_point$text_label
+#     y_label <- "Monthly Variance to Budget"
+#   } else {
+#     text_label <- paste0("$", last_data_point$text_label)
+#     y_label <- "Monthly Variance to Budget $"
+#   }
+#   
+#   
+#   
+#   ggplotly(
+#   ggplot(data)  + 
+#     geom_bar(aes(x=date, y= Variance), stat="identity", fill= "#b2b3b2")+
+#     labs(x = "Date", y = y_label, 
+#          title = paste0(site , " ", metric),
+#          subtitle = paste0("($ in Thousands)"))+
+#     theme(plot.title = element_textbox_simple(size = 15, halign=0.5),
+#           plot.subtitle = element_text(hjust = 0.5, size = 10),
+#           axis.title = element_text(face = "bold"),
+#           legend.text = element_text(size = 6),
+#           axis.text.x = element_text(angle = 45, hjust = 1, face = "bold"),
+#           axis.text.y = element_text(face = "bold",  size = 10),
+#           panel.background = element_rect(fill = "white", color = "black", linewidth = 0.5),
+#           panel.grid.major = element_line(linewidth = 0.5, linetype = 'solid', colour = "grey"),
+#           panel.grid.major.x = element_blank(),
+#           panel.grid.minor = element_line(linewidth = 0.25, colour = "grey"),
+#           legend.position = "non")+
+#     geom_text(aes(label= text_label, x=date, y= Variance, color = sign),
+#               position = position_dodge(width = 1), fontface = "bold",
+#               vjust = 0.5 - sign(data$Variance)/2, size = 3)+
+#     scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "black"))+
+#     scale_y_continuous(limits=c(min, max), breaks = seq(min, max, by = breaks))+
+#     geom_hline(aes(yintercept = 0)))
+#   
+# }
+
+
 var_graph_break <- function(data, site, metric) {
   
   if(metric %in% c("Total Hospital Revenue")) {
-    max <- 20000 	
-    min <- -30000
+    y_range <- c(-30000, 20000) 	
     breaks  <- 5000 
   } else if(metric %in% c("Outpatient Revenue")) {
-    max  <- 12000 	
-    min  <- -8000
+    y_range  <- c(-8000, 12000) 	
     breaks  <- 2000 
   } else if(metric %in% c("340B/Other Operating Revenue")) {
-    max  <- 6000 	
-    min  <- -14000
+    y_range  <- c(-14000, 6000 )
     breaks  <- 2000 
   } else if(metric %in% c("Total Hospital Expenses")) {
-    max  <- 10000 	
-    min  <- -40000
+    y_range  <- c(-40000, 10000) 	
     breaks  <- 5000 
   } else if(metric %in% c("Salaries and Benefits")) {
-    max  <- 10000 	
-    min  <- -14000
+    y_range  <- c(-14000, 10000)	
     breaks  <- 2000 
   } else if(metric %in% c("Supplies & Expenses")) {
-    max  <- 30000 	
-    min  <- -25000
+    y_range  <- c(-25000, 30000)	
     breaks  <- 5000
   } else if(metric %in% c("CARTS")) {
-    max  <- 5000 	
-    min  <- -5000
+    y_range  <- c(-5000, 5000)	
     breaks  <- 1000 
   } else if(metric %in% c("Nursing Agency Costs")) {
-    max  <- 2000 	
-    min  <- -8000
+    y_range <- c(-8000, 2000)
     breaks  <- 2000 
   } else if(metric %in% c("Discharges")) {
-    max  <- 750 	
-    min  <- -750
+    y_range  <- c(-750, 750) 	
     breaks  <- 150
   } else if(metric %in% c("CMI")) {
-    max  <- 0.25	
-    min  <- -0.25
+    y_range  <- c(-0.25, 0.25)	
     breaks  <- 0.05
   } else if(metric %in% c("ALOS")) {
-    max  <- 2.5	
-    min  <- -2.5
+    y_range  <- c(-2.5, 2.5)	
     breaks  <- 0.5
   }
   
+  last_data_point <-  data %>% filter(month == max(month), year == max(year))
+  text_color <- ifelse(last_data_point$Variance < 0, "red", "black")
+  
   # Define different labels for metrics    
   if (metric %in% c("CMI", "ALOS", "Discharges")) {
-    text_label <- data$text_label
+    text_label <- last_data_point$text_label
     y_label <- "Monthly Variance to Budget"
   } else {
-    text_label <- paste0("$", data$text_label)
+    text_label <- paste0("$", last_data_point$text_label)
     y_label <- "Monthly Variance to Budget $"
   }
   
-  ggplot(data)  + 
-    geom_bar(aes(x=date, y= Variance), stat="identity", fill= "#b2b3b2")+
-    labs(x = "Date", y = y_label, 
-         title = paste0(site , " ", metric),
-         subtitle = paste0("($ in Thousands)"))+
-    theme(plot.title = element_textbox_simple(size = 15, halign=0.5),
-          plot.subtitle = element_text(hjust = 0.5, size = 10),
-          axis.title = element_text(face = "bold"),
-          legend.text = element_text(size = 6),
-          axis.text.x = element_text(angle = 45, hjust = 1, face = "bold"),
-          axis.text.y = element_text(face = "bold",  size = 10),
-          panel.background = element_rect(fill = "white", color = "black", linewidth = 0.5),
-          panel.grid.major = element_line(linewidth = 0.5, linetype = 'solid', colour = "grey"),
-          panel.grid.major.x = element_blank(),
-          panel.grid.minor = element_line(linewidth = 0.25, colour = "grey"),
-          legend.position = "non")+
-    geom_text(aes(label= text_label, x=date, y= Variance, color = sign),
-              position = position_dodge(width = 1), fontface = "bold",
-              vjust = 0.5 - sign(data$Variance)/2, size = 4)+
-    scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "black"))+
-    scale_y_continuous(limits=c(min, max), breaks = seq(min, max, by = breaks))+
-    geom_hline(aes(yintercept = 0))
   
+  plot_ly(data, x = ~date, y = ~Variance, type = "bar", showlegend = F, 
+          marker = list(color =  "#b2b3b2")) %>%
+    layout(title= paste0("<b> ", site, " ", metric, "<b>"),
+           xaxis = list(title="<b> Date <b>", titlefont = list(size = 12), showline = TRUE, mirror= "ticks", linewidth = 2),
+           yaxis = list(title= paste0("<b>", y_label,"<b>"), titlefont = list(size = 12), 
+                        range = y_range, showline = TRUE, mirror = "ticks", linewidth = 2))%>%
+    add_text(x = last_data_point$date, y = last_data_point$Variance, 
+             text = paste0("<b>", text_label, "<b> "), 
+             textposition = "outside center",  
+             textfont = list(color = text_color, size = 10))%>%
+    layout(margin = list(l = 50, r = 50, t = 50, b = 50),
+           annotations = list(
+             list(x = 0.5,  
+                  y = 1.09,   
+                  text = "($ in Thousands)",
+                  showarrow = FALSE,
+                  xref='paper', yref='paper',
+                  font = list(size = 12))))
 }
 
-
-
 # graph functions
+# ytd_graph_break <- function(data, site, metric) {
+#   
+#   if(metric %in% c("Total Hospital Revenue")) {
+#     min_ratio <- -24
+#     max_ratio <- 16
+#     breaks_ratio <- 4
+#   } else if(metric %in% c("Outpatient Revenue")) {
+#     min_ratio <- -12
+#     max_ratio <- 18
+#     breaks_ratio <- 3
+#   } else if(metric %in% c("340B/Other Operating Revenue")) {
+#     min_ratio <- -36
+#     max_ratio <- 24
+#     breaks_ratio <- 6
+#   } else if(metric %in% c("Total Hospital Expenses")) {
+#     min_ratio <- -24
+#     max_ratio <- 6
+#     breaks_ratio <- 3
+#   } else if(metric %in% c("Salaries and Benefits")) {
+#     min_ratio <- -12
+#     max_ratio <- 10
+#     breaks_ratio <- 2
+#   } else if(metric %in% c("Supplies & Expenses")) {
+#     min_ratio <- -25
+#     max_ratio <- 30
+#     breaks_ratio <- 5
+#   } else if(metric %in% c("CARTS")) {
+#     min_ratio <- -40
+#     max_ratio <- 40
+#     breaks_ratio <- 8
+#   } else if(metric %in% c("Nursing Agency Costs")) {
+#     min_ratio <- -800
+#     max_ratio <- 200
+#     breaks_ratio <- 200
+#   } else if(metric %in% c("Discharges")) {
+#     min_ratio <- -25
+#     max_ratio <- 25
+#     breaks_ratio <- 5
+#   } else if(metric %in% c("CMI")) {
+#     min_ratio <- -10
+#     max_ratio <- 10
+#     breaks_ratio <- 2
+#   } else if(metric %in% c("ALOS")) {
+#     min_ratio <- -25
+#     max_ratio <- 25
+#     breaks_ratio <- 5
+#   }
+#   
+#   ggplotly(
+#   ggplot(data)  + 
+#     geom_line(aes(x=date, y= Variance.From.Budget.YTD, group = 1), 
+#               colour = "#212070", stat="identity", linewidth = 1.25)+
+#     geom_point(mapping = aes(date, Variance.From.Budget.YTD),
+#                colour = "#212070", size = 3) +
+#     labs(x = "Date", y = "YTD Variance to Budget Ratio %" , 
+#          title = paste0(site, " " , metric ))+
+#     theme(plot.title = element_textbox_simple(size = 15, halign=0.5),
+#           plot.subtitle = element_text(hjust = 0.5, size = 10),
+#           axis.title = element_text(face = "bold"),
+#           legend.text = element_text(size = 6),
+#           axis.text.x = element_text(angle = 45, hjust = 1, face = "bold"),
+#           axis.text.y = element_text(face = "bold",  size = 10),
+#           panel.background = element_rect(fill = "white", color = "black", linewidth = 0.5),
+#           panel.grid.major.x = element_blank(),
+#           panel.grid.major = element_line(linewidth = 0.5, linetype = 'solid', colour = "grey"),
+#           panel.grid.minor = element_line(linewidth = 0.25, colour = "grey"),
+#           legend.position = "none")+
+#     geom_text(aes(label= paste0(data$ratio_label, "%"), 
+#                   x=date, y= Variance.From.Budget.YTD, color= sign.YTD),
+#               position = position_dodge(width = 1), fontface = "bold",
+#               vjust = 0.5 - sign(data$Variance.From.Budget.YTD), size = 4)+
+#     scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "black"))+
+#     scale_y_continuous(limits=c(min_ratio, max_ratio), breaks = seq(min_ratio, max_ratio, by = breaks_ratio))+
+#     geom_hline(aes(yintercept = 0)))
+#   
+# }
+
+
 ytd_graph_break <- function(data, site, metric) {
   
   if(metric %in% c("Total Hospital Revenue")) {
-    min_ratio <- -24
-    max_ratio <- 16
+    ratio_range <- c(-24, 16)
     breaks_ratio <- 4
   } else if(metric %in% c("Outpatient Revenue")) {
-    min_ratio <- -12
-    max_ratio <- 18
+    ratio_range <- c(-12, 18)
     breaks_ratio <- 3
   } else if(metric %in% c("340B/Other Operating Revenue")) {
-    min_ratio <- -36
-    max_ratio <- 24
+    ratio_range <- c(-42, 18)
     breaks_ratio <- 6
   } else if(metric %in% c("Total Hospital Expenses")) {
-    min_ratio <- -24
-    max_ratio <- 6
+    ratio_range <- c(-24, 6)
     breaks_ratio <- 3
   } else if(metric %in% c("Salaries and Benefits")) {
-    min_ratio <- -12
-    max_ratio <- 10
+    ratio_range <- c(-12, 10)
     breaks_ratio <- 2
   } else if(metric %in% c("Supplies & Expenses")) {
-    min_ratio <- -25
-    max_ratio <- 30
+    ratio_range <- c(-25, 30)
     breaks_ratio <- 5
   } else if(metric %in% c("CARTS")) {
-    min_ratio <- -40
-    max_ratio <- 40
+    ratio_range <- c(-40, 40)
     breaks_ratio <- 8
   } else if(metric %in% c("Nursing Agency Costs")) {
-    min_ratio <- -800
-    max_ratio <- 200
+    ratio_range <- c(-800, 200)
     breaks_ratio <- 200
   } else if(metric %in% c("Discharges")) {
-    min_ratio <- -25
-    max_ratio <- 25
+    ratio_range <- c(-25, 25)
     breaks_ratio <- 5
   } else if(metric %in% c("CMI")) {
-    min_ratio <- -10
-    max_ratio <- 10
+    ratio_range <- c(-10, 10)
     breaks_ratio <- 2
   } else if(metric %in% c("ALOS")) {
-    min_ratio <- -25
-    max_ratio <- 25
+    ratio_range <- c(-25, 25)
     breaks_ratio <- 5
   }
   
-  ggplot(data)  + 
-    geom_line(aes(x=date, y= Variance.From.Budget.YTD, group = 1), 
-              colour = "#212070", stat="identity", linewidth = 1.25)+
-    geom_point(mapping = aes(date, Variance.From.Budget.YTD),
-               colour = "#212070", size = 3) +
-    labs(x = "Date", y = "YTD Variance to Budget Ratio %" , 
-         title = paste0(site, " " , metric ))+
-    theme(plot.title = element_textbox_simple(size = 15, halign=0.5),
-          plot.subtitle = element_text(hjust = 0.5, size = 10),
-          axis.title = element_text(face = "bold"),
-          legend.text = element_text(size = 6),
-          axis.text.x = element_text(angle = 45, hjust = 1, face = "bold"),
-          axis.text.y = element_text(face = "bold",  size = 10),
-          panel.background = element_rect(fill = "white", color = "black", linewidth = 0.5),
-          panel.grid.major.x = element_blank(),
-          panel.grid.major = element_line(linewidth = 0.5, linetype = 'solid', colour = "grey"),
-          panel.grid.minor = element_line(linewidth = 0.25, colour = "grey"),
-          legend.position = "none")+
-    geom_text(aes(label= paste0(data$ratio_label, "%"), 
-                  x=date, y= Variance.From.Budget.YTD, color= sign.YTD),
-              position = position_dodge(width = 1), fontface = "bold",
-              vjust = 0.5 - sign(data$Variance.From.Budget.YTD), size = 4)+
-    scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "black"))+
-    scale_y_continuous(limits=c(min_ratio, max_ratio), breaks = seq(min_ratio, max_ratio, by = breaks_ratio))+
-    geom_hline(aes(yintercept = 0))
   
+  last_data_point <-  data %>% filter(month == max(month))
+  text_color_ratio <- ifelse(last_data_point$Variance.From.Budget.YTD < 0, "red", "black")
+  
+  
+  
+  
+  plot_ly(data, x = ~date, y = ~Variance.From.Budget.YTD, type = "scatter", showlegend = F,
+          mode = "lines+markers", marker = list(color = "#212070"),
+          line = list(color =  "#212070")) %>%
+    layout(title= paste0("<b> ", hospital, " ", metric_option, "<b>"),
+           xaxis = list(title="<b> Date <b>", titlefont = list(size = 12), showline = TRUE, mirror= "ticks", linewidth = 2),
+           yaxis = list(title= paste0("<b> YTD Variance to Budget Ratio % <b>"), titlefont = list(size = 12), 
+                        range = ratio_range, showline = TRUE, mirror = "ticks", linewidth = 2))%>%
+    add_text(x = last_data_point$date, y = last_data_point$Variance.From.Budget.YTD, 
+             text = paste0("<b>", last_data_point$ratio_label,"%", "<b>"),
+             textposition = "top center", textfont = list(color = text_color_ratio, size = 10))%>%
+    layout(margin = list(l = 50, r = 50, t = 50, b = 50))
 }
+
 
 
 ratio_graph_hosp <- function(data, site) {

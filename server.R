@@ -506,7 +506,7 @@ server <- function(input, output, session) {
   
   # Variance Tab ---------------------------
   ### MSHS -------------------------------------
-  output$mshs_var <- renderPlot({
+  output$mshs_var <- renderPlotly({
     
     metric_option <- isolate(input$var_metrics)
     hospital <- "MSHS"
@@ -514,7 +514,7 @@ server <- function(input, output, session) {
     data <- var_data() %>%
       #data <- new_repo %>% filter(Metrics == metric_option)%>%
       filter(Site == hospital)%>%
-      mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
+      mutate(sign = ifelse(Variance >= 0, "black", "red"),
              text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)))
     
     validate(need(nrow(data) > 0, paste0(metric_option , " is not available for ", hospital)))
@@ -525,13 +525,13 @@ server <- function(input, output, session) {
   })
   
   ### MSB -------------------------------------
-  output$msb_var <- renderPlot({
+  output$msb_var <- renderPlotly({
     metric_option <- isolate(input$var_metrics)
     hospital <- "MSB"
     
     data <- var_data() %>%
       filter(Site == hospital)%>%
-      mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
+      mutate(sign = ifelse(Variance >= 0, "black", "red"),
              text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)))
     
     validate(need(nrow(data) > 0, paste0(metric_option , " is not available for ", hospital)))
@@ -542,13 +542,13 @@ server <- function(input, output, session) {
   })
   
   ### MSBI -------------------------------------
-  output$msbi_var <- renderPlot({
+  output$msbi_var <- renderPlotly({
     metric_option <- isolate(input$var_metrics)
     hospital <- "MSBI"
     
     data <- var_data() %>%
       filter(Site == hospital)%>%
-      mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
+      mutate(sign = ifelse(Variance >= 0, "black", "red"),
              text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)))
     
     validate(need(nrow(data) > 0, paste0(metric_option , " is not available for ", hospital)))
@@ -559,14 +559,14 @@ server <- function(input, output, session) {
   })
   
   ### MSH -------------------------------------
-  output$msh_var <- renderPlot({
+  output$msh_var <- renderPlotly({
     
     metric_option <- isolate(input$var_metrics)
     hospital <- "MSH"
     
     data <- var_data() %>%
       filter(Site == hospital)%>%
-      mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
+      mutate(sign = ifelse(Variance >= 0, "black", "red"),
              text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)))
     
     validate(need(nrow(data) > 0, paste0(metric_option , " is not available for ", hospital)))
@@ -577,13 +577,13 @@ server <- function(input, output, session) {
   })
   
   ### MSM -------------------------------------
-  output$msm_var <- renderPlot({
+  output$msm_var <- renderPlotly({
     metric_option <- isolate(input$var_metrics)
     hospital <- "MSM"
     
     data <- var_data() %>%
       filter(Site == hospital)%>%
-      mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
+      mutate(sign = ifelse(Variance >= 0, "black", "red"),
              text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)))
     
     validate(need(nrow(data) > 0, paste0(metric_option , " is not available for ", hospital)))
@@ -594,13 +594,13 @@ server <- function(input, output, session) {
   })
   
   ### MSQ -------------------------------------
-  output$msq_var <- renderPlot({
+  output$msq_var <- renderPlotly({
     metric_option <- isolate(input$var_metrics)
     hospital <- "MSQ"
     
     data <- var_data() %>%
       filter(Site == hospital)%>%
-      mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
+      mutate(sign = ifelse(Variance >= 0, "black", "red"),
              text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)))
     
     validate(need(nrow(data) > 0, paste0(metric_option , " is not available for ", hospital)))
@@ -611,13 +611,13 @@ server <- function(input, output, session) {
   })
   
   ### MSSN -------------------------------------
-  output$mssn_var <- renderPlot({
+  output$mssn_var <- renderPlotly({
     metric_option <- isolate(input$var_metrics)
     hospital <- "MSSN"
     
     data <- var_data() %>%
       filter(Site == hospital)%>%
-      mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
+      mutate(sign = ifelse(Variance >= 0, "black", "red"),
              text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)))
     
     validate(need(nrow(data) > 0, paste0(metric_option , " is not available for ", hospital)))
@@ -628,13 +628,13 @@ server <- function(input, output, session) {
   })
   
   ### MSW -------------------------------------
-  output$msw_var <- renderPlot({
+  output$msw_var <- renderPlotly({
     metric_option <- isolate(input$var_metrics)
     hospital <- "MSW"
     
     data <- var_data() %>%
       filter(Site == hospital)%>%
-      mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
+      mutate(sign = ifelse(Variance >= 0, "black", "red"),
              text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)))
     
     validate(need(nrow(data) > 0, paste0(metric_option , " is not available for ", hospital)))
@@ -646,13 +646,13 @@ server <- function(input, output, session) {
   })
   
   ### NYEE -------------------------------------
-  output$nyee_var <- renderPlot({
+  output$nyee_var <- renderPlotly({
     metric_option <- isolate(input$var_metrics)
     hospital <- "NYEE"
     
     data <- var_data() %>%
       filter(Site == hospital)%>%
-      mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
+      mutate(sign = ifelse(Variance >= 0, "black", "red"),
              text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)))
     
     validate(need(nrow(data) > 0, paste0(metric_option , " is not available for ", hospital)))
@@ -665,7 +665,7 @@ server <- function(input, output, session) {
   
   # YTD Variance To Budget Ratio ----------------
   ### MSHS -----------------------
-  output$mshs_plot_ytd <- renderPlot({
+  output$mshs_plot_ytd <- renderPlotly({
     
     hospital <- "MSHS"
     metric_option <- isolate(input$mshs_metrics_ytd)
@@ -685,7 +685,7 @@ server <- function(input, output, session) {
   })
   
   ### MSB -----------------------
-  output$msb_plot_ytd <- renderPlot({
+  output$msb_plot_ytd <- renderPlotly({
     
     hospital <- "MSB"
     metric_option <- isolate(input$mshs_metrics_ytd)
@@ -706,7 +706,7 @@ server <- function(input, output, session) {
   })
   
   ### MSBI -----------------------
-  output$msbi_plot_ytd <- renderPlot({
+  output$msbi_plot_ytd <- renderPlotly({
     hospital <- "MSBI"
     metric_option <- isolate(input$mshs_metrics_ytd)
     
@@ -726,7 +726,7 @@ server <- function(input, output, session) {
   })
   
   ### MSH -----------------------
-  output$msh_plot_ytd <- renderPlot({
+  output$msh_plot_ytd <- renderPlotly({
     hospital <- "MSH"
     metric_option <- isolate(input$mshs_metrics_ytd)
     
@@ -746,7 +746,7 @@ server <- function(input, output, session) {
   })
   
   ### MSM -----------------------
-  output$msm_plot_ytd <- renderPlot({
+  output$msm_plot_ytd <- renderPlotly({
     
     hospital <- "MSM"
     metric_option <- isolate(input$mshs_metrics_ytd)
@@ -767,7 +767,7 @@ server <- function(input, output, session) {
   })
   
   ### MSQ -----------------------
-  output$msq_plot_ytd <- renderPlot({
+  output$msq_plot_ytd <- renderPlotly({
     
     hospital <- "MSQ"
     metric_option <- isolate(input$mshs_metrics_ytd)
@@ -788,7 +788,7 @@ server <- function(input, output, session) {
   })
   
   ### MSSN -----------------------
-  output$mssn_plot_ytd <- renderPlot({
+  output$mssn_plot_ytd <- renderPlotly({
     hospital <- "MSSN"
     metric_option <- isolate(input$mshs_metrics_ytd)
     
@@ -808,7 +808,7 @@ server <- function(input, output, session) {
   })
   
   ### MSW -----------------------
-  output$msw_plot_ytd <- renderPlot({
+  output$msw_plot_ytd <- renderPlotly({
     
     hospital <- "MSW"
     metric_option <- isolate(input$mshs_metrics_ytd)
@@ -828,7 +828,7 @@ server <- function(input, output, session) {
   })
 
   ### NYEE -----------------------
-  output$nyee_plot_ytd <- renderPlot({
+  output$nyee_plot_ytd <- renderPlotly({
     
     hospital <- "NYEE"
     metric_option <- isolate(input$mshs_metrics_ytd)
