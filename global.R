@@ -742,7 +742,7 @@ ytd_graph_break <- function(data, site, metric) {
   plot_ly(data, x = ~date, y = ~Variance.From.Budget.YTD, type = "scatter", showlegend = F,
           mode = "lines+markers", marker = list(color = "#212070"),
           line = list(color =  "#212070")) %>%
-    layout(title= paste0("<b> ", hospital, " ", metric_option, "<b>"),
+    layout(title= paste0("<b> ", site, " ", metric, "<b>"),
            xaxis = list(title="<b> Date <b>", titlefont = list(size = 12), showline = TRUE, mirror= "ticks", linewidth = 2),
            yaxis = list(title= paste0("<b> YTD Variance to Budget Ratio % <b>"), titlefont = list(size = 12), 
                         range = ratio_range, showline = TRUE, mirror = "ticks", linewidth = 2))%>%
