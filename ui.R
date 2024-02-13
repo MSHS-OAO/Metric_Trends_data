@@ -139,7 +139,7 @@ ui <- dashboardPage(
                                            countSelectedText = "{0}/{1} Dates",
                                            dropupAuto = FALSE),
                                            choices = date_options, 
-                                           selected = date_options)),
+                                           selected = date_selected)),
                            
                            column(width = 4,
                                   actionButton("mshs_filters_update", "CLICK TO UPDATE", width = "75%"),
@@ -197,7 +197,7 @@ ui <- dashboardPage(
                                              countSelectedText = "{0}/{1} Dates",
                                              dropupAuto = FALSE),
                                              choices = date_options, 
-                                             selected = date_options)),
+                                             selected = date_selected)),
                              
                              column(width = 4,
                                     actionButton("mshs_filters_update_var", "CLICK TO UPDATE", width = "75%"),
@@ -255,7 +255,7 @@ ui <- dashboardPage(
                                                countSelectedText = "{0}/{1} Dates",
                                                dropupAuto = FALSE),
                                              choices = date_options, 
-                                             selected = date_options)),
+                                             selected = date_selected)),
                              
                              column(width = 4,
                                     actionButton("mshs_filters_update_ytd", "CLICK TO UPDATE", width = "75%"),
@@ -351,7 +351,7 @@ ui <- dashboardPage(
                                                      countSelectedText = "{0}/{1} Dates",
                                                      dropupAuto = FALSE),
                                            choices = date_options, 
-                                           selected = date_options)),
+                                           selected = date_selected)),
                           
                            column(width = 4,
                                   actionButton("all_filters_update", 
@@ -361,55 +361,55 @@ ui <- dashboardPage(
                 fluidRow(
                        box(title = NULL, status = "primary",
                         solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
-                           plotOutput("ratio_plot"),  width = 4),
+                           plotlyOutput("ratio_plot"),  width = 4),
                        
                        box(title = NULL, status = "primary", 
                         solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
-                           plotOutput("revenue_plot"),  width = 4),
+                           plotlyOutput("revenue_plot"),  width = 4),
                 
                        box(title = NULL, status = "primary",
                         solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
-                           plotOutput("expense_plot"),  width = 4),
+                           plotlyOutput("expense_plot"),  width = 4),
                        
                        box(title = NULL, status = "primary", 
                         solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
-                           plotOutput("discharges_plot"),  width = 4),
+                           plotlyOutput("discharges_plot"),  width = 4),
                 
                
                        box(title = NULL, status = "primary",
                         solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
-                           plotOutput("cmi_plot"),  width = 4),
+                           plotlyOutput("cmi_plot"),  width = 4),
                        
                        box(title = NULL, status = "primary", 
                         solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
-                           plotOutput("alos_plot"),  width = 4),
+                           plotlyOutput("alos_plot"),  width = 4),
                 
               
                        box(title = NULL, status = "primary",
                         solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
-                           plotOutput("outpt_plot"),  width = 4),
+                           plotlyOutput("outpt_plot"),  width = 4),
                        
                        box(title = NULL, status = "primary", 
                         solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
-                           plotOutput("operate_plot"),  width = 4),
+                           plotlyOutput("operate_plot"),  width = 4),
                 
                
                        box(title = NULL, status = "primary",
                         solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
-                           plotOutput("salary_plot"),  width = 4),
+                           plotlyOutput("salary_plot"),  width = 4),
                        
                        box(title = NULL, status = "primary", 
                         solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
-                           plotOutput("supply_plot"),  width = 4),
+                           plotlyOutput("supply_plot"),  width = 4),
                 
                
                        box(title = NULL, status = "primary",
                         solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
-                           plotOutput("nurse_plot"),  width = 4),
+                           plotlyOutput("nurse_plot"),  width = 4),
                        
                        box(title = NULL, status = "primary", 
                         solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
-                           plotOutput("carts_plot"),  width = 4))
+                           plotlyOutput("carts_plot"),  width = 4))
 
                 ),
                 
@@ -437,7 +437,7 @@ ui <- dashboardPage(
                                                countSelectedText = "{0}/{1} Dates",
                                                dropupAuto = FALSE),
                                              choices = date_options, 
-                                             selected = date_options)),
+                                             selected = date_selected)),
                              
                              column(width = 4,
                                     actionButton("all_filters_update_var", 
@@ -447,55 +447,55 @@ ui <- dashboardPage(
                        fluidRow(
                          box(title = NULL, status = "primary",
                              solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
-                             plotOutput("ratio_plot_var"),  width = 4),
+                             plotlyOutput("ratio_plot_var"),  width = 4),
                          
                          box(title = NULL, status = "primary", 
                              solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
-                             plotOutput("revenue_plot_var"),  width = 4),
+                             plotlyOutput("revenue_plot_var"),  width = 4),
                          
                          box(title = NULL, status = "primary",
                              solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
-                             plotOutput("expense_plot_var"),  width = 4),
+                             plotlyOutput("expense_plot_var"),  width = 4),
                          
                          box(title = NULL, status = "primary", 
                              solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
-                             plotOutput("discharges_plot_var"),  width = 4),
-                         
-                         
-                         box(title = NULL, status = "primary",
-                             solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
-                             plotOutput("cmi_plot_var"),  width = 4),
-                         
-                         box(title = NULL, status = "primary", 
-                             solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
-                             plotOutput("alos_plot_var"),  width = 4),
+                             plotlyOutput("discharges_plot_var"),  width = 4),
                          
                          
                          box(title = NULL, status = "primary",
                              solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
-                             plotOutput("outpt_plot_var"),  width = 4),
+                             plotlyOutput("cmi_plot_var"),  width = 4),
                          
                          box(title = NULL, status = "primary", 
                              solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
-                             plotOutput("operate_plot_var"),  width = 4),
+                             plotlyOutput("alos_plot_var"),  width = 4),
                          
                          
                          box(title = NULL, status = "primary",
                              solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
-                             plotOutput("salary_plot_var"),  width = 4),
+                             plotlyOutput("outpt_plot_var"),  width = 4),
                          
                          box(title = NULL, status = "primary", 
                              solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
-                             plotOutput("supply_plot_var"),  width = 4),
+                             plotlyOutput("operate_plot_var"),  width = 4),
                          
                          
                          box(title = NULL, status = "primary",
                              solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
-                             plotOutput("nurse_plot_var"),  width = 4),
+                             plotlyOutput("salary_plot_var"),  width = 4),
                          
                          box(title = NULL, status = "primary", 
                              solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
-                             plotOutput("carts_plot_var"),  width = 4))
+                             plotlyOutput("supply_plot_var"),  width = 4),
+                         
+                         
+                         box(title = NULL, status = "primary",
+                             solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
+                             plotlyOutput("nurse_plot_var"),  width = 4),
+                         
+                         box(title = NULL, status = "primary", 
+                             solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
+                             plotlyOutput("carts_plot_var"),  width = 4))
                        
               ),
               
@@ -523,7 +523,7 @@ ui <- dashboardPage(
                                                countSelectedText = "{0}/{1} Dates",
                                                dropupAuto = FALSE),
                                              choices = date_options, 
-                                             selected = date_options)),
+                                             selected = date_selected)),
                              
                              column(width = 4,
                                     actionButton("all_filters_update_ytd", 
@@ -533,55 +533,55 @@ ui <- dashboardPage(
                        fluidRow(
                          box(title = NULL, status = "primary",
                              solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
-                             plotOutput("ratio_plot_ytd"),  width = 4),
+                             plotlyOutput("ratio_plot_ytd"),  width = 4),
                          
                          box(title = NULL, status = "primary", 
                              solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
-                             plotOutput("revenue_plot_ytd"),  width = 4),
+                             plotlyOutput("revenue_plot_ytd"),  width = 4),
                          
                          box(title = NULL, status = "primary",
                              solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
-                             plotOutput("expense_plot_ytd"),  width = 4),
+                             plotlyOutput("expense_plot_ytd"),  width = 4),
                          
                          box(title = NULL, status = "primary", 
                              solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
-                             plotOutput("discharges_plot_ytd"),  width = 4),
-                         
-                         
-                         box(title = NULL, status = "primary",
-                             solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
-                             plotOutput("cmi_plot_ytd"),  width = 4),
-                         
-                         box(title = NULL, status = "primary", 
-                             solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
-                             plotOutput("alos_plot_ytd"),  width = 4),
+                             plotlyOutput("discharges_plot_ytd"),  width = 4),
                          
                          
                          box(title = NULL, status = "primary",
                              solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
-                             plotOutput("outpt_plot_ytd"),  width = 4),
+                             plotlyOutput("cmi_plot_ytd"),  width = 4),
                          
                          box(title = NULL, status = "primary", 
                              solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
-                             plotOutput("operate_plot_ytd"),  width = 4),
+                             plotlyOutput("alos_plot_ytd"),  width = 4),
                          
                          
                          box(title = NULL, status = "primary",
                              solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
-                             plotOutput("salary_plot_ytd"),  width = 4),
+                             plotlyOutput("outpt_plot_ytd"),  width = 4),
                          
                          box(title = NULL, status = "primary", 
                              solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
-                             plotOutput("supply_plot_ytd"),  width = 4),
+                             plotlyOutput("operate_plot_ytd"),  width = 4),
                          
                          
                          box(title = NULL, status = "primary",
                              solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
-                             plotOutput("nurse_plot_ytd"),  width = 4),
+                             plotlyOutput("salary_plot_ytd"),  width = 4),
                          
                          box(title = NULL, status = "primary", 
                              solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
-                             plotOutput("carts_plot_ytd"),  width = 4))
+                             plotlyOutput("supply_plot_ytd"),  width = 4),
+                         
+                         
+                         box(title = NULL, status = "primary",
+                             solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
+                             plotlyOutput("nurse_plot_ytd"),  width = 4),
+                         
+                         box(title = NULL, status = "primary", 
+                             solidHeader = TRUE, collapsible = TRUE, closable = TRUE,
+                             plotlyOutput("carts_plot_ytd"),  width = 4))
                        
               )
                 

@@ -303,6 +303,9 @@ hospital_choices <- sort(unique(new_repo$Site))
 date_options <- as.character(unique(new_repo$date))
 mshs_metric_choices <- sort(unique(new_repo$Metrics))
 
+date_selected <- new_repo %>% filter(year == max(year)) %>%  ungroup() %>% select(date)
+date_selected <- as.character(unique(date_selected$date))
+
 metric_choices <- sort(unique(new_repo$Metrics))
 index <- which(metric_choices == "Expense to Revenue Ratio")
 metric_choices <- metric_choices[- index]
@@ -398,7 +401,7 @@ graph_style_break <- function(data, site, metric){
   } else if(metric %in% c("Discharges")) {
     y_range  <- c(-750, 750) 	
     breaks  <- 150
-    ratio_range <- c(-0.25, 0.25)
+    ratio_range <- c(-0.25, 0.75)
     breaks_ratio <- 0.05
   } else if(metric %in% c("CMI")) {
     y_range  <- c(-0.25, 0.25)	
@@ -421,13 +424,15 @@ graph_style_break <- function(data, site, metric){
   if (metric %in% c("CMI", "ALOS", "Discharges")) {
     text_label <- last_data_point$text_label
     y_label <- "Monthly Variance to Budget"
+    y_tick  <- ""
   } else {
     text_label <- paste0("$", last_data_point$text_label)
     y_label <- "Monthly Variance to Budget $"
+    y_tick  <- "$,.0f"
   }
   
   
-  plot_ly(data, x = ~date, y = ~Variance, type = "bar", showlegend = F, 
+ plot_ly(data, x = ~date, y = ~Variance, type = "bar", showlegend = F, 
           marker = list(color =  "#b2b3b2")) %>%
     add_trace(data, x = ~date, y = ~Variance.From.Budget.YTD, type = "scatter", 
               mode = "lines+markers", yaxis = "y2", marker = list(color = "#212070"),
@@ -436,9 +441,11 @@ graph_style_break <- function(data, site, metric){
            yaxis2 = list(title = "<b> YTD Variance To Budget Ratio % </b>",
                          overlaying = "y", side = "right", range = ratio_range, tickformat= ',.0%', 
                          titlefont = list(size = 12)), 
-           xaxis = list(title="<b> Date <b>", titlefont = list(size = 12), showline = TRUE, mirror= "ticks", linewidth = 2),
-           yaxis = list(title= paste0("<b>", y_label,"<b>"), titlefont = list(size = 12), 
-                        range = y_range, showline = TRUE, mirror = "ticks", linewidth = 2))%>%
+           xaxis = list(title="<b> Date <b>", titlefont = list(size = 12), 
+                        showline = TRUE, mirror= "ticks", linewidth = 2, tickangle= -45),
+           yaxis = list(title= paste0("<b>", y_label,"<b>"), tickformat = y_tick, 
+                        titlefont = list(size = 12), range = y_range, showline = TRUE,
+                         mirror = "ticks", linewidth = 2))%>%
     add_text(x = last_data_point$date, y = last_data_point$Variance, 
              text = paste0("<b>", text_label, "<b> "), 
              textposition = "outside center", 
@@ -454,6 +461,8 @@ graph_style_break <- function(data, site, metric){
                   showarrow = FALSE,
                   xref='paper', yref='paper',
                   font = list(size = 12))))
+  
+
 }
 
 
@@ -590,17 +599,21 @@ var_graph_break <- function(data, site, metric) {
   if (metric %in% c("CMI", "ALOS", "Discharges")) {
     text_label <- last_data_point$text_label
     y_label <- "Monthly Variance to Budget"
+    y_tick  <- ""
   } else {
     text_label <- paste0("$", last_data_point$text_label)
     y_label <- "Monthly Variance to Budget $"
+    y_tick  <- "$,.0f"
   }
   
   
   plot_ly(data, x = ~date, y = ~Variance, type = "bar", showlegend = F, 
           marker = list(color =  "#b2b3b2")) %>%
     layout(title= paste0("<b> ", site, " ", metric, "<b>"),
-           xaxis = list(title="<b> Date <b>", titlefont = list(size = 12), showline = TRUE, mirror= "ticks", linewidth = 2),
-           yaxis = list(title= paste0("<b>", y_label,"<b>"), titlefont = list(size = 12), 
+           xaxis = list(title="<b> Date <b>", titlefont = list(size = 12), 
+                        showline = TRUE, mirror= "ticks", linewidth = 2, tickangle= -45),
+           yaxis = list(title= paste0("<b>", y_label,"<b>"), 
+                        titlefont = list(size = 12), tickformat = y_tick,
                         range = y_range, showline = TRUE, mirror = "ticks", linewidth = 2))%>%
     add_text(x = last_data_point$date, y = last_data_point$Variance, 
              text = paste0("<b>", text_label, "<b> "), 
@@ -698,53 +711,52 @@ var_graph_break <- function(data, site, metric) {
 ytd_graph_break <- function(data, site, metric) {
   
   if(metric %in% c("Total Hospital Revenue")) {
-    ratio_range <- c(-24, 16)
-    breaks_ratio <- 4
+    ratio_range <- c(-0.24, 0.16)
+    breaks_ratio <- 0.04
   } else if(metric %in% c("Outpatient Revenue")) {
-    ratio_range <- c(-12, 18)
-    breaks_ratio <- 3
+    ratio_range <- c(-0.12, 0.18)
+    breaks_ratio <- 0.03
   } else if(metric %in% c("340B/Other Operating Revenue")) {
-    ratio_range <- c(-42, 18)
-    breaks_ratio <- 6
+    ratio_range <- c(-0.42, 0.18)
+    breaks_ratio <- 0.06
   } else if(metric %in% c("Total Hospital Expenses")) {
-    ratio_range <- c(-24, 6)
-    breaks_ratio <- 3
+    ratio_range <- c(-0.24, 0.06)
+    breaks_ratio <- 0.03
   } else if(metric %in% c("Salaries and Benefits")) {
-    ratio_range <- c(-12, 10)
-    breaks_ratio <- 2
+    ratio_range <- c(-0.12, 0.10)
+    breaks_ratio <- 0.02
   } else if(metric %in% c("Supplies & Expenses")) {
-    ratio_range <- c(-25, 30)
-    breaks_ratio <- 5
+    ratio_range <- c(-0.25, 0.30)
+    breaks_ratio <- 0.05
   } else if(metric %in% c("CARTS")) {
-    ratio_range <- c(-40, 40)
-    breaks_ratio <- 8
+    ratio_range <- c(-0.40, 0.40)
+    breaks_ratio <- 0.08
   } else if(metric %in% c("Nursing Agency Costs")) {
-    ratio_range <- c(-800, 200)
-    breaks_ratio <- 200
-  } else if(metric %in% c("Discharges")) {
-    ratio_range <- c(-25, 25)
-    breaks_ratio <- 5
-  } else if(metric %in% c("CMI")) {
-    ratio_range <- c(-10, 10)
+    ratio_range <- c(-8, 2)
     breaks_ratio <- 2
+  } else if(metric %in% c("Discharges")) {
+    ratio_range <- c(-0.25, 0.75)
+    breaks_ratio <- 0.05
+  } else if(metric %in% c("CMI")) {
+    ratio_range <- c(-0.10, 0.10)
+    breaks_ratio <- 0.02
   } else if(metric %in% c("ALOS")) {
-    ratio_range <- c(-25, 25)
-    breaks_ratio <- 5
+    ratio_range <- c(-0.25, 0.25)
+    breaks_ratio <- 0.05
   }
   
   
   last_data_point <-  data %>% filter(month == max(month))
   text_color_ratio <- ifelse(last_data_point$Variance.From.Budget.YTD < 0, "red", "black")
-  
-  
-  
-  
+ 
   plot_ly(data, x = ~date, y = ~Variance.From.Budget.YTD, type = "scatter", showlegend = F,
           mode = "lines+markers", marker = list(color = "#212070"),
           line = list(color =  "#212070")) %>%
     layout(title= paste0("<b> ", site, " ", metric, "<b>"),
-           xaxis = list(title="<b> Date <b>", titlefont = list(size = 12), showline = TRUE, mirror= "ticks", linewidth = 2),
-           yaxis = list(title= paste0("<b> YTD Variance to Budget Ratio % <b>"), titlefont = list(size = 12), 
+           xaxis = list(title="<b> Date <b>", titlefont = list(size = 12), 
+                        showline = TRUE, mirror= "ticks", linewidth = 2, tickangle= -45),
+           yaxis = list(title= paste0("<b> YTD Variance to Budget Ratio % <b>"), 
+                        titlefont = list(size = 12), tickformat= ',.0%', 
                         range = ratio_range, showline = TRUE, mirror = "ticks", linewidth = 2))%>%
     add_text(x = last_data_point$date, y = last_data_point$Variance.From.Budget.YTD, 
              text = paste0("<b>", last_data_point$ratio_label,"%", "<b>"),
@@ -754,145 +766,295 @@ ytd_graph_break <- function(data, site, metric) {
 
 
 
-ratio_graph_hosp <- function(data, site) {
-    ggplot(data)  + 
-      geom_rect(xmin= 0, xmax= Inf , aes(ymin = 1, ymax= Inf), fill= "#990000", alpha=0.02)+
-      geom_line(aes(x=date, y= Actual, group = 1), 
-                colour = "#212070", stat="identity", linewidth = 1)+
-      geom_point(mapping = aes(date, Actual),
-                 colour = "#212070", size = 2) +
-      labs(x = "Date", y = "Expense to Revenue Ratio" ,
-           title = paste0(site, " Expense to Revenue Ratio" ))+
-      geom_hline(aes(yintercept= 1), colour="#990000", linetype="dashed")+
-      geom_hline(aes(yintercept = 0))+
-      theme(plot.title = element_text(hjust = 0.5, size = 15),
-            axis.title = element_text(face = "bold", size = 10),
-            axis.text.x = element_text(angle = 45, hjust = 1, face = "bold", size =10),
-            axis.text.y = element_text(face = "bold", size = 10),
-            #text = element_text(face = "bold", size = 1),
-            panel.background = element_rect(fill = "white", color = "black", linewidth = 0.5),
-            panel.grid.major.x = element_blank(),
-            panel.grid.major = element_line(linewidth = 0.5, linetype = 'solid', colour = "grey"),
-            panel.grid.minor = element_line(linewidth = 0.25, colour = "grey"),
-            legend.position = "none")+
-      geom_text(aes(label= Actual, x=date, y= Actual+0.02),
-                position = position_dodge(width = 1), vjust = 0 )+
-      scale_y_continuous(limits=c(0.8, 1.5), breaks = seq(0.8, 1.5, by = 0.1))
-}
+# ratio_graph_hosp <- function(data, site) {
+#     ggplot(data)  +
+#       geom_rect(xmin= 0, xmax= Inf , aes(ymin = 1, ymax= Inf), fill= "#990000", alpha=0.02)+
+#       geom_line(aes(x=date, y= Actual, group = 1),
+#                 colour = "#212070", stat="identity", linewidth = 1)+
+#       geom_point(mapping = aes(date, Actual),
+#                  colour = "#212070", size = 2) +
+#       labs(x = "Date", y = "Expense to Revenue Ratio" ,
+#            title = paste0(site, " Expense to Revenue Ratio" ))+
+#       geom_hline(aes(yintercept= 1), colour="#990000", linetype="dashed")+
+#       geom_hline(aes(yintercept = 0))+
+#       theme(plot.title = element_text(hjust = 0.5, size = 15),
+#             axis.title = element_text(face = "bold", size = 10),
+#             axis.text.x = element_text(angle = 45, hjust = 1, face = "bold", size =10),
+#             axis.text.y = element_text(face = "bold", size = 10),
+#             #text = element_text(face = "bold", size = 1),
+#             panel.background = element_rect(fill = "white", color = "black", linewidth = 0.5),
+#             panel.grid.major.x = element_blank(),
+#             panel.grid.major = element_line(linewidth = 0.5, linetype = 'solid', colour = "grey"),
+#             panel.grid.minor = element_line(linewidth = 0.25, colour = "grey"),
+#             legend.position = "none")+
+#       geom_text(aes(label= Actual, x=date, y= Actual+0.02),
+#                 position = position_dodge(width = 1), vjust = 0 )+
+#       scale_y_continuous(limits=c(0.8, 1.5), breaks = seq(0.8, 1.5, by = 0.1))
+# }
 
 
 
-graph_style <- function(data,site, metric,  min, max, text, y_label, ratio){
-  data_end <- data %>% filter(month == max(month))
+# graph_style <- function(data,site, metric,  min, max, text, y_label, ratio){
+#   data_end <- data %>% filter(month == max(month))
+# 
+# 
+#   p1 <- ggplot(data)  +
+#     geom_bar(aes(x=date, y= Variance), stat="identity", fill= "#b2b3b2")+
+#     labs(x = "Date", y = y_label,
+#          title = paste0(site, " ", metric),
+#          subtitle = paste0("($ in Thousands)"))+
+#     theme(plot.title = element_textbox_simple(size = 15, halign=0.5),
+#           plot.subtitle = element_text(hjust = 0.5, size = 10),
+#           axis.title = element_text(face='bold'),
+#           legend.text = element_text(size = 6),
+#           axis.text.x = element_text(angle = 45, hjust = 1, face = "bold"),
+#           axis.text.y = element_text(face = "bold", size = 10),
+#           panel.background = element_rect(fill = "white", color = "black", linewidth = 0.5),
+#           panel.grid.major.x = element_blank(),
+#           panel.grid.major = element_line(linewidth = 0.5, linetype = 'solid', colour = "grey"),
+#           panel.grid.minor = element_line(linewidth = 0.25, colour = "grey"),
+#           legend.position = "non")+
+#     geom_text_repel(aes(label= data_end$text_label,
+#                   x=date, y= Variance, color = sign),
+#               data = data_end,
+#               position = position_dodge(width = 1), fontface = "bold",
+#               vjust = 0.5- sign(data_end$Variance)/2,
+#               size = 3)+
+#     scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "black"))+
+#     geom_hline(aes(yintercept = 0))
+# 
+#   p1 <- p1 +
+#     geom_line(mapping = aes(date, Variance_scaled, group = 1),
+#               colour = "#212070", linewidth = 1.0) +
+#     geom_point(mapping = aes(date, Variance_scaled),
+#                colour = "#212070", size = 1.6) +
+#     scale_y_continuous(limits=c(min, max),
+#                        sec.axis = ggplot2::sec_axis(~. / ratio ,
+#                                                     labels = scales::label_percent(scale = 1),
+#                                                     name = "YTD Variance To Budget Ratio %"))+
+#     geom_text_repel(aes(label= paste0(data_end$ratio_label, "%"),
+#                   x=date, y= Variance_scaled, color = sign.YTD),
+#               data = data_end,
+#               position = position_dodge(width = 1), fontface='bold',
+#               vjust = 0.5 - sign(data_end$Variance.From.Budget.YTD)/2, size = 3 )
+# 
+#   return(p1)
+# }
+
+
+graph_style <- function(data,site, metric){
   
-  p1 <- ggplot(data)  + 
-    geom_bar(aes(x=date, y= Variance), stat="identity", fill= "#b2b3b2")+
-    labs(x = "Date", y = y_label, 
-         title = paste0(site, " ", metric),
-         subtitle = paste0("($ in Thousands)"))+
-    theme(plot.title = element_textbox_simple(size = 15, halign=0.5),
-          plot.subtitle = element_text(hjust = 0.5, size = 10),
-          axis.title = element_text(face='bold'),
-          legend.text = element_text(size = 6),
-          axis.text.x = element_text(angle = 45, hjust = 1, face = "bold"),
-          axis.text.y = element_text(face = "bold", size = 10),
-          panel.background = element_rect(fill = "white", color = "black", linewidth = 0.5),
-          panel.grid.major.x = element_blank(),
-          panel.grid.major = element_line(linewidth = 0.5, linetype = 'solid', colour = "grey"),
-          panel.grid.minor = element_line(linewidth = 0.25, colour = "grey"),
-          legend.position = "non")+
-    geom_text_repel(aes(label= data_end$text_label, 
-                  x=date, y= Variance, color = sign),
-              data = data_end,
-              position = position_dodge(width = 1), fontface = "bold",
-              vjust = 0.5- sign(data_end$Variance)/2, 
-              size = 3)+
-    scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "black"))+
-    geom_hline(aes(yintercept = 0)) 
+  last_data_point <-  data %>% filter(month == max(month), year == max(year))
+  text_color <- ifelse(last_data_point$Variance < 0, "red", "black")
+  text_color_ratio <- ifelse(last_data_point$Variance.From.Budget.YTD < 0, "red", "black")
   
-  p1 <- p1 +
-    geom_line(mapping = aes(date, Variance_scaled, group = 1),
-              colour = "#212070", linewidth = 1.0) +
-    geom_point(mapping = aes(date, Variance_scaled),
-               colour = "#212070", size = 1.6) +
-    scale_y_continuous(limits=c(min, max), 
-                       sec.axis = ggplot2::sec_axis(~. / ratio , 
-                                                    labels = scales::label_percent(scale = 1),
-                                                    name = "YTD Variance To Budget Ratio %"))+
-    geom_text_repel(aes(label= paste0(data_end$ratio_label, "%"),
-                  x=date, y= Variance_scaled, color = sign.YTD),
-              data = data_end,
-              position = position_dodge(width = 1), fontface='bold',
-              vjust = 0.5 - sign(data_end$Variance.From.Budget.YTD)/2, size = 3 )
+  # Define different labels for metrics    
+  if (metric %in% c("CMI", "ALOS", "Discharges")) {
+    text_label <- last_data_point$text_label
+    y_label <- "Monthly Variance to Budget"
+    y_tick  <- ""
+  } else {
+    text_label <- paste0("$", last_data_point$text_label)
+    y_label <- "Monthly Variance to Budget $"
+    y_tick  <- "$,.0f"
+  }
   
-  return(p1)
-}
-
-
-
-# graph functions
-ytd_graph <- function(data, site, metric, min, max) {
   
-  ggplot(data)  + 
-    geom_line(aes(x=date, y= Variance.From.Budget.YTD, group = 1), 
-              colour = "#212070", stat="identity", linewidth = 1.25)+
-    geom_point(mapping = aes(date, Variance.From.Budget.YTD),
-               colour = "#212070", size = 3) +
-    labs(x = "Date", y = "YTD Variance to Budget Ratio %" , 
-         title = paste0(site, " " , metric ))+
-    theme(plot.title = element_textbox_simple(size = 15, halign=0.5),
-          plot.subtitle = element_text(hjust = 0.5, size = 10),
-          axis.title = element_text(face = "bold"),
-          legend.text = element_text(size = 6),
-          axis.text.x = element_text(angle = 45, hjust = 1, face = "bold"),
-          axis.text.y = element_text(face = "bold",  size = 10),
-          panel.background = element_rect(fill = "white", color = "black", linewidth = 0.5),
-          panel.grid.major.x = element_blank(),
-          panel.grid.major = element_line(linewidth = 0.5, linetype = 'solid', colour = "grey"),
-          panel.grid.minor = element_line(linewidth = 0.25, colour = "grey"),
-          legend.position = "none")+
-    geom_text(aes(label= paste0(data$ratio_label, "%"), 
-                  x=date, y= Variance.From.Budget.YTD, color= sign.YTD),
-              position = position_dodge(width = 1), fontface = "bold",
-              vjust = 0.5 - sign(data$Variance.From.Budget.YTD), size = 4)+
-    scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "black"))+
-    scale_y_continuous(limits=c(min, max))+
-    geom_hline(aes(yintercept = 0))
+  plot_ly(data, x = ~date, y = ~Variance, type = "bar", showlegend = F, 
+          marker = list(color =  "#b2b3b2")) %>%
+    add_trace(data, x = ~date, y = ~Variance.From.Budget.YTD, type = "scatter", 
+              mode = "lines+markers", yaxis = "y2", marker = list(color = "#212070"),
+              line = list(color =  "#212070")) %>%
+    layout(title= paste0("<b> ", site, " ", metric, "<b>"),
+           yaxis2 = list(title = "<b> YTD Variance To Budget Ratio % </b>",
+                         scaleratio = 1, constraintoward = "bottom",
+                         overlaying = "y",  side = "right", tickformat= ',.0%', 
+                         titlefont = list(size = 12)), 
+           xaxis = list(title="<b> Date <b>", titlefont = list(size = 12), 
+                        showline = TRUE, mirror= "ticks", linewidth = 2, tickangle= -45),
+           yaxis = list(title= paste0("<b>", y_label,"<b>"), 
+                        titlefont = list(size = 12), tickformat = y_tick,
+                         showline = TRUE, mirror = "ticks", linewidth = 2))%>%
+    add_text(x = last_data_point$date, y = last_data_point$Variance, 
+             text = paste0("<b>", text_label, "<b> "), 
+             textposition = "outside center", 
+             textfont = list(color = text_color, size = 10))%>%
+    add_text(x = last_data_point$date, y = last_data_point$Variance.From.Budget.YTD, 
+             text = paste0("<b>", last_data_point$ratio_label,"%", "<b>"), 
+             textposition = "outside center", textfont = list(color = text_color_ratio, size = 10))%>%
+    layout(margin = list(l = 50, r = 50, t = 50, b = 50),
+           annotations = list(
+             list(x = 0.5,  
+                  y = 1.09,   
+                  text = "($ in Thousands)",
+                  showarrow = FALSE,
+                  xref='paper', yref='paper',
+                  font = list(size = 12))))
   
-}
-
-var_graph <- function(data, site, metric, min, max, y_label, text) {
-  
-  ggplot(data)  + 
-    geom_bar(aes(x=date, y= Variance), stat="identity", fill= "#b2b3b2")+
-    labs(x = "Date", y = y_label, 
-         title = paste0(site , " ", metric),
-         subtitle = paste0("($ in Thousands)"))+
-    theme(plot.title = element_textbox_simple(size = 15, halign=0.5),
-          plot.subtitle = element_text(hjust = 0.5, size = 10),
-          axis.title = element_text(face = "bold"),
-          legend.text = element_text(size = 6),
-          axis.text.x = element_text(angle = 45, hjust = 1, face = "bold"),
-          axis.text.y = element_text(face = "bold",  size = 10),
-          panel.background = element_rect(fill = "white", color = "black", linewidth = 0.5),
-          panel.grid.major = element_line(linewidth = 0.5, linetype = 'solid', colour = "grey"),
-          panel.grid.major.x = element_blank(),
-          panel.grid.minor = element_line(linewidth = 0.25, colour = "grey"),
-          legend.position = "non")+
-    geom_text(aes(label= text, x=date, y= Variance, color = sign),
-              position = position_dodge(width = 1), fontface = "bold",
-              vjust = 0.5 - sign(data$Variance)/2, size = 4)+
-    scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "black"))+
-    scale_y_continuous(limits=c(min, max))+
-    geom_hline(aes(yintercept = 0))
   
 }
 
 
 
 
+# # graph functions
+# ytd_graph <- function(data, site, metric, min, max) {
+#   
+# 
+#   ggplot(data)  + 
+#     geom_line(aes(x=date, y= Variance.From.Budget.YTD, group = 1), 
+#               colour = "#212070", stat="identity", linewidth = 1.25)+
+#     geom_point(mapping = aes(date, Variance.From.Budget.YTD),
+#                colour = "#212070", size = 3) +
+#     labs(x = "Date", y = "YTD Variance to Budget Ratio %" , 
+#          title = paste0(site, " " , metric ))+
+#     theme(plot.title = element_textbox_simple(size = 15, halign=0.5),
+#           plot.subtitle = element_text(hjust = 0.5, size = 10),
+#           axis.title = element_text(face = "bold"),
+#           legend.text = element_text(size = 6),
+#           axis.text.x = element_text(angle = 45, hjust = 1, face = "bold"),
+#           axis.text.y = element_text(face = "bold",  size = 10),
+#           panel.background = element_rect(fill = "white", color = "black", linewidth = 0.5),
+#           panel.grid.major.x = element_blank(),
+#           panel.grid.major = element_line(linewidth = 0.5, linetype = 'solid', colour = "grey"),
+#           panel.grid.minor = element_line(linewidth = 0.25, colour = "grey"),
+#           legend.position = "none")+
+#     geom_text(aes(label= paste0(data$ratio_label, "%"), 
+#                   x=date, y= Variance.From.Budget.YTD, color= sign.YTD),
+#               position = position_dodge(width = 1), fontface = "bold",
+#               vjust = 0.5 - sign(data$Variance.From.Budget.YTD), size = 4)+
+#     scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "black"))+
+#     scale_y_continuous(limits=c(min, max))+
+#     geom_hline(aes(yintercept = 0))
+#   
+# }
+# 
+# var_graph <- function(data, site, metric, min, max, y_label, text) {
+#   
+# 
+#   ggplot(data)  + 
+#     geom_bar(aes(x=date, y= Variance), stat="identity", fill= "#b2b3b2")+
+#     labs(x = "Date", y = y_label, 
+#          title = paste0(site , " ", metric),
+#          subtitle = paste0("($ in Thousands)"))+
+#     theme(plot.title = element_textbox_simple(size = 15, halign=0.5),
+#           plot.subtitle = element_text(hjust = 0.5, size = 10),
+#           axis.title = element_text(face = "bold"),
+#           legend.text = element_text(size = 6),
+#           axis.text.x = element_text(angle = 45, hjust = 1, face = "bold"),
+#           axis.text.y = element_text(face = "bold",  size = 10),
+#           panel.background = element_rect(fill = "white", color = "black", linewidth = 0.5),
+#           panel.grid.major = element_line(linewidth = 0.5, linetype = 'solid', colour = "grey"),
+#           panel.grid.major.x = element_blank(),
+#           panel.grid.minor = element_line(linewidth = 0.25, colour = "grey"),
+#           legend.position = "non")+
+#     geom_text(aes(label= text, x=date, y= Variance, color = sign),
+#               position = position_dodge(width = 1), fontface = "bold",
+#               vjust = 0.5 - sign(data$Variance)/2, size = 4)+
+#     scale_colour_manual(values=c("negative"= "#D2042D", "positive"= "black"))+
+#     scale_y_continuous(limits=c(min, max))+
+#     geom_hline(aes(yintercept = 0))
+#   
+# }
+# 
 
 
+
+var_graph <- function(data, site, metric) {
+  
+
+  if( (max(data$Variance, na.rm = TRUE))*1.2 < 0){
+    max_value <- 0
+  } else {
+    max_value <- (max(data$Variance, na.rm = TRUE))*1.2
+  }
+  
+  if( (min(data$Variance, na.rm = TRUE))*1.2 > 0){
+    min_value <- 0
+  } else {
+    min_value <- (min(data$Variance, na.rm = TRUE))*1.2
+  }
+  
+    y_range <- c(min_value, max_value) 	
+    
+  
+    
+  last_data_point <-  data %>% filter(month == max(month), year == max(year))
+  text_color <- ifelse(last_data_point$Variance < 0, "red", "black")
+  
+  # Define different labels for metrics    
+  if (metric %in% c("CMI", "ALOS", "Discharges")) {
+    text_label <- last_data_point$text_label
+    y_label <- "Monthly Variance to Budget"
+    y_tick  <- ""
+  } else {
+    text_label <- paste0("$", last_data_point$text_label)
+    y_label <- "Monthly Variance to Budget $"
+    y_tick  <- "$,.0f"
+  }
+  
+  
+  plot_ly(data, x = ~date, y = ~Variance, type = "bar", showlegend = F, 
+          marker = list(color =  "#b2b3b2")) %>%
+    layout(title= paste0("<b> ", site, " ", metric, "<b>"),
+           xaxis = list(title="<b> Date <b>", titlefont = list(size = 12), 
+                        showline = TRUE, mirror= "ticks", linewidth = 2, tickangle= -45),
+           yaxis = list(title= paste0("<b>", y_label,"<b>"), tickformat = y_tick,
+                        titlefont = list(size = 12), 
+                        range = y_range, showline = TRUE, mirror = "ticks", linewidth = 2))%>%
+    add_text(x = last_data_point$date, y = last_data_point$Variance, 
+             text = paste0("<b>", text_label, "<b> "), 
+             textposition = "outside center",  
+             textfont = list(color = text_color, size = 10))%>%
+    layout(margin = list(l = 50, r = 50, t = 50, b = 50),
+           annotations = list(
+             list(x = 0.5,  
+                  y = 1.09,   
+                  text = "($ in Thousands)",
+                  showarrow = FALSE,
+                  xref='paper', yref='paper',
+                  font = list(size = 12))))
+}
+
+
+
+ytd_graph <- function(data, site, metric) {
+  
+  
+  if( (max(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.2 < 0){
+    max_value_ytd <- 0
+  } else {
+    max_value_ytd <- (max(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.2
+  }
+  
+  if( (min(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.2 > 0){
+    min_value_ytd <- 0
+  } else {
+    min_value_ytd <- (min(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.2
+  }
+  
+  
+    ratio_range <- c(min_value_ytd, max_value_ytd)
+    
+  
+  
+  last_data_point <-  data %>% filter(month == max(month), year == max(year))
+  text_color_ratio <- ifelse(last_data_point$Variance.From.Budget.YTD < 0, "red", "black")
+  
+  plot_ly(data, x = ~date, y = ~Variance.From.Budget.YTD, type = "scatter", showlegend = F,
+          mode = "lines+markers", marker = list(color = "#212070"),
+          line = list(color =  "#212070")) %>%
+    layout(title= paste0("<b> ", site, " ", metric, "<b>"),
+           xaxis = list(title="<b> Date <b>", titlefont = list(size = 12), 
+                        showline = TRUE, mirror= "ticks", linewidth = 2, tickangle= -45),
+           yaxis = list(title= paste0("<b> YTD Variance to Budget Ratio % <b>"), 
+                        titlefont = list(size = 12), tickformat= ',.0%',
+                        range = ratio_range, showline = TRUE, mirror = "ticks", linewidth = 2))%>%
+    add_text(x = last_data_point$date, y = last_data_point$Variance.From.Budget.YTD, 
+             text = paste0("<b>", last_data_point$ratio_label,"%", "<b>"),
+             textposition = "top center", textfont = list(color = text_color_ratio, size = 10))%>%
+    layout(margin = list(l = 50, r = 50, t = 50, b = 50))
+}
 
 
 
