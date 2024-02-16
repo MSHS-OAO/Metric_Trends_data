@@ -401,8 +401,8 @@ graph_style_break <- function(data, site, metric){
   } else if(metric %in% c("Discharges")) {
     y_range  <- c(-750, 750) 	
     breaks  <- 150
-    ratio_range <- c(-0.25, 0.75)
-    breaks_ratio <- 0.05
+    ratio_range <- c(-0.75, 0.75)
+    breaks_ratio <- 0.5
   } else if(metric %in% c("CMI")) {
     y_range  <- c(-0.25, 0.25)	
     breaks  <- 0.05

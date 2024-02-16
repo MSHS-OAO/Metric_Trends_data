@@ -920,7 +920,7 @@ server <- function(input, output, session) {
     # graph_style(data, site = isolate(input$all_hospital), metric = metric_choice, min =  min_value,
     #             max = max_value, text = text_label, y_label = y_label, ratio = ratio)
     
-    graph_style(data, site = isolate(input$all_hospital), metric = metric_choice)
+    graph_style_break(data, site = isolate(input$all_hospital), metric = metric_choice)
   })
   
   
@@ -965,7 +965,7 @@ server <- function(input, output, session) {
     # y_label <- "Monthly Variance to Budget $"
     
    
-    graph_style(data, site = isolate(input$all_hospital), metric = metric_choice)
+    graph_style_break(data, site = isolate(input$all_hospital), metric = metric_choice)
   })
   
   output$discharges_plot <- renderPlotly({
@@ -1009,7 +1009,7 @@ server <- function(input, output, session) {
     # text_label <- data$text_label
     # y_label <- "Monthly Variance to Budget"
     
-    graph_style(data, site = isolate(input$all_hospital), metric = metric_choice)
+    graph_style_break(data, site = isolate(input$all_hospital), metric = metric_choice)
   })
   
   output$cmi_plot <- renderPlotly({
@@ -1052,7 +1052,7 @@ server <- function(input, output, session) {
     # text_label <- data$text_label
     # y_label <- "Monthly Variance to Budget"
     # 
-    graph_style(data, site = isolate(input$all_hospital), metric = metric_choice)
+    graph_style_break(data, site = isolate(input$all_hospital), metric = metric_choice)
     
   })
   
@@ -1101,7 +1101,7 @@ server <- function(input, output, session) {
     # text_label <- data$text_label
     # y_label <- "Monthly Variance to Budget"
     
-    graph_style(data, site = isolate(input$all_hospital), metric = metric_choice)
+    graph_style_break(data, site = isolate(input$all_hospital), metric = metric_choice)
   })
   
   
@@ -1146,7 +1146,7 @@ server <- function(input, output, session) {
     # y_label <- "Monthly Variance to Budget $"
     
     
-    graph_style(data, site = isolate(input$all_hospital), metric = metric_choice)
+    graph_style_break(data, site = isolate(input$all_hospital), metric = metric_choice)
     
   })
   
@@ -1191,7 +1191,7 @@ server <- function(input, output, session) {
     # text_label <- paste0("$", data$text_label)
     # y_label <- "Monthly Variance to Budget $"
     
-    graph_style(data, site = isolate(input$all_hospital), metric = metric_choice)
+    graph_style_break(data, site = isolate(input$all_hospital), metric = metric_choice)
   })
   
   output$salary_plot <- renderPlotly({
@@ -1235,7 +1235,7 @@ server <- function(input, output, session) {
     # text_label <- paste0("$", data$text_label)
     # y_label <- "Monthly Variance to Budget $"
     
-    graph_style(data, site = isolate(input$all_hospital), metric = metric_choice)
+    graph_style_break(data, site = isolate(input$all_hospital), metric = metric_choice)
   })
   
   output$supply_plot <- renderPlotly({
@@ -1279,7 +1279,7 @@ server <- function(input, output, session) {
     # text_label <- paste0("$", data$text_label)
     # y_label <- "Monthly Variance to Budget $"
     
-    graph_style(data, site = isolate(input$all_hospital), metric = metric_choice)
+    graph_style_break(data, site = isolate(input$all_hospital), metric = metric_choice)
   })
   
   output$nurse_plot <- renderPlotly({
@@ -1322,7 +1322,7 @@ server <- function(input, output, session) {
     # text_label <- paste0("$", data$text_label)
     # y_label <- "Monthly Variance to Budget $"
     
-    graph_style(data, site = isolate(input$all_hospital), metric = metric_choice)
+    graph_style_break(data, site = isolate(input$all_hospital), metric = metric_choice)
   })
   
   output$carts_plot <- renderPlotly({
@@ -1365,7 +1365,7 @@ server <- function(input, output, session) {
     # text_label <- paste0("$", data$text_label)
     # y_label <- "Monthly Variance to Budget $"
     
-    graph_style(data, site = isolate(input$all_hospital), metric = metric_choice)
+    graph_style_break(data, site = isolate(input$all_hospital), metric = metric_choice)
   })
   
   ## Monthly Variance tab ----------------------
@@ -1451,7 +1451,7 @@ server <- function(input, output, session) {
     var_graph(data, site =hospital, metric = metric_option)
   })
   
-  output$discharges_plot_var <- renderPlotly({
+  outputdischarges_plot_var <- renderPlotly({
     
     metric_option <-  "Discharges"
     hospital <- isolate(input$all_hospital_var)
