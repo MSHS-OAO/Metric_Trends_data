@@ -35,8 +35,9 @@ repo <- read.csv(repo_file)
 
 
 # Get file names in raw data folder
-raw_data_list <- file.info(list.files(path = paste0(dir,"Monthly Financial Data/"), full.names = T)) %>%
+raw_data_list <- file.info(list.files(path = paste0(dir, "Monthly Financial Data/"), pattern = "^[^~]", full.names = T)) %>%
                                 arrange(mtime)
+ 
 
 # Select new data
 new_metric_data <- basename(rownames(raw_data_list))[!(basename(rownames(raw_data_list)) 
