@@ -9,23 +9,23 @@ server <- function(input, output, session) {
   # Text output ---------------------------------
   ### Text output for Metrics tab -------------------------------
   system_text <- eventReactive(input$mshs_filters_update, {
-    end_date <- isolate(max(input$mshs_date_range))
-    start_date <- isolate(min(input$mshs_date_range))
+    end_date <- isolate(tail(input$mshs_date_range, 1))
+    start_date <- isolate(input$mshs_date_range[1])
     metric <- isolate(input$mshs_metrics)
    paste0("Based on data from ", start_date, " to ", end_date, " for ", metric)
   }, ignoreNULL = FALSE)
   
   var_text <- eventReactive(input$mshs_filters_update_var, {
-    end_date <- isolate(max(input$var_date_range))
-    start_date <- isolate(min(input$var_date_range))
+    end_date <- isolate(tail(input$var_date_range, 1))
+    start_date <- isolate(input$var_date_range[1])
     metric <- isolate(input$var_metrics)
     paste0("Based on data from ", start_date, " to ", end_date, " for ", metric)
   }, ignoreNULL = FALSE)
   
   
   ytd_text <- eventReactive(input$mshs_filters_update_ytd, {
-    end_date <- isolate(max(input$mshs_date_range_ytd))
-    start_date <- isolate(min(input$mshs_date_range_ytd))
+    end_date <- isolate(tail(input$mshs_date_range_ytd, 1))
+    start_date <- isolate(input$mshs_date_range_ytd[1])
     metric <- isolate(input$mshs_metrics_ytd)
     paste0("Based on data from ", start_date, " to ", end_date, " for ", metric)
   }, ignoreNULL = FALSE)
@@ -55,22 +55,22 @@ server <- function(input, output, session) {
 
   ### Text output for Hospital tab -------------------------------
   all_mshs_text <- eventReactive(input$all_filters_update, {
-    end_date <- isolate(max(input$all_date_range))
-    start_date <- isolate(min(input$all_date_range))
+    end_date <- isolate(tail(input$all_date_range, 1))
+    start_date <- isolate(input$all_date_range[1])
     hospitals <- isolate(input$all_hospital)
     paste0("Based on data from ", start_date, " to ", end_date, " for ", hospitals)
   }, ignoreNULL = FALSE)
   
   all_mshs_text_var <- eventReactive(input$all_filters_update_var, {
-    end_date <- isolate(max(input$all_date_range_var))
-    start_date <- isolate(min(input$all_date_range_var))
+    end_date <- isolate(tail(input$all_date_range_var, 1))
+    start_date <- isolate(input$all_date_range_var[1])
     hospitals <- isolate(input$all_hospital_var)
     paste0("Based on data from ", start_date, " to ", end_date, " for ", hospitals)
   }, ignoreNULL = FALSE)
   
   all_mshs_text_ytd <- eventReactive(input$all_filters_update_ytd, {
-    end_date <- isolate(max(input$all_date_range_ytd))
-    start_date <- isolate(min(input$all_date_range_ytd))
+    end_date <- isolate(tail(input$all_date_range_ytd, 1))
+    start_date <- isolate(input$all_date_range_ytd[1])
     hospitals <- isolate(input$all_hospital_ytd)
     paste0("Based on data from ", start_date, " to ", end_date, " for ", hospitals)
   }, ignoreNULL = FALSE)
@@ -100,10 +100,10 @@ server <- function(input, output, session) {
   
   ### Text output for Ratio tab -------------------------------
   ratio_mshs_text <- eventReactive(input$ratio_filters_update, {
-    end_date <- isolate(max(input$ratio_date_range))
-    start_date <- isolate(min(input$ratio_date_range))
+    end_date <- isolate(tail(input$ratio_date_range, 1))
+    start_date <- isolate(input$ratio_date_range[1])
     hospitals <- isolate(input$ratio_hospital)
-    paste0("Based on data from ", start_date, " to ", end_date, " for ", hospitals)
+    paste0("Based on data from ", end_date, " to ", start_date, " for ", hospitals)
   }, ignoreNULL = FALSE)
   
   output$ratio_date_show <- renderText({

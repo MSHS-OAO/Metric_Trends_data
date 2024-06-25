@@ -234,12 +234,17 @@ write.csv(new_repo, paste0(dir, "REPO/Metric_Trends_Data_updated_",
 #   arrange(month, year)
 
 
+
+new_repo <- new_repo %>% mutate(sortedDate = as.Date(paste0("01-", date), format = "%d-%b-%y"))%>%
+  arrange(sortedDate)
+
 new_repo <- new_repo %>%
   mutate(date = paste0(month.abb[c(month)], "-", substr(year, 3, 4)))
+
 levels_options <- unique(new_repo$date)
 new_repo <- new_repo %>%
-  mutate(date = factor(date, levels = levels_options))%>%
-  arrange(month, year)
+  mutate(date = factor(date, levels = levels_options))
+
 
 # fill na with zero if one of the Actual or Budget is available 
 new_repo <- new_repo %>% mutate(Actual = ifelse(!is.na(Budget) & is.na(Actual), 0, Actual),
@@ -304,7 +309,10 @@ hospital_choices <- sort(unique(new_repo$Site))
 date_options <- as.character(unique(new_repo$date))
 mshs_metric_choices <- sort(unique(new_repo$Metrics))
 
-date_selected <- new_repo %>% filter(year == max(year)) %>%  ungroup() %>% select(date)
+max_year <- max(new_repo$year)
+
+date_selected <- new_repo %>% filter(year == max_year) %>%
+  ungroup() %>% select(date)
 date_selected <- as.character(unique(date_selected$date))
 
 metric_choices <- sort(unique(new_repo$Metrics))
