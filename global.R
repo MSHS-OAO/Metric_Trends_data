@@ -100,28 +100,24 @@ data <- data %>% mutate_at(colnames(data[,2:19]), as.numeric)
 
 # Create Expense to Revenue Ratio
 exp_rev <- data %>%
-  filter(Metrics %in% c("Total Hospital Expenses", "Total Hospital Revenue"))%>%
-  select(-c("Filename", "month", "year"))
+  filter(Metrics %in% c("Total Hospital Expenses", "Total Hospital Revenue"))
+
 
 # change th data from long to wide
-exp_rev <-  dcast(melt(exp_rev, id.vars=c("Metrics")), variable ~ Metrics )
+exp_rev <-  dcast(melt(exp_rev, id.vars=c("Metrics", "Filename", "month", "year")), 
+                  Filename + month + year + variable ~ Metrics )
 
 exp_rev <- exp_rev %>% 
   mutate( `Total Hospital Expenses`= as.numeric(`Total Hospital Expenses`),
           `Total Hospital Revenue` = as.numeric(`Total Hospital Revenue`),
           `Expense to Revenue Ratio` = round(`Total Hospital Expenses`/`Total Hospital Revenue`, 2))
 
+
 # change th data from wide to long
 exp_rev <- exp_rev %>% 
-  select(variable, `Expense to Revenue Ratio`)%>%
-  spread(key = variable, value = `Expense to Revenue Ratio`)
-
-# Add other metrics
-exp_rev <- exp_rev %>%
-  mutate(Metrics= "Expense to Revenue Ratio",
-         Filename = unique(data$Filename), 
-         month = unique(data$month),
-         year = unique(data$year))
+  select(-c( `Total Hospital Expenses`, `Total Hospital Revenue`))%>%
+  spread(key = variable, value = `Expense to Revenue Ratio`)%>%
+  mutate(Metrics= "Expense to Revenue Ratio")
 
 # Bind data and exp_rev        
 data <- rbind(data, exp_rev)
@@ -129,11 +125,13 @@ data <- rbind(data, exp_rev)
 
 # Create Salaries and Benefits
 salary <- data %>%
-  filter(Metrics %in% c("Salaries & Wages", "Contractual & Other Benefits"))%>%
-  select(-c("Filename", "month", "year"))
+  filter(Metrics %in% c("Salaries & Wages", "Contractual & Other Benefits"))
+  
 
 # change th data from long to wide
-salary <- dcast(melt(salary, id.vars=c("Metrics")), variable ~ Metrics )
+salary <- dcast(melt(salary, id.vars=c("Metrics", "Filename", "month", "year")),
+                  Filename + month + year + variable ~ Metrics )
+
 
 # estimate salaries and benefit
 salary <- salary %>% 
@@ -143,12 +141,9 @@ salary <- salary %>%
 
 # change th data from wide to long
 salary <- salary %>% 
-  select(variable, `Salaries and Benefits`)%>%
+  select(-c(`Salaries & Wages`, `Contractual & Other Benefits`))%>%
   spread(key = variable, value = `Salaries and Benefits`) %>%
-  mutate(Metrics= "Salaries and Benefits",
-         Filename = unique(data$Filename), 
-         month = unique(data$month),
-         year = unique(data$year))
+  mutate(Metrics= "Salaries and Benefits")
 
 # Bind data and salary
 data <- rbind(data, salary)
@@ -157,21 +152,18 @@ data <- rbind(data, salary)
 #Create 340B/Other Operating Revenue
 operating <- data %>%
   filter(Metrics %in% c("Other Operating", "340B Pharmacy Program"))%>%
-  select(-c("Filename", "month", "year")) %>%
   replace(is.na(.), 0) 
   
 # change th data from long to wide
-operating <- dcast(melt(operating, id.vars=c("Metrics")), variable ~ Metrics )
+operating <- dcast(melt(operating, id.vars=c("Metrics", "Filename", "month", "year")),
+                   Filename + month + year + variable ~ Metrics )
 
 # estimate 340B/Other Operating Revenue and change the data to long
 operating <- operating %>%
   mutate(`340B/Other Operating Revenue`= `340B Pharmacy Program`+ `Other Operating`)%>%
-  select(-c("340B Pharmacy Program", "Other Operating"))%>%
+  select(-c(`340B Pharmacy Program`, `Other Operating`))%>%
    spread(key = variable, value = `340B/Other Operating Revenue`) %>%
-   mutate(Metrics= "340B/Other Operating Revenue",
-         Filename = unique(data$Filename), 
-         month = unique(data$month),
-         year = unique(data$year))
+   mutate(Metrics= "340B/Other Operating Revenue")
 
 
 # Bind data and salary
@@ -181,8 +173,6 @@ data <- rbind(data, operating)
 data <- data %>%
   filter(!(Metrics %in% c("Salaries & Wages", "Contractual & Other Benefits",
                       "340B Pharmacy Program", "Other Operating")))
-
-
 
 data <- data %>%
   mutate(Metrics = ifelse(Metrics == "Outpatient", "Outpatient Revenue", Metrics),
@@ -203,8 +193,7 @@ budget <- data %>%
 
 
 # merge actual and budget data
-final_data <- left_join(actual, budget %>%
-              select("Metrics", "Site", "Budget"), by = c("Metrics", "Site"))
+final_data <- left_join(actual, budget , by = c( "Metrics", "Filename", "month", "year","Site"))
 
 
 
@@ -227,19 +216,16 @@ write.csv(new_repo, paste0(dir, "REPO/Metric_Trends_Data_updated_",
 
 
 # Define date variable
-# new_repo <- new_repo %>%
-#   mutate(month= ifelse(nchar(month) < 2, paste0("0", month), month),
-#          date = paste0(year, "-", month),
-#          month= as.numeric(month)) %>%
-#   arrange(month, year)
+new_repo <- new_repo %>%
+  mutate(month= ifelse(nchar(month) < 2, paste0("0", month), month),
+         date = paste0(year, "-", month))
+        
 
-
-
-new_repo <- new_repo %>% mutate(sortedDate = as.Date(paste0("01-", date), format = "%d-%b-%y"))%>%
+new_repo <- new_repo %>% mutate(sortedDate = as.Date(paste0(date,  "-01")))%>%
   arrange(sortedDate)
 
 new_repo <- new_repo %>%
-  mutate(date = paste0(month.abb[c(month)], "-", substr(year, 3, 4)))
+  mutate(date = paste0(month.abb[c(as.numeric(month))], "-", substr(year, 3, 4)))
 
 levels_options <- unique(new_repo$date)
 new_repo <- new_repo %>%
@@ -261,7 +247,7 @@ metrics_dif <- c("CARTS", "Nursing Agency Costs", "Salaries and Benefits",
 
 #define Variance
 new_repo <- new_repo %>%
-  group_by(Site, Metrics, year) %>%
+  group_by(Site, Metrics) %>%
   mutate(Variance = ifelse(Metrics %in% metrics_dif, 
                                       round(Budget - Actual, 2),
                                       round(Actual - Budget, 2)))
