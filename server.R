@@ -209,9 +209,11 @@ server <- function(input, output, session) {
 
     if (metric_option %in% c("Expense to Revenue Ratio")) {
      
-      data <- mshs_data() %>% 
-      filter(Site == site_option)%>%
-      select("month", "year", "Site", "Actual", "Metrics", "date")
+      #data <- mshs_data() %>% 
+      data <- new_repo %>%
+        filter(Site == site_option, Metrics == "Expense to Revenue Ratio")%>%
+        select("month", "year", "Site", "Actual", "Metrics", "date")
+      
       
       history <- Exp_Rev_Ratio %>% filter(Site== site_option)
       
@@ -223,15 +225,14 @@ server <- function(input, output, session) {
       
     } else {
       data <- mshs_data() %>%
-        filter(Site == site_option)%>%
+        filter(Site == site_option)%>% ungroup()%>%
         mutate(text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)),
                ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)*100), ")"),
                                     Variance.From.Budget.YTD*100))
       
       data <- data %>%
         filter(!is.na(Variance)) %>%
-        filter(!is.na(Variance.From.Budget.YTD))%>%
-        ungroup()
+        filter(!is.na(Variance.From.Budget.YTD))
       
       y_range <- c(min(mshs_data()$Variance, na.rm = TRUE)*1.2, 
                    max(mshs_data()$Variance, na.rm = TRUE)*1.2)
@@ -257,8 +258,9 @@ server <- function(input, output, session) {
     
     if (metric_option %in% c("Expense to Revenue Ratio")) {
       
-      data <- mshs_data() %>% 
-        filter(Site == site_option)%>%
+      #data <- mshs_data() %>% 
+      data <- new_repo %>%
+        filter(Site == site_option, Metrics == "Expense to Revenue Ratio")%>%
         select("month", "year", "Site", "Actual", "Metrics", "date")
       
       history <- Exp_Rev_Ratio %>% filter(Site== site_option)
@@ -272,11 +274,11 @@ server <- function(input, output, session) {
     } else {
       data <- mshs_data() %>%
         #filter(year %in% max(year)) %>%
-        filter(Site == site_option)%>%
+        filter(Site == site_option)%>% ungroup()%>%
         mutate(text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)),
                ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)*100), ")"),
                                     Variance.From.Budget.YTD*100))%>%
-                                      ungroup()%>% arrange(date)
+                                     arrange(date)
       
       y_range <- c(min(mshs_data()$Variance, na.rm = TRUE)*1.2, 
                    max(mshs_data()$Variance, na.rm = TRUE)*1.2)
@@ -302,8 +304,9 @@ server <- function(input, output, session) {
     
     if (metric_option %in% c("Expense to Revenue Ratio")) {
       
-      data <- mshs_data() %>% 
-        filter(Site == site_option)%>%
+      #data <- mshs_data() %>% 
+      data <- new_repo %>%
+        filter(Site == site_option, Metrics == "Expense to Revenue Ratio")%>%
         select("month", "year", "Site", "Actual", "Metrics", "date")
       
       history <- Exp_Rev_Ratio %>% filter(Site== site_option)
@@ -317,7 +320,7 @@ server <- function(input, output, session) {
     } else {
       data <- mshs_data() %>%
         #filter(year %in% max(year)) %>%
-        filter(Site == site_option)%>%
+        filter(Site == site_option)%>% ungroup()%>%
         mutate(text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)),
                ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)*100), ")"),
                                     Variance.From.Budget.YTD*100))%>%
@@ -345,9 +348,11 @@ server <- function(input, output, session) {
     
     if (metric_option %in% c("Expense to Revenue Ratio")) {
       
-      data <- mshs_data() %>% 
-        filter(Site == site_option)%>%
+      #data <- mshs_data() %>% 
+      data <- new_repo %>%
+        filter(Site == site_option, Metrics == "Expense to Revenue Ratio")%>%
         select("month", "year", "Site", "Actual", "Metrics", "date")
+      
       
       history <- Exp_Rev_Ratio %>% filter(Site== site_option)
       
@@ -360,11 +365,11 @@ server <- function(input, output, session) {
     } else {
       data <- mshs_data() %>%
         #filter(year %in% max(year)) %>%
-        filter(Site == site_option)%>%
+        filter(Site == site_option)%>% ungroup()%>%
         mutate(text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)),
                ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)*100), ")"),
                                     Variance.From.Budget.YTD*100))%>%
-                                      ungroup()%>% arrange(date)
+                                       arrange(date)
       
       y_range <- c(min(mshs_data()$Variance, na.rm = TRUE)*1.2, 
                    max(mshs_data()$Variance, na.rm = TRUE)*1.2)
@@ -388,9 +393,11 @@ server <- function(input, output, session) {
     
     if (metric_option %in% c("Expense to Revenue Ratio")) {
       
-      data <- mshs_data() %>% 
-        filter(Site == site_option)%>%
+      #data <- mshs_data() %>% 
+      data <- new_repo %>%
+        filter(Site == site_option, Metrics == "Expense to Revenue Ratio")%>%
         select("month", "year", "Site", "Actual", "Metrics", "date")
+      
       
       history <- Exp_Rev_Ratio %>% filter(Site== site_option)
       
@@ -403,11 +410,11 @@ server <- function(input, output, session) {
     } else {
       data <- mshs_data() %>%
         #filter(year %in% max(year)) %>%
-        filter(Site == site_option)%>%
+        filter(Site == site_option)%>% ungroup()%>%
         mutate(text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)),
                ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)*100), ")"),
                                     Variance.From.Budget.YTD*100))%>%
-                                     ungroup()%>% arrange(date)
+                                      arrange(date)
       
       y_range <- c(min(mshs_data()$Variance, na.rm = TRUE)*1.2, 
                    max(mshs_data()$Variance, na.rm = TRUE)*1.2)
@@ -431,9 +438,11 @@ server <- function(input, output, session) {
     
     if (metric_option %in% c("Expense to Revenue Ratio")) {
       
-      data <- mshs_data() %>% 
-        filter(Site == site_option)%>%
+      #data <- mshs_data() %>% 
+      data <- new_repo %>%
+        filter(Site == site_option, Metrics == "Expense to Revenue Ratio")%>%
         select("month", "year", "Site", "Actual", "Metrics", "date")
+      
       
       history <- Exp_Rev_Ratio %>% filter(Site== site_option)
       
@@ -446,11 +455,11 @@ server <- function(input, output, session) {
     } else {
       data <- mshs_data() %>%
         #filter(year %in% max(year)) %>%
-        filter(Site == site_option)%>%
+        filter(Site == site_option)%>% ungroup()%>%
         mutate(text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)),
                ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)*100), ")"),
                                     Variance.From.Budget.YTD*100))%>%
-                                     ungroup()%>% arrange(date)
+                                     arrange(date)
       
       y_range <- c(min(mshs_data()$Variance, na.rm = TRUE)*1.2, 
                    max(mshs_data()$Variance, na.rm = TRUE)*1.2)
@@ -474,9 +483,11 @@ server <- function(input, output, session) {
     
     if (metric_option %in% c("Expense to Revenue Ratio")) {
       
-      data <- mshs_data() %>% 
-        filter(Site == site_option)%>%
+      #data <- mshs_data() %>% 
+      data <- new_repo %>%
+        filter(Site == site_option, Metrics == "Expense to Revenue Ratio")%>%
         select("month", "year", "Site", "Actual", "Metrics", "date")
+      
       
       history <- Exp_Rev_Ratio %>% filter(Site== site_option)
       
@@ -489,11 +500,11 @@ server <- function(input, output, session) {
     } else {
       data <- mshs_data() %>%
         #filter(year %in% max(year)) %>%
-        filter(Site == site_option)%>%
+        filter(Site == site_option)%>% ungroup()%>%
         mutate(text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)),
                ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)*100), ")"),
                                     Variance.From.Budget.YTD*100))%>%
-                                        ungroup()%>% arrange(date)
+                                         arrange(date)
       
       y_range <- c(min(mshs_data()$Variance, na.rm = TRUE)*1.2, 
                    max(mshs_data()$Variance, na.rm = TRUE)*1.2)
@@ -516,9 +527,11 @@ server <- function(input, output, session) {
     
     if (metric_option %in% c("Expense to Revenue Ratio")) {
       
-      data <- mshs_data() %>% 
-        filter(Site == site_option)%>%
+      #data <- mshs_data() %>% 
+      data <- new_repo %>%
+        filter(Site == site_option, Metrics == "Expense to Revenue Ratio")%>%
         select("month", "year", "Site", "Actual", "Metrics", "date")
+      
       
       history <- Exp_Rev_Ratio %>% filter(Site== site_option)
       
@@ -531,11 +544,11 @@ server <- function(input, output, session) {
     } else {
       data <- mshs_data() %>%
         #filter(year %in% max(year)) %>%
-        filter(Site == site_option)%>%
+        filter(Site == site_option)%>% ungroup()%>%
         mutate(text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)),
                ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)*100), ")"),
                                     Variance.From.Budget.YTD*100))%>%
-                                     ungroup()%>% arrange(date)
+                                      arrange(date)
       
       y_range <- c(min(mshs_data()$Variance, na.rm = TRUE)*1.2, 
                    max(mshs_data()$Variance, na.rm = TRUE)*1.2)
@@ -559,12 +572,13 @@ server <- function(input, output, session) {
     metric_option <- isolate(input$mshs_metrics)
     site_option <- "NYEE"
     
-    test <<- mshs_data()
+   
     
     if (metric_option %in% c("Expense to Revenue Ratio")) {
       
-      data <- mshs_data() %>% 
-        filter(Site == site_option)%>%
+      #data <- mshs_data() %>% 
+      data <- new_repo %>%
+        filter(Site == site_option, Metrics == "Expense to Revenue Ratio")%>%
         select("month", "year", "Site", "Actual", "Metrics", "date")
       
       history <- Exp_Rev_Ratio %>% filter(Site== site_option)
@@ -574,16 +588,18 @@ server <- function(input, output, session) {
         arrange(date) %>%
         slice(tail(row_number(), 12))
       
+      test_ratio <<- data
+      
       ratio_graph(data, site = site_option)
       
     } else {
       data <- mshs_data() %>%
         #filter(year %in% max(year)) %>%
-        filter(Site == site_option)%>%
+        filter(Site == site_option)%>%  ungroup()%>%
         mutate(text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)),
                ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)*100), ")"),
                                     Variance.From.Budget.YTD*100))%>%
-                                       ungroup()%>% arrange(date)
+                                       arrange(date)
       
      
       

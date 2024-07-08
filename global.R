@@ -321,10 +321,12 @@ ratio_date_option <- c(rev(date_options), ratio_date_option)
 
 # graph functions
 ratio_graph <- function(data, site) {
+  
+  max_ratio <- 1.8
  
   ggplotly(
   ggplot(data)  + 
-    geom_rect(xmin= 0, xmax= 13 , aes(ymin = 1, ymax= 1.5), fill= "#990000", alpha=0.2)+
+    geom_rect(xmin= 0, xmax= 13 , aes(ymin = 1, ymax= max_ratio), fill= "#990000", alpha=0.2)+
     geom_line(aes(x=date, y= Actual, group = 1), 
               colour = "#212070", stat="identity", linewidth = 0.5)+
     geom_point(mapping = aes(date, Actual),
@@ -344,10 +346,10 @@ ratio_graph <- function(data, site) {
           legend.position = "none")+
     geom_text(aes(label= Actual, x=date, y= Actual+0.04),
               position = position_dodge(width = 1), vjust = 0 , size = 3)+
-    scale_y_continuous(limits=c(0.8, 1.5), breaks = seq(0.8, 1.5, by = 0.1)))%>%
+    scale_y_continuous(limits=c(0.8, max_ratio), breaks = seq(0.8, max_ratio, by = 0.1)))%>%
     layout( xaxis = list(title = "<b> Date <b> ", showline = TRUE, mirror = "ticks", titlefont = list(size = 12),
                    linewidth = 2, linecolor = "black", showgrid = F),
-      yaxis = list(title = "<b> Expense to Revenue Ratio <b>", range = c(0.8, 1.5), titlefont = list(size = 12),
+      yaxis = list(title = "<b> Expense to Revenue Ratio <b>", range = c(0.8, max_ratio), titlefont = list(size = 12),
                    showline = TRUE, mirror = "ticks",linewidth = 2, linecolor = "black"))
 }
 
@@ -412,7 +414,7 @@ graph_style_break <- function(data, site, metric, y_range, ratio_range){
 
  
   
-  last_data_point <-  data %>% filter(year == max_year, month == max(month))
+  last_data_point <-  data %>% filter(year == max_year) %>% filter(month == max(month))
   text_color <- ifelse(last_data_point$Variance < 0, "red", "black")
   text_color_ratio <- ifelse(last_data_point$Variance.From.Budget.YTD < 0, "red", "black")
   
