@@ -236,9 +236,11 @@ server <- function(input, output, session) {
       y_range <- c(min(mshs_data()$Variance, na.rm = TRUE)*1.2, 
                    max(mshs_data()$Variance, na.rm = TRUE)*1.2)
       
-      ratio_value <- max(abs(c(min(mshs_data()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2, 
-                               max(mshs_data()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2)))
-      ratio_range <- c(-ratio_value, ratio_value)
+      ratio_range  <- c(min(mshs_data()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2, 
+                               max(mshs_data()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2)
+      
+      
+      
       
       
       validate(need(nrow(data) > 0, paste0(metric_option, " is not available for ", site_option)))
@@ -279,9 +281,9 @@ server <- function(input, output, session) {
       y_range <- c(min(mshs_data()$Variance, na.rm = TRUE)*1.2, 
                    max(mshs_data()$Variance, na.rm = TRUE)*1.2)
       
-      ratio_value <- max(abs(c(min(mshs_data()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2, 
-                               max(mshs_data()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2)))
-      ratio_range <- c(-ratio_value, ratio_value)
+      ratio_range <- c(min(mshs_data()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2, 
+                               max(mshs_data()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2)
+     
       
       
       validate(need(nrow(data) > 0, paste0(metric_option, " is not available for ", site_option)))
@@ -324,9 +326,9 @@ server <- function(input, output, session) {
       y_range <- c(min(mshs_data()$Variance, na.rm = TRUE)*1.2, 
                    max(mshs_data()$Variance, na.rm = TRUE)*1.2)
       
-      ratio_value <- max(abs(c(min(mshs_data()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2, 
-                               max(mshs_data()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2)))
-      ratio_range <- c(-ratio_value, ratio_value)
+      
+      ratio_range <- c(min(mshs_data()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2, 
+                       max(mshs_data()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2)
       
       
       validate(need(nrow(data) > 0, paste0(metric_option, " is not available for ", site_option)))
@@ -367,9 +369,9 @@ server <- function(input, output, session) {
       y_range <- c(min(mshs_data()$Variance, na.rm = TRUE)*1.2, 
                    max(mshs_data()$Variance, na.rm = TRUE)*1.2)
       
-      ratio_value <- max(abs(c(min(mshs_data()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2, 
-                               max(mshs_data()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2)))
-      ratio_range <- c(-ratio_value, ratio_value)
+      
+      ratio_range <- c(min(mshs_data()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2, 
+                       max(mshs_data()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2)
       
       
       validate(need(nrow(data) > 0, paste0(metric_option, " is not available for ", site_option)))
@@ -410,9 +412,9 @@ server <- function(input, output, session) {
       y_range <- c(min(mshs_data()$Variance, na.rm = TRUE)*1.2, 
                    max(mshs_data()$Variance, na.rm = TRUE)*1.2)
       
-      ratio_value <- max(abs(c(min(mshs_data()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2, 
-                               max(mshs_data()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2)))
-      ratio_range <- c(-ratio_value, ratio_value)
+      
+      ratio_range <- c(min(mshs_data()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2, 
+                       max(mshs_data()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2)
       
       
       validate(need(nrow(data) > 0, paste0(metric_option, " is not available for ", site_option)))
@@ -453,9 +455,9 @@ server <- function(input, output, session) {
       y_range <- c(min(mshs_data()$Variance, na.rm = TRUE)*1.2, 
                    max(mshs_data()$Variance, na.rm = TRUE)*1.2)
       
-      ratio_value <- max(abs(c(min(mshs_data()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2, 
-                               max(mshs_data()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2)))
-      ratio_range <- c(-ratio_value, ratio_value)
+      
+      ratio_range <- c(min(mshs_data()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2, 
+                       max(mshs_data()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2)
       
       
       validate(need(nrow(data) > 0, paste0(metric_option, " is not available for ", site_option)))
@@ -496,10 +498,9 @@ server <- function(input, output, session) {
       y_range <- c(min(mshs_data()$Variance, na.rm = TRUE)*1.2, 
                    max(mshs_data()$Variance, na.rm = TRUE)*1.2)
       
-      ratio_value <- max(abs(c(min(mshs_data()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2, 
-                               max(mshs_data()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2)))
-      ratio_range <- c(-ratio_value, ratio_value)
       
+      ratio_range <- c(min(mshs_data()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2, 
+                       max(mshs_data()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2)
       
       validate(need(nrow(data) > 0, paste0(metric_option, " is not available for ", site_option)))
       graph_style_break(data = data, site = site_option, metric= metric_option, 
@@ -589,9 +590,8 @@ server <- function(input, output, session) {
       y_range <- c(min(mshs_data()$Variance, na.rm = TRUE)*1.2, 
                    max(mshs_data()$Variance, na.rm = TRUE)*1.2)
       
-      ratio_value <- max(abs(c(min(mshs_data()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2, 
-                               max(mshs_data()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2)))
-      ratio_range <- c(-ratio_value, ratio_value)
+      ratio_range <- c(min(mshs_data()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2, 
+                               max(mshs_data()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2)
       
       
       validate(need(nrow(data) > 0, paste0(metric_option, " is not available for ", site_option)))
@@ -619,10 +619,14 @@ server <- function(input, output, session) {
     data <- data %>%
       filter(!is.na(Variance)) 
     
+    y_range <- c(min(var_data()$Variance, na.rm = TRUE)*1.2, 
+                 max(var_data()$Variance, na.rm = TRUE)*1.2)
+    
+    
     validate(need(nrow(data) > 0, paste0(metric_option , " is not available for ", hospital)))
 
     
-    var_graph_break(data, site= hospital, metric = metric_option)
+    var_graph_break(data, site= hospital, metric = metric_option, y_range = y_range)
     
   })
   
@@ -636,9 +640,16 @@ server <- function(input, output, session) {
       mutate(sign = ifelse(Variance >= 0, "black", "red"),
              text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)))
     
+    
+    y_range <- c(min(var_data()$Variance, na.rm = TRUE)*1.2, 
+                 max(var_data()$Variance, na.rm = TRUE)*1.2)
+    
+    
     validate(need(nrow(data) > 0, paste0(metric_option , " is not available for ", hospital)))
     
-    var_graph_break(data, site= hospital, metric = metric_option)
+    
+    var_graph_break(data, site= hospital, metric = metric_option, y_range = y_range)
+    
     
     
   })
@@ -653,9 +664,15 @@ server <- function(input, output, session) {
       mutate(sign = ifelse(Variance >= 0, "black", "red"),
              text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)))
     
+    y_range <- c(min(var_data()$Variance, na.rm = TRUE)*1.2, 
+                 max(var_data()$Variance, na.rm = TRUE)*1.2)
+    
+    
     validate(need(nrow(data) > 0, paste0(metric_option , " is not available for ", hospital)))
     
-    var_graph_break(data, site= hospital, metric = metric_option)
+    
+    var_graph_break(data, site= hospital, metric = metric_option, y_range = y_range)
+    
     
     
   })
@@ -671,10 +688,15 @@ server <- function(input, output, session) {
       mutate(sign = ifelse(Variance >= 0, "black", "red"),
              text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)))
     
+    y_range <- c(min(var_data()$Variance, na.rm = TRUE)*1.2, 
+                 max(var_data()$Variance, na.rm = TRUE)*1.2)
+    
+    
     validate(need(nrow(data) > 0, paste0(metric_option , " is not available for ", hospital)))
     
     
-    var_graph_break(data, site= hospital, metric = metric_option)
+    var_graph_break(data, site= hospital, metric = metric_option, y_range = y_range)
+    
     
   })
   
@@ -688,10 +710,15 @@ server <- function(input, output, session) {
       mutate(sign = ifelse(Variance >= 0, "black", "red"),
              text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)))
     
+    y_range <- c(min(var_data()$Variance, na.rm = TRUE)*1.2, 
+                 max(var_data()$Variance, na.rm = TRUE)*1.2)
+    
+    
     validate(need(nrow(data) > 0, paste0(metric_option , " is not available for ", hospital)))
     
     
-    var_graph_break(data, site= hospital, metric = metric_option)
+    var_graph_break(data, site= hospital, metric = metric_option, y_range = y_range)
+    
     
   })
   
@@ -705,10 +732,15 @@ server <- function(input, output, session) {
       mutate(sign = ifelse(Variance >= 0, "black", "red"),
              text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)))
     
+    y_range <- c(min(var_data()$Variance, na.rm = TRUE)*1.2, 
+                 max(var_data()$Variance, na.rm = TRUE)*1.2)
+    
+    
     validate(need(nrow(data) > 0, paste0(metric_option , " is not available for ", hospital)))
     
     
-    var_graph_break(data, site= hospital, metric = metric_option)
+    var_graph_break(data, site= hospital, metric = metric_option, y_range = y_range)
+    
     
   })
   
@@ -722,10 +754,15 @@ server <- function(input, output, session) {
       mutate(sign = ifelse(Variance >= 0, "black", "red"),
              text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)))
     
+    y_range <- c(min(var_data()$Variance, na.rm = TRUE)*1.2, 
+                 max(var_data()$Variance, na.rm = TRUE)*1.2)
+    
+    
     validate(need(nrow(data) > 0, paste0(metric_option , " is not available for ", hospital)))
     
     
-    var_graph_break(data, site= hospital, metric = metric_option)
+    var_graph_break(data, site= hospital, metric = metric_option, y_range = y_range)
+    
     
   })
   
@@ -739,10 +776,14 @@ server <- function(input, output, session) {
       mutate(sign = ifelse(Variance >= 0, "black", "red"),
              text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)))
     
+    y_range <- c(min(var_data()$Variance, na.rm = TRUE)*1.2, 
+                 max(var_data()$Variance, na.rm = TRUE)*1.2)
+    
+    
     validate(need(nrow(data) > 0, paste0(metric_option , " is not available for ", hospital)))
     
     
-    var_graph_break(data, site= hospital, metric = metric_option)
+    var_graph_break(data, site= hospital, metric = metric_option, y_range = y_range)
     
     
   })
@@ -757,10 +798,15 @@ server <- function(input, output, session) {
       mutate(sign = ifelse(Variance >= 0, "black", "red"),
              text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)))
     
+    y_range <- c(min(var_data()$Variance, na.rm = TRUE)*1.2, 
+                 max(var_data()$Variance, na.rm = TRUE)*1.2)
+    
+    
     validate(need(nrow(data) > 0, paste0(metric_option , " is not available for ", hospital)))
     
     
-    var_graph_break(data, site= hospital, metric = metric_option)
+    var_graph_break(data, site= hospital, metric = metric_option, y_range = y_range)
+    
     
   })
   
@@ -772,10 +818,8 @@ server <- function(input, output, session) {
     hospital <- "MSHS"
     metric_option <- isolate(input$mshs_metrics_ytd)
     
-    test <<- mshs_data_ytd()
-    
     data <- mshs_data_ytd()%>%
-      filter(Site == hospital)%>%
+      filter(Site == hospital)%>% ungroup() %>%
       mutate(sign.YTD = ifelse(Variance.From.Budget.YTD > 0, "positive", "negative"),
              ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD*100)),")"),
                                   Variance.From.Budget.YTD*100))
@@ -783,10 +827,21 @@ server <- function(input, output, session) {
     data <- data %>%
       filter(!is.na(Variance.From.Budget.YTD))
     
+    ratio_range <- c(min(mshs_data_ytd()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2, 
+                     max(mshs_data_ytd()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2)
+    
+    if(ratio_range[1]>0 & ratio_range[2]>0){
+      
+      ratio_range <- c(0, max(mshs_data_ytd()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2)
+      
+    } else if(ratio_range[1]<0 & ratio_range[2]<0){
+      ratio_range <- c(min(mshs_data_ytd()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2, 0)
+    }
+    
     
     validate(need(nrow(data) > 0, paste0(metric_option, " is not available for ", hospital)))
 
-    ytd_graph_break(data, site = hospital, metric = metric_option)
+    ytd_graph_break(data, site = hospital, metric = metric_option, ratio_range= ratio_range)
              
   })
   
@@ -797,16 +852,27 @@ server <- function(input, output, session) {
     metric_option <- isolate(input$mshs_metrics_ytd)
     
     data <- mshs_data_ytd()%>%
-      filter(Site == hospital)%>%
+      filter(Site == hospital)%>% ungroup() %>%
       mutate(sign.YTD = ifelse(Variance.From.Budget.YTD > 0, "positive", "negative"),
              ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD*100)), ")"),
                                   Variance.From.Budget.YTD*100))
     
     
-    validate(need(nrow(data) > 0, paste0(metric_option, " is not available for ", hospital)))
-  
+    ratio_range <- c(min(mshs_data_ytd()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2, 
+                     max(mshs_data_ytd()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2)
     
-    ytd_graph_break(data, site = hospital, metric = metric_option) 
+    if(ratio_range[1]>0 & ratio_range[2]>0){
+      
+      ratio_range <- c(0, max(mshs_data_ytd()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2)
+      
+    } else if(ratio_range[1]<0 & ratio_range[2]<0){
+      ratio_range <- c(min(mshs_data_ytd()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2, 0)
+    }
+    
+    
+    validate(need(nrow(data) > 0, paste0(metric_option, " is not available for ", hospital)))
+    
+    ytd_graph_break(data, site = hospital, metric = metric_option, ratio_range= ratio_range)
                  
   })
   
@@ -816,16 +882,27 @@ server <- function(input, output, session) {
     metric_option <- isolate(input$mshs_metrics_ytd)
     
     data <- mshs_data_ytd()%>%
-      filter(Site == hospital)%>%
+      filter(Site == hospital)%>% ungroup() %>%
       mutate(sign.YTD = ifelse(Variance.From.Budget.YTD > 0, "positive", "negative"),
              ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD*100)), ")"),
                                   Variance.From.Budget.YTD*100))
     
     
-    validate(need(nrow(data) > 0, paste0(metric_option, " is not available for ", hospital)))
-  
+    ratio_range <- c(min(mshs_data_ytd()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2, 
+                     max(mshs_data_ytd()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2)
     
-    ytd_graph_break(data, site = hospital, metric = metric_option) 
+    if(ratio_range[1]>0 & ratio_range[2]>0){
+      
+      ratio_range <- c(0, max(mshs_data_ytd()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2)
+      
+    } else if(ratio_range[1]<0 & ratio_range[2]<0){
+      ratio_range <- c(min(mshs_data_ytd()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2, 0)
+    }
+    
+    
+    validate(need(nrow(data) > 0, paste0(metric_option, " is not available for ", hospital)))
+    
+    ytd_graph_break(data, site = hospital, metric = metric_option, ratio_range= ratio_range)
                     
   })
   
@@ -835,16 +912,27 @@ server <- function(input, output, session) {
     metric_option <- isolate(input$mshs_metrics_ytd)
     
     data <- mshs_data_ytd()%>%
-      filter(Site == hospital)%>%
+      filter(Site == hospital)%>% ungroup() %>%
       mutate(sign.YTD = ifelse(Variance.From.Budget.YTD > 0, "positive", "negative"),
              ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD*100)), ")"),
                                   Variance.From.Budget.YTD*100))
     
     
+    ratio_range <- c(min(mshs_data_ytd()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2, 
+                     max(mshs_data_ytd()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2)
+    
+    if(ratio_range[1]>0 & ratio_range[2]>0){
+      
+      ratio_range <- c(0, max(mshs_data_ytd()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2)
+      
+    } else if(ratio_range[1]<0 & ratio_range[2]<0){
+      ratio_range <- c(min(mshs_data_ytd()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2, 0)
+    }
+    
+    
     validate(need(nrow(data) > 0, paste0(metric_option, " is not available for ", hospital)))
     
-    
-    ytd_graph_break(data, site = hospital, metric = metric_option)
+    ytd_graph_break(data, site = hospital, metric = metric_option, ratio_range= ratio_range)
                     
   })
   
@@ -855,16 +943,27 @@ server <- function(input, output, session) {
     metric_option <- isolate(input$mshs_metrics_ytd)
     
     data <- mshs_data_ytd()%>%
-      filter(Site == hospital)%>%
+      filter(Site == hospital)%>% ungroup() %>%
       mutate(sign.YTD = ifelse(Variance.From.Budget.YTD > 0, "positive", "negative"),
              ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD*100)), ")"),
                                   Variance.From.Budget.YTD*100))
     
     
+    ratio_range <- c(min(mshs_data_ytd()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2, 
+                     max(mshs_data_ytd()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2)
+    
+    if(ratio_range[1]>0 & ratio_range[2]>0){
+      
+      ratio_range <- c(0, max(mshs_data_ytd()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2)
+      
+    } else if(ratio_range[1]<0 & ratio_range[2]<0){
+      ratio_range <- c(min(mshs_data_ytd()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2, 0)
+    }
+    
+    
     validate(need(nrow(data) > 0, paste0(metric_option, " is not available for ", hospital)))
     
-    
-    ytd_graph_break(data, site = hospital, metric = metric_option) 
+    ytd_graph_break(data, site = hospital, metric = metric_option, ratio_range= ratio_range) 
                     
   })
   
@@ -874,17 +973,32 @@ server <- function(input, output, session) {
     hospital <- "MSQ"
     metric_option <- isolate(input$mshs_metrics_ytd)
     
+    msq_data <<- mshs_data_ytd()
+    
     data <- mshs_data_ytd()%>%
-      filter(Site == hospital)%>%
+      filter(Site == hospital)%>% ungroup() %>%
       mutate(sign.YTD = ifelse(Variance.From.Budget.YTD > 0, "positive", "negative"),
              ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD*100)), ")"),
                                   Variance.From.Budget.YTD*100))
     
     
+    
+    
+    ratio_range <- c(min(mshs_data_ytd()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2, 
+                     max(mshs_data_ytd()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2)
+    
+    if(ratio_range[1]>0 & ratio_range[2]>0){
+      
+      ratio_range <- c(0, max(mshs_data_ytd()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2)
+      
+    } else if(ratio_range[1]<0 & ratio_range[2]<0){
+      ratio_range <- c(min(mshs_data_ytd()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2, 0)
+    }
+    
+    
     validate(need(nrow(data) > 0, paste0(metric_option, " is not available for ", hospital)))
     
-    
-    ytd_graph_break(data, site = hospital, metric = metric_option) 
+    ytd_graph_break(data, site = hospital, metric = metric_option, ratio_range= ratio_range)
                      
   })
   
@@ -894,16 +1008,27 @@ server <- function(input, output, session) {
     metric_option <- isolate(input$mshs_metrics_ytd)
     
     data <- mshs_data_ytd()%>%
-      filter(Site == hospital)%>%
+      filter(Site == hospital)%>% ungroup() %>%
       mutate(sign.YTD = ifelse(Variance.From.Budget.YTD > 0, "positive", "negative"),
              ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD*100)), ")"),
                                   Variance.From.Budget.YTD*100))
     
     
+    ratio_range <- c(min(mshs_data_ytd()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2, 
+                     max(mshs_data_ytd()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2)
+    
+    if(ratio_range[1]>0 & ratio_range[2]>0){
+      
+      ratio_range <- c(0, max(mshs_data_ytd()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2)
+      
+    } else if(ratio_range[1]<0 & ratio_range[2]<0){
+      ratio_range <- c(min(mshs_data_ytd()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2, 0)
+    }
+    
+    
     validate(need(nrow(data) > 0, paste0(metric_option, " is not available for ", hospital)))
     
-    
-    ytd_graph_break(data, site = hospital, metric = metric_option) 
+    ytd_graph_break(data, site = hospital, metric = metric_option, ratio_range= ratio_range)
     
   })
   
@@ -914,16 +1039,27 @@ server <- function(input, output, session) {
     metric_option <- isolate(input$mshs_metrics_ytd)
     
     data <- mshs_data_ytd()%>%
-      filter(Site == hospital)%>%
+      filter(Site == hospital)%>% ungroup() %>%
       mutate(sign.YTD = ifelse(Variance.From.Budget.YTD > 0, "positive", "negative"),
              ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD*100)), ")"),
                                   Variance.From.Budget.YTD*100))
     
     
+    ratio_range <- c(min(mshs_data_ytd()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2, 
+                     max(mshs_data_ytd()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2)
+    
+    if(ratio_range[1]>0 & ratio_range[2]>0){
+      
+      ratio_range <- c(0, max(mshs_data_ytd()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2)
+      
+    } else if(ratio_range[1]<0 & ratio_range[2]<0){
+      ratio_range <- c(min(mshs_data_ytd()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2, 0)
+    }
+    
+    
     validate(need(nrow(data) > 0, paste0(metric_option, " is not available for ", hospital)))
     
-   
-    ytd_graph_break(data, site = hospital, metric = metric_option)  
+    ytd_graph_break(data, site = hospital, metric = metric_option, ratio_range= ratio_range) 
   })
 
   ### NYEE -----------------------
@@ -933,16 +1069,28 @@ server <- function(input, output, session) {
     metric_option <- isolate(input$mshs_metrics_ytd)
     
     data <- mshs_data_ytd()%>%
-      filter(Site == hospital)%>%
+      filter(Site == hospital)%>% ungroup() %>%
       mutate(sign.YTD = ifelse(Variance.From.Budget.YTD > 0, "positive", "negative"),
              ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD*100)), ")"),
                                   Variance.From.Budget.YTD*100))
     
+ 
+    
+    ratio_range <- c(min(mshs_data_ytd()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2, 
+                     max(mshs_data_ytd()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2)
+    
+    if(ratio_range[1]>0 & ratio_range[2]>0){
+      
+      ratio_range <- c(0, max(mshs_data_ytd()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2)
+      
+    } else if(ratio_range[1]<0 & ratio_range[2]<0){
+      ratio_range <- c(min(mshs_data_ytd()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2, 0)
+    }
+    
     
     validate(need(nrow(data) > 0, paste0(metric_option, " is not available for ", hospital)))
     
-    
-    ytd_graph_break(data, site = hospital, metric = metric_option) 
+    ytd_graph_break(data, site = hospital, metric = metric_option, ratio_range= ratio_range)
   })
   
   

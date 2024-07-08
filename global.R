@@ -411,6 +411,7 @@ graph_style_break <- function(data, site, metric, y_range, ratio_range){
   # }
 
  
+  
   last_data_point <-  data %>% filter(year == max_year, month == max(month))
   text_color <- ifelse(last_data_point$Variance < 0, "red", "black")
   text_color_ratio <- ifelse(last_data_point$Variance.From.Budget.YTD < 0, "red", "black")
@@ -551,44 +552,44 @@ plot_ly(data, x = ~sortedDate, y = ~Variance, type = "bar", showlegend = F,
 # }
 
 
-var_graph_break <- function(data, site, metric) {
+var_graph_break <- function(data, site, metric, y_range) {
   
-  if(metric %in% c("Total Hospital Revenue")) {
-    y_range <- c(-30000, 20000) 	
-    breaks  <- 5000 
-  } else if(metric %in% c("Outpatient Revenue")) {
-    y_range  <- c(-8000, 12000) 	
-    breaks  <- 2000 
-  } else if(metric %in% c("340B/Other Operating Revenue")) {
-    y_range  <- c(-14000, 6000 )
-    breaks  <- 2000 
-  } else if(metric %in% c("Total Hospital Expenses")) {
-    y_range  <- c(-40000, 10000) 	
-    breaks  <- 5000 
-  } else if(metric %in% c("Salaries and Benefits")) {
-    y_range  <- c(-14000, 10000)	
-    breaks  <- 2000 
-  } else if(metric %in% c("Supplies & Expenses")) {
-    y_range  <- c(-25000, 30000)	
-    breaks  <- 5000
-  } else if(metric %in% c("CARTS")) {
-    y_range  <- c(-5000, 5000)	
-    breaks  <- 1000 
-  } else if(metric %in% c("Nursing Agency Costs")) {
-    y_range <- c(-8000, 2000)
-    breaks  <- 2000 
-  } else if(metric %in% c("Discharges")) {
-    y_range  <- c(-750, 750) 	
-    breaks  <- 150
-  } else if(metric %in% c("CMI")) {
-    y_range  <- c(-0.25, 0.25)	
-    breaks  <- 0.05
-  } else if(metric %in% c("ALOS")) {
-    y_range  <- c(-2.5, 2.5)	
-    breaks  <- 0.5
-  }
+  # if(metric %in% c("Total Hospital Revenue")) {
+  #   y_range <- c(-30000, 20000) 	
+  #   breaks  <- 5000 
+  # } else if(metric %in% c("Outpatient Revenue")) {
+  #   y_range  <- c(-8000, 12000) 	
+  #   breaks  <- 2000 
+  # } else if(metric %in% c("340B/Other Operating Revenue")) {
+  #   y_range  <- c(-14000, 6000 )
+  #   breaks  <- 2000 
+  # } else if(metric %in% c("Total Hospital Expenses")) {
+  #   y_range  <- c(-40000, 10000) 	
+  #   breaks  <- 5000 
+  # } else if(metric %in% c("Salaries and Benefits")) {
+  #   y_range  <- c(-14000, 10000)	
+  #   breaks  <- 2000 
+  # } else if(metric %in% c("Supplies & Expenses")) {
+  #   y_range  <- c(-25000, 30000)	
+  #   breaks  <- 5000
+  # } else if(metric %in% c("CARTS")) {
+  #   y_range  <- c(-5000, 5000)	
+  #   breaks  <- 1000 
+  # } else if(metric %in% c("Nursing Agency Costs")) {
+  #   y_range <- c(-8000, 2000)
+  #   breaks  <- 2000 
+  # } else if(metric %in% c("Discharges")) {
+  #   y_range  <- c(-750, 750) 	
+  #   breaks  <- 150
+  # } else if(metric %in% c("CMI")) {
+  #   y_range  <- c(-0.25, 0.25)	
+  #   breaks  <- 0.05
+  # } else if(metric %in% c("ALOS")) {
+  #   y_range  <- c(-2.5, 2.5)	
+  #   breaks  <- 0.5
+  # }
   
-  last_data_point <-  data %>% filter(month == max(month), year == max(year))
+  last_data_point <-  data %>% filter(year == max_year) %>% filter(month == max(month))
   text_color <- ifelse(last_data_point$Variance < 0, "red", "black")
   
   # Define different labels for metrics    
@@ -704,45 +705,45 @@ var_graph_break <- function(data, site, metric) {
 # }
 
 
-ytd_graph_break <- function(data, site, metric) {
+ytd_graph_break <- function(data, site, metric, ratio_range) {
   
-  if(metric %in% c("Total Hospital Revenue")) {
-    ratio_range <- c(-0.24, 0.16)
-    breaks_ratio <- 0.04
-  } else if(metric %in% c("Outpatient Revenue")) {
-    ratio_range <- c(-0.12, 0.18)
-    breaks_ratio <- 0.03
-  } else if(metric %in% c("340B/Other Operating Revenue")) {
-    ratio_range <- c(-0.42, 0.18)
-    breaks_ratio <- 0.06
-  } else if(metric %in% c("Total Hospital Expenses")) {
-    ratio_range <- c(-0.24, 0.06)
-    breaks_ratio <- 0.03
-  } else if(metric %in% c("Salaries and Benefits")) {
-    ratio_range <- c(-0.12, 0.10)
-    breaks_ratio <- 0.02
-  } else if(metric %in% c("Supplies & Expenses")) {
-    ratio_range <- c(-0.25, 0.30)
-    breaks_ratio <- 0.05
-  } else if(metric %in% c("CARTS")) {
-    ratio_range <- c(-0.40, 0.40)
-    breaks_ratio <- 0.08
-  } else if(metric %in% c("Nursing Agency Costs")) {
-    ratio_range <- c(-8, 2)
-    breaks_ratio <- 2
-  } else if(metric %in% c("Discharges")) {
-    ratio_range <- c(-0.25, 0.75)
-    breaks_ratio <- 0.05
-  } else if(metric %in% c("CMI")) {
-    ratio_range <- c(-0.10, 0.10)
-    breaks_ratio <- 0.02
-  } else if(metric %in% c("ALOS")) {
-    ratio_range <- c(-0.25, 0.25)
-    breaks_ratio <- 0.05
-  }
+  # if(metric %in% c("Total Hospital Revenue")) {
+  #   ratio_range <- c(-0.24, 0.16)
+  #   breaks_ratio <- 0.04
+  # } else if(metric %in% c("Outpatient Revenue")) {
+  #   ratio_range <- c(-0.12, 0.18)
+  #   breaks_ratio <- 0.03
+  # } else if(metric %in% c("340B/Other Operating Revenue")) {
+  #   ratio_range <- c(-0.42, 0.18)
+  #   breaks_ratio <- 0.06
+  # } else if(metric %in% c("Total Hospital Expenses")) {
+  #   ratio_range <- c(-0.24, 0.06)
+  #   breaks_ratio <- 0.03
+  # } else if(metric %in% c("Salaries and Benefits")) {
+  #   ratio_range <- c(-0.12, 0.10)
+  #   breaks_ratio <- 0.02
+  # } else if(metric %in% c("Supplies & Expenses")) {
+  #   ratio_range <- c(-0.25, 0.30)
+  #   breaks_ratio <- 0.05
+  # } else if(metric %in% c("CARTS")) {
+  #   ratio_range <- c(-0.40, 0.40)
+  #   breaks_ratio <- 0.08
+  # } else if(metric %in% c("Nursing Agency Costs")) {
+  #   ratio_range <- c(-8, 2)
+  #   breaks_ratio <- 2
+  # } else if(metric %in% c("Discharges")) {
+  #   ratio_range <- c(-0.25, 0.75)
+  #   breaks_ratio <- 0.05
+  # } else if(metric %in% c("CMI")) {
+  #   ratio_range <- c(-0.10, 0.10)
+  #   breaks_ratio <- 0.02
+  # } else if(metric %in% c("ALOS")) {
+  #   ratio_range <- c(-0.25, 0.25)
+  #   breaks_ratio <- 0.05
+  # }
+  # 
   
-  
-  last_data_point <-  data %>% filter(month == max(month))
+  last_data_point <-  data %>% filter(year == max_year) %>% filter(month == max(month))
   text_color_ratio <- ifelse(last_data_point$Variance.From.Budget.YTD < 0, "red", "black")
  
   plot_ly(data, x = ~date, y = ~Variance.From.Budget.YTD, type = "scatter", showlegend = F,
