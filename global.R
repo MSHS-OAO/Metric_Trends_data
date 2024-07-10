@@ -236,8 +236,10 @@ new_repo <- new_repo %>% mutate(Actual = ifelse(!is.na(Budget) & is.na(Actual), 
                                      Budget = ifelse(is.na(Budget) & !is.na(Actual), 0, Budget))
                                      
 
-new_repo <- new_repo %>% mutate(Actual = round(Actual, 3), 
-                                Budget = round(Budget, 3))
+new_repo <- new_repo %>%
+  mutate( Actual= ifelse(Metrics %in% c("ALOS", "CMI", "Discharges", "Expense to Revenue Ratio"), Actual, Actual/1000),
+          Budget= ifelse(Metrics %in% c("ALOS", "CMI", "Discharges", "Expense to Revenue Ratio"), Budget, Budget/1000),
+          Actual = round(Actual, 3), Budget = round(Budget, 3))
 
 # for these metrics YTD variance = (budget - Actual)/budget
 metrics_dif <- c("CARTS", "Nursing Agency Costs", "Salaries and Benefits", 
@@ -322,7 +324,8 @@ ratio_date_option <- c(rev(date_options), ratio_date_option)
 # graph functions
 ratio_graph <- function(data, site) {
   
-  max_ratio <- 1.8
+  max_ratio <- 1.9
+  min_ratio <- 0.7
  
   ggplotly(
   ggplot(data)  + 
@@ -346,10 +349,10 @@ ratio_graph <- function(data, site) {
           legend.position = "none")+
     geom_text(aes(label= Actual, x=date, y= Actual+0.04),
               position = position_dodge(width = 1), vjust = 0 , size = 3)+
-    scale_y_continuous(limits=c(0.8, max_ratio), breaks = seq(0.8, max_ratio, by = 0.1)))%>%
+    scale_y_continuous(limits=c(min_ratio, max_ratio), breaks = seq(min_ratio, max_ratio, by = 0.1)))%>%
     layout( xaxis = list(title = "<b> Date <b> ", showline = TRUE, mirror = "ticks", titlefont = list(size = 12),
                    linewidth = 2, linecolor = "black", showgrid = F),
-      yaxis = list(title = "<b> Expense to Revenue Ratio <b>", range = c(0.8, max_ratio), titlefont = list(size = 12),
+      yaxis = list(title = "<b> Expense to Revenue Ratio <b>", range = c(min_ratio, max_ratio), titlefont = list(size = 12),
                    showline = TRUE, mirror = "ticks",linewidth = 2, linecolor = "black"))
 }
 
@@ -456,7 +459,7 @@ plot_ly(data, x = ~sortedDate, y = ~Variance, type = "bar", showlegend = F,
            annotations = list(
              list(x = 0.5,  
                   y = 1.09,   
-                  text = "($ in Thousands)",
+                  text = "($ in Million)",
                   showarrow = FALSE,
                   xref='paper', yref='paper',
                   font = list(size = 12))))
@@ -622,7 +625,7 @@ var_graph_break <- function(data, site, metric, y_range) {
            annotations = list(
              list(x = 0.5,  
                   y = 1.09,   
-                  text = "($ in Thousands)",
+                  text = "($ in Million)",
                   showarrow = FALSE,
                   xref='paper', yref='paper',
                   font = list(size = 12))))
@@ -885,7 +888,7 @@ graph_style <- function(data,site, metric){
            annotations = list(
              list(x = 0.5,  
                   y = 1.09,   
-                  text = "($ in Thousands)",
+                  text = "($ in Million)",
                   showarrow = FALSE,
                   xref='paper', yref='paper',
                   font = list(size = 12))))
@@ -1009,7 +1012,7 @@ var_graph <- function(data, site, metric) {
            annotations = list(
              list(x = 0.5,  
                   y = 1.09,   
-                  text = "($ in Thousands)",
+                  text = "($ in Million)",
                   showarrow = FALSE,
                   xref='paper', yref='paper',
                   font = list(size = 12))))
