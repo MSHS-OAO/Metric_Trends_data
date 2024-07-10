@@ -209,15 +209,21 @@ server <- function(input, output, session) {
 
     if (metric_option %in% c("Expense to Revenue Ratio")) {
      
-      #data <- mshs_data() %>% 
-      data <- new_repo %>%
-        filter(Site == site_option, Metrics == "Expense to Revenue Ratio")%>%
+      data <- mshs_data() %>% 
+        filter(Site == site_option)%>%
         select("month", "year", "Site", "Actual", "Metrics", "date")
       
       
+      
+      repo_data <- new_repo %>%
+        filter(Site == site_option, 
+               date < data$date,
+               Metrics == "Expense to Revenue Ratio")%>%
+        select("month", "year", "Site", "Actual", "Metrics", "date")
+
       history <- Exp_Rev_Ratio %>% filter(Site== site_option)
       
-      data <- rbind(history, data) %>%
+      data <- rbind(history, repo_data, data) %>%
         mutate(Actual = round(Actual, 2))%>%
         arrange(date) %>%
         slice(tail(row_number(), 12))
@@ -258,14 +264,19 @@ server <- function(input, output, session) {
     
     if (metric_option %in% c("Expense to Revenue Ratio")) {
       
-      #data <- mshs_data() %>% 
-      data <- new_repo %>%
-        filter(Site == site_option, Metrics == "Expense to Revenue Ratio")%>%
+      data <- mshs_data() %>% 
+        filter(Site == site_option)%>%
+        select("month", "year", "Site", "Actual", "Metrics", "date")
+      
+      repo_data <- new_repo %>%
+        filter(Site == site_option, 
+               date < data$date,
+               Metrics == "Expense to Revenue Ratio")%>%
         select("month", "year", "Site", "Actual", "Metrics", "date")
       
       history <- Exp_Rev_Ratio %>% filter(Site== site_option)
       
-      data <- rbind(history, data) %>%
+      data <- rbind(history, repo_data, data) %>%
         mutate(Actual = round(Actual, 2))%>%
         arrange(date) %>%
         slice(tail(row_number(), 12))
@@ -304,14 +315,19 @@ server <- function(input, output, session) {
     
     if (metric_option %in% c("Expense to Revenue Ratio")) {
       
-      #data <- mshs_data() %>% 
-      data <- new_repo %>%
-        filter(Site == site_option, Metrics == "Expense to Revenue Ratio")%>%
+      data <- mshs_data() %>% 
+        filter(Site == site_option)%>%
+        select("month", "year", "Site", "Actual", "Metrics", "date")
+      
+      repo_data <- new_repo %>%
+        filter(Site == site_option, 
+               date < data$date,
+               Metrics == "Expense to Revenue Ratio")%>%
         select("month", "year", "Site", "Actual", "Metrics", "date")
       
       history <- Exp_Rev_Ratio %>% filter(Site== site_option)
       
-      data <- rbind(history, data) %>%
+      data <- rbind(history, repo_data, data) %>%
         mutate(Actual = round(Actual, 2))%>%
         arrange(date) %>%
         slice(tail(row_number(), 12))
@@ -348,15 +364,19 @@ server <- function(input, output, session) {
     
     if (metric_option %in% c("Expense to Revenue Ratio")) {
       
-      #data <- mshs_data() %>% 
-      data <- new_repo %>%
-        filter(Site == site_option, Metrics == "Expense to Revenue Ratio")%>%
+      data <- mshs_data() %>% 
+        filter(Site == site_option)%>%
         select("month", "year", "Site", "Actual", "Metrics", "date")
       
+      repo_data <- new_repo %>%
+        filter(Site == site_option, 
+               date < data$date,
+               Metrics == "Expense to Revenue Ratio")%>%
+        select("month", "year", "Site", "Actual", "Metrics", "date")
       
       history <- Exp_Rev_Ratio %>% filter(Site== site_option)
       
-      data <- rbind(history, data) %>%
+      data <- rbind(history, repo_data, data) %>%
         mutate(Actual = round(Actual, 2))%>%
         arrange(date) %>%
         slice(tail(row_number(), 12))
@@ -393,15 +413,19 @@ server <- function(input, output, session) {
     
     if (metric_option %in% c("Expense to Revenue Ratio")) {
       
-      #data <- mshs_data() %>% 
-      data <- new_repo %>%
-        filter(Site == site_option, Metrics == "Expense to Revenue Ratio")%>%
+      data <- mshs_data() %>% 
+        filter(Site == site_option)%>%
         select("month", "year", "Site", "Actual", "Metrics", "date")
       
+      repo_data <- new_repo %>%
+        filter(Site == site_option, 
+               date < data$date,
+               Metrics == "Expense to Revenue Ratio")%>%
+        select("month", "year", "Site", "Actual", "Metrics", "date")
       
       history <- Exp_Rev_Ratio %>% filter(Site== site_option)
       
-      data <- rbind(history, data) %>%
+      data <- rbind(history, repo_data, data) %>%
         mutate(Actual = round(Actual, 2))%>%
         arrange(date) %>%
         slice(tail(row_number(), 12))
@@ -438,15 +462,19 @@ server <- function(input, output, session) {
     
     if (metric_option %in% c("Expense to Revenue Ratio")) {
       
-      #data <- mshs_data() %>% 
-      data <- new_repo %>%
-        filter(Site == site_option, Metrics == "Expense to Revenue Ratio")%>%
+      data <- mshs_data() %>% 
+        filter(Site == site_option)%>%
         select("month", "year", "Site", "Actual", "Metrics", "date")
       
+      repo_data <- new_repo %>%
+        filter(Site == site_option, 
+               date < data$date,
+               Metrics == "Expense to Revenue Ratio")%>%
+        select("month", "year", "Site", "Actual", "Metrics", "date")
       
       history <- Exp_Rev_Ratio %>% filter(Site== site_option)
       
-      data <- rbind(history, data) %>%
+      data <- rbind(history, repo_data, data) %>%
         mutate(Actual = round(Actual, 2))%>%
         arrange(date) %>%
         slice(tail(row_number(), 12))
@@ -483,15 +511,19 @@ server <- function(input, output, session) {
     
     if (metric_option %in% c("Expense to Revenue Ratio")) {
       
-      #data <- mshs_data() %>% 
-      data <- new_repo %>%
-        filter(Site == site_option, Metrics == "Expense to Revenue Ratio")%>%
+      data <- mshs_data() %>% 
+        filter(Site == site_option)%>%
         select("month", "year", "Site", "Actual", "Metrics", "date")
       
+      repo_data <- new_repo %>%
+        filter(Site == site_option, 
+               date < data$date,
+               Metrics == "Expense to Revenue Ratio")%>%
+        select("month", "year", "Site", "Actual", "Metrics", "date")
       
       history <- Exp_Rev_Ratio %>% filter(Site== site_option)
       
-      data <- rbind(history, data) %>%
+      data <- rbind(history, repo_data, data) %>%
         mutate(Actual = round(Actual, 2))%>%
         arrange(date) %>%
         slice(tail(row_number(), 12))
@@ -527,15 +559,19 @@ server <- function(input, output, session) {
     
     if (metric_option %in% c("Expense to Revenue Ratio")) {
       
-      #data <- mshs_data() %>% 
-      data <- new_repo %>%
-        filter(Site == site_option, Metrics == "Expense to Revenue Ratio")%>%
+      data <- mshs_data() %>% 
+        filter(Site == site_option)%>%
         select("month", "year", "Site", "Actual", "Metrics", "date")
       
+      repo_data <- new_repo %>%
+        filter(Site == site_option, 
+               date < data$date,
+               Metrics == "Expense to Revenue Ratio")%>%
+        select("month", "year", "Site", "Actual", "Metrics", "date")
       
       history <- Exp_Rev_Ratio %>% filter(Site== site_option)
       
-      data <- rbind(history, data) %>%
+      data <- rbind(history, repo_data, data) %>%
         mutate(Actual = round(Actual, 2))%>%
         arrange(date) %>%
         slice(tail(row_number(), 12))
@@ -576,14 +612,19 @@ server <- function(input, output, session) {
     
     if (metric_option %in% c("Expense to Revenue Ratio")) {
       
-      #data <- mshs_data() %>% 
-      data <- new_repo %>%
-        filter(Site == site_option, Metrics == "Expense to Revenue Ratio")%>%
+      data <- mshs_data() %>% 
+        filter(Site == site_option)%>%
+        select("month", "year", "Site", "Actual", "Metrics", "date")
+      
+      repo_data <- new_repo %>%
+        filter(Site == site_option, 
+               date < data$date,
+               Metrics == "Expense to Revenue Ratio")%>%
         select("month", "year", "Site", "Actual", "Metrics", "date")
       
       history <- Exp_Rev_Ratio %>% filter(Site== site_option)
       
-      data <- rbind(history, data) %>%
+      data <- rbind(history, repo_data, data) %>%
         mutate(Actual = round(Actual, 2))%>%
         arrange(date) %>%
         slice(tail(row_number(), 12))
@@ -1114,12 +1155,14 @@ server <- function(input, output, session) {
   ## summary tab --------------------
   
   output$ratio_plot <- renderPlotly({
-    data <- metric_data() %>% 
-      filter(Metrics == "Expense to Revenue Ratio" ) %>%
-      select("month", "year", "Site", "Actual", "Metrics", "date")
     
     hospital <- isolate(input$all_hospital)
     
+    #data <- metric_data() %>% 
+    data <- new_repo %>%
+      filter(Metrics == "Expense to Revenue Ratio", Site== hospital) %>%
+      select("month", "year", "Site", "Actual", "Metrics", "date")
+
     history <- Exp_Rev_Ratio %>% filter(Site== hospital)
     
     
@@ -1142,8 +1185,9 @@ server <- function(input, output, session) {
     metric_choice <-  "Total Hospital Revenue"
     
     data <-  metric_data() %>%
+      #data <- new_repo %>%
       #filter(year %in% max(year)) %>%
-      filter(Metrics ==  metric_choice)%>%
+      filter(Metrics ==  metric_choice)%>% ungroup()%>%
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
              sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
              text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)),
@@ -1160,20 +1204,22 @@ server <- function(input, output, session) {
     # }
     # 
     # data <- data %>% mutate(Variance_scaled = Variance.From.Budget.YTD * ratio)
-    # 
-    # 
-    # if((max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.2 < 0){
-    #   max_value <- 0
-    # } else {
-    #   max_value <- (max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.2
-    # }
-    # 
-    # if((min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.2 > 0){
-    #   min_value <- 0
-    # } else {
-    #   min_value <- (min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.2
-    # }
-    # 
+
+
+    if((max(data$Variance, na.rm = TRUE))*1.2 < 0){
+      max_value <- 0
+    } else {
+      max_value <- (max(data$Variance, na.rm = TRUE))*1.2
+    }
+
+    if((min(data$Variance, na.rm = TRUE))*1.2 > 0){
+      min_value <- 0
+    } else {
+      min_value <- (min(data$Variance, na.rm = TRUE))*1.2
+    }
+    
+    
+    ratio_range <- c(min(data$Variance.From.Budget.YTD)*1.2, max(data$Variance.From.Budget.YTD)*1.2)
     # # Define labels for metrics    
     # text_label <- paste0("$", data$text_label)
     # y_label <- "Monthly Variance to Budget $"
@@ -1181,23 +1227,27 @@ server <- function(input, output, session) {
     # graph_style(data, site = isolate(input$all_hospital), metric = metric_choice, min =  min_value,
     #             max = max_value, text = text_label, y_label = y_label, ratio = ratio)
     
-    graph_style_break(data, site = isolate(input$all_hospital), metric = metric_choice)
+    graph_style_break(data, site = isolate(input$all_hospital), 
+                      metric = metric_choice, y_range = c(min_value, max_value), 
+                      ratio_range = ratio_range)
   })
   
   
   output$expense_plot <- renderPlotly({
     
     metric_choice <-  "Total Hospital Expenses"
+    hospital <- isolate(input$all_hospital)
+    
     data <-  metric_data() %>%
       #filter(year %in% max(year)) %>%
-      filter(Metrics %in%   metric_choice)%>%
+      filter(Metrics %in%   metric_choice)%>% ungroup() %>%
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
              sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
              text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)),
              ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)*100), ")"),
                                   Variance.From.Budget.YTD*100))
     
-    validate(need(nrow(data)>0, paste0( metric_choice, " is not available for ", isolate(input$all_hospital))))
+    validate(need(nrow(data)>0, paste0( metric_choice, " is not available for ",  hospital)))
     
     # #define a scale for second axis
     # ratio <- max(abs(data$Variance), na.rm = TRUE)/ max(abs(data$Variance.From.Budget.YTD), na.rm = TRUE)
@@ -1207,42 +1257,46 @@ server <- function(input, output, session) {
     # }
     # 
     # data <- data %>% mutate(Variance_scaled = Variance.From.Budget.YTD * ratio)
-    # 
-    # 
-    # if((max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.2 < 0){
-    #   max_value <- 0
-    # } else {
-    #   max_value <- (max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.2
-    # }
-    # 
-    # if((min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.2 > 0){
-    #   min_value <- 0
-    # } else {
-    #   min_value <- (min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.2
-    # }
-    # 
+    if((max(data$Variance, na.rm = TRUE))*1.2 < 0){
+      max_value <- 0
+    } else {
+      max_value <- (max(data$Variance, na.rm = TRUE))*1.2
+    }
+    
+    if((min(data$Variance, na.rm = TRUE))*1.2 > 0){
+      min_value <- 0
+    } else {
+      min_value <- (min(data$Variance, na.rm = TRUE))*1.2
+    }
+    
+    
+    ratio_range <- c(min(data$Variance.From.Budget.YTD)*1.2, max(data$Variance.From.Budget.YTD)*1.2)
     # # Define labels for metrics    
     # text_label <- paste0("$", data$text_label)
     # y_label <- "Monthly Variance to Budget $"
+    # 
+    # graph_style(data, site = isolate(input$all_hospital), metric = metric_choice, min =  min_value,
+    #             max = max_value, text = text_label, y_label = y_label, ratio = ratio)
     
-   
-    graph_style_break(data, site = isolate(input$all_hospital), metric = metric_choice)
+    graph_style_break(data, site =  hospital, 
+                      metric = metric_choice, y_range = c(min_value, max_value), 
+                      ratio_range = ratio_range)
   })
   
   output$discharges_plot <- renderPlotly({
     
     metric_choice <-  "Discharges"
-    
+    hospital <- isolate(input$all_hospital)
     data <-  metric_data() %>%
       #filter(year %in% max(year)) %>%
-      filter(Metrics %in%  metric_choice)%>%
+      filter(Metrics %in%  metric_choice)%>% ungroup()%>%
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
              sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
              text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)),
              ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)*100), ")"),
                                   Variance.From.Budget.YTD*100))
     
-    validate(need(nrow(data)>0, paste0(metric_choice, " is not available for ", isolate(input$all_hospital))))
+    validate(need(nrow(data)>0, paste0(metric_choice, " is not available for ",  hospital)))
     
     # #define a scale for second axis
     # ratio <- max(abs(data$Variance), na.rm = TRUE)/ max(abs(data$Variance.From.Budget.YTD), na.rm = TRUE)
@@ -1254,23 +1308,30 @@ server <- function(input, output, session) {
     # data <- data %>% mutate(Variance_scaled = Variance.From.Budget.YTD * ratio)
     # 
     # 
-    # if((max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.2 < 0){
-    #   max_value <- 0
-    # } else {
-    #   max_value <- (max(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.2
-    # }
-    # 
-    # if((min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.2 > 0){
-    #   min_value <- 0
-    # } else {
-    #   min_value <- (min(data$Variance, data$Variance_scaled, na.rm = TRUE))*1.2
-    # }
-    # 
-    # # Define labels for metrics    
-    # text_label <- data$text_label
-    # y_label <- "Monthly Variance to Budget"
+    if((max(data$Variance, na.rm = TRUE))*1.2 < 0){
+      max_value <- 0
+    } else {
+      max_value <- (max(data$Variance, na.rm = TRUE))*1.2
+    }
     
-    graph_style_break(data, site = isolate(input$all_hospital), metric = metric_choice)
+    if((min(data$Variance, na.rm = TRUE))*1.2 > 0){
+      min_value <- 0
+    } else {
+      min_value <- (min(data$Variance, na.rm = TRUE))*1.2
+    }
+    
+    
+    ratio_range <- c(min(data$Variance.From.Budget.YTD)*1.2, max(data$Variance.From.Budget.YTD)*1.2)
+    # # Define labels for metrics    
+    # text_label <- paste0("$", data$text_label)
+    # y_label <- "Monthly Variance to Budget $"
+    # 
+    # graph_style(data, site = isolate(input$all_hospital), metric = metric_choice, min =  min_value,
+    #             max = max_value, text = text_label, y_label = y_label, ratio = ratio)
+    
+    graph_style_break(data, site =  hospital, 
+                      metric = metric_choice, y_range = c(min_value, max_value), 
+                      ratio_range = ratio_range)
   })
   
   output$cmi_plot <- renderPlotly({

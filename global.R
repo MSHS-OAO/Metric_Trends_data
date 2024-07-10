@@ -233,17 +233,23 @@ new_repo <- new_repo %>%
 
 # fill NAs with zero if one of the Actual or Budget is available 
 new_repo <- new_repo %>% mutate(Actual = ifelse(!is.na(Budget) & is.na(Actual), 0, Actual),
-                                     Budget = ifelse(is.na(Budget) & !is.na(Actual), 0, Budget))
-                                     
+                                Budget = ifelse(is.na(Budget) & !is.na(Actual), 0, Budget))
 
+
+# change the Actual and Budget values into million
 new_repo <- new_repo %>%
   mutate( Actual= ifelse(Metrics %in% c("ALOS", "CMI", "Discharges", "Expense to Revenue Ratio"), Actual, Actual/1000),
           Budget= ifelse(Metrics %in% c("ALOS", "CMI", "Discharges", "Expense to Revenue Ratio"), Budget, Budget/1000),
           Actual = round(Actual, 3), Budget = round(Budget, 3))
 
+
+
+
 # for these metrics YTD variance = (budget - Actual)/budget
 metrics_dif <- c("CARTS", "Nursing Agency Costs", "Salaries and Benefits", 
                  "Supplies & Expenses", "Total Hospital Expenses", "ALOS" )
+
+
 
 
 #define Variance
@@ -266,7 +272,7 @@ new_repo <- new_repo %>%
 
 new_repo <- new_repo %>%
   mutate(Variance.From.Budget.YTD = 
-           ifelse(Variance.From.Budget.YTD %in% c("Inf", "-Inf", "NaN"), 0, Variance.From.Budget.YTD))
+           ifelse(Variance.From.Budget.YTD %in% c("Inf", "-Inf", "NaN"), NA, Variance.From.Budget.YTD))
 
 
 
@@ -443,7 +449,7 @@ plot_ly(data, x = ~sortedDate, y = ~Variance, type = "bar", showlegend = F,
                          overlaying = "y", side = "right", range = ratio_range, tickformat= ',.0%', 
                          titlefont = list(size = 12)), 
            xaxis = list(title="<b> Date <b>", titlefont = list(size = 12), fixedrange = TRUE,
-                        showline = TRUE, mirror= "ticks", linewidth = 1, tickangle= -45),
+                        showline = TRUE, mirror= "ticks", linewidth = 2, tickangle= -45),
                         #tickformat = "%b-%y"),
            yaxis = list(title= paste0("<b>", y_label,"<b>"), tickformat = y_tick, 
                         titlefont = list(size = 12), range = y_range, showline = TRUE,
