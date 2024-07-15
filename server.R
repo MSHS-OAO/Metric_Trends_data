@@ -185,13 +185,13 @@ server <- function(input, output, session) {
     validate(need(input$ratio_hospital != "", "Please Select a Hospital"),
              need(input$ratio_date_range != "", "Please Select a Date"))
              
-    data <-  new_repo  %>% 
-      filter(Metrics == "Expense to Revenue Ratio") %>%
-      select("month", "year", "Site", "Actual", "Metrics", "date")
+    # data <-  new_repo  %>% 
+    #   filter(Metrics == "Expense to Revenue Ratio") %>%
+    #   select("month", "year", "Site", "Actual", "Metrics", "date")
+    # 
+    # data <- rbind(Exp_Rev_Ratio, data)
     
-    data <- rbind(Exp_Rev_Ratio, data)
-    
-    data %>%
+    Exp_Rev_Ratio %>%
       filter(Site %in% input$ratio_hospital,
              date %in% input$ratio_date_range)
   }, ignoreNULL = FALSE)
@@ -211,21 +211,16 @@ server <- function(input, output, session) {
      
       data <- mshs_data() %>% 
         filter(Site == site_option)%>%
-        select("month", "year", "Site", "Actual", "Metrics", "date")
+        select("month", "year", "Site", "Actual", "Metrics", "date", "sortedDate")
       
+      history <- Exp_Rev_Ratio %>%
+        filter(Site== site_option,
+                 sortedDate < min(data$sortedDate))
       
-      
-      repo_data <- new_repo %>%
-        filter(Site == site_option, 
-               date < data$date,
-               Metrics == "Expense to Revenue Ratio")%>%
-        select("month", "year", "Site", "Actual", "Metrics", "date")
-
-      history <- Exp_Rev_Ratio %>% filter(Site== site_option)
-      
-      data <- rbind(history, repo_data, data) %>%
+  
+      data <- rbind(history, data) %>%
         mutate(Actual = round(Actual, 2))%>%
-        arrange(date) %>%
+        arrange(date) %>% 
         slice(tail(row_number(), 12))
       ratio_graph(data, site = site_option)
       
@@ -266,17 +261,13 @@ server <- function(input, output, session) {
       
       data <- mshs_data() %>% 
         filter(Site == site_option)%>%
-        select("month", "year", "Site", "Actual", "Metrics", "date")
+        select("month", "year", "Site", "Actual", "Metrics", "date", "sortedDate")
       
-      repo_data <- new_repo %>%
-        filter(Site == site_option, 
-               date < data$date,
-               Metrics == "Expense to Revenue Ratio")%>%
-        select("month", "year", "Site", "Actual", "Metrics", "date")
+      history <- Exp_Rev_Ratio %>%
+        filter(Site== site_option,
+               sortedDate < min(data$sortedDate))
       
-      history <- Exp_Rev_Ratio %>% filter(Site== site_option)
-      
-      data <- rbind(history, repo_data, data) %>%
+      data <- rbind(history, data) %>%
         mutate(Actual = round(Actual, 2))%>%
         arrange(date) %>%
         slice(tail(row_number(), 12))
@@ -317,17 +308,13 @@ server <- function(input, output, session) {
       
       data <- mshs_data() %>% 
         filter(Site == site_option)%>%
-        select("month", "year", "Site", "Actual", "Metrics", "date")
+        select("month", "year", "Site", "Actual", "Metrics", "date", "sortedDate")
       
-      repo_data <- new_repo %>%
-        filter(Site == site_option, 
-               date < data$date,
-               Metrics == "Expense to Revenue Ratio")%>%
-        select("month", "year", "Site", "Actual", "Metrics", "date")
+      history <- Exp_Rev_Ratio %>%
+        filter(Site== site_option,
+               sortedDate < min(data$sortedDate))
       
-      history <- Exp_Rev_Ratio %>% filter(Site== site_option)
-      
-      data <- rbind(history, repo_data, data) %>%
+      data <- rbind(history, data) %>%
         mutate(Actual = round(Actual, 2))%>%
         arrange(date) %>%
         slice(tail(row_number(), 12))
@@ -366,17 +353,13 @@ server <- function(input, output, session) {
       
       data <- mshs_data() %>% 
         filter(Site == site_option)%>%
-        select("month", "year", "Site", "Actual", "Metrics", "date")
+        select("month", "year", "Site", "Actual", "Metrics", "date", "sortedDate")
       
-      repo_data <- new_repo %>%
-        filter(Site == site_option, 
-               date < data$date,
-               Metrics == "Expense to Revenue Ratio")%>%
-        select("month", "year", "Site", "Actual", "Metrics", "date")
+      history <- Exp_Rev_Ratio %>%
+        filter(Site== site_option,
+               sortedDate < min(data$sortedDate))
       
-      history <- Exp_Rev_Ratio %>% filter(Site== site_option)
-      
-      data <- rbind(history, repo_data, data) %>%
+      data <- rbind(history, data) %>%
         mutate(Actual = round(Actual, 2))%>%
         arrange(date) %>%
         slice(tail(row_number(), 12))
@@ -415,17 +398,13 @@ server <- function(input, output, session) {
       
       data <- mshs_data() %>% 
         filter(Site == site_option)%>%
-        select("month", "year", "Site", "Actual", "Metrics", "date")
+        select("month", "year", "Site", "Actual", "Metrics", "date", "sortedDate")
       
-      repo_data <- new_repo %>%
-        filter(Site == site_option, 
-               date < data$date,
-               Metrics == "Expense to Revenue Ratio")%>%
-        select("month", "year", "Site", "Actual", "Metrics", "date")
+      history <- Exp_Rev_Ratio %>%
+        filter(Site== site_option,
+               sortedDate < min(data$sortedDate))
       
-      history <- Exp_Rev_Ratio %>% filter(Site== site_option)
-      
-      data <- rbind(history, repo_data, data) %>%
+      data <- rbind(history, data) %>%
         mutate(Actual = round(Actual, 2))%>%
         arrange(date) %>%
         slice(tail(row_number(), 12))
@@ -464,17 +443,13 @@ server <- function(input, output, session) {
       
       data <- mshs_data() %>% 
         filter(Site == site_option)%>%
-        select("month", "year", "Site", "Actual", "Metrics", "date")
+        select("month", "year", "Site", "Actual", "Metrics", "date", "sortedDate")
       
-      repo_data <- new_repo %>%
-        filter(Site == site_option, 
-               date < data$date,
-               Metrics == "Expense to Revenue Ratio")%>%
-        select("month", "year", "Site", "Actual", "Metrics", "date")
+      history <- Exp_Rev_Ratio %>%
+        filter(Site== site_option,
+               sortedDate < min(data$sortedDate))
       
-      history <- Exp_Rev_Ratio %>% filter(Site== site_option)
-      
-      data <- rbind(history, repo_data, data) %>%
+      data <- rbind(history, data) %>%
         mutate(Actual = round(Actual, 2))%>%
         arrange(date) %>%
         slice(tail(row_number(), 12))
@@ -513,17 +488,13 @@ server <- function(input, output, session) {
       
       data <- mshs_data() %>% 
         filter(Site == site_option)%>%
-        select("month", "year", "Site", "Actual", "Metrics", "date")
+        select("month", "year", "Site", "Actual", "Metrics", "date", "sortedDate")
       
-      repo_data <- new_repo %>%
-        filter(Site == site_option, 
-               date < data$date,
-               Metrics == "Expense to Revenue Ratio")%>%
-        select("month", "year", "Site", "Actual", "Metrics", "date")
+      history <- Exp_Rev_Ratio %>%
+        filter(Site== site_option,
+               sortedDate < min(data$sortedDate))
       
-      history <- Exp_Rev_Ratio %>% filter(Site== site_option)
-      
-      data <- rbind(history, repo_data, data) %>%
+      data <- rbind(history, data) %>%
         mutate(Actual = round(Actual, 2))%>%
         arrange(date) %>%
         slice(tail(row_number(), 12))
@@ -561,17 +532,13 @@ server <- function(input, output, session) {
       
       data <- mshs_data() %>% 
         filter(Site == site_option)%>%
-        select("month", "year", "Site", "Actual", "Metrics", "date")
+        select("month", "year", "Site", "Actual", "Metrics", "date", "sortedDate")
       
-      repo_data <- new_repo %>%
-        filter(Site == site_option, 
-               date < data$date,
-               Metrics == "Expense to Revenue Ratio")%>%
-        select("month", "year", "Site", "Actual", "Metrics", "date")
+      history <- Exp_Rev_Ratio %>%
+        filter(Site== site_option,
+               sortedDate < min(data$sortedDate))
       
-      history <- Exp_Rev_Ratio %>% filter(Site== site_option)
-      
-      data <- rbind(history, repo_data, data) %>%
+      data <- rbind(history, data) %>%
         mutate(Actual = round(Actual, 2))%>%
         arrange(date) %>%
         slice(tail(row_number(), 12))
@@ -614,23 +581,17 @@ server <- function(input, output, session) {
       
       data <- mshs_data() %>% 
         filter(Site == site_option)%>%
-        select("month", "year", "Site", "Actual", "Metrics", "date")
+        select("month", "year", "Site", "Actual", "Metrics", "date", "sortedDate")
       
-      repo_data <- new_repo %>%
-        filter(Site == site_option, 
-               date < data$date,
-               Metrics == "Expense to Revenue Ratio")%>%
-        select("month", "year", "Site", "Actual", "Metrics", "date")
+      history <- Exp_Rev_Ratio %>%
+        filter(Site== site_option,
+               sortedDate < min(data$sortedDate))
       
-      history <- Exp_Rev_Ratio %>% filter(Site== site_option)
-      
-      data <- rbind(history, repo_data, data) %>%
+      data <- rbind(history, data) %>%
         mutate(Actual = round(Actual, 2))%>%
         arrange(date) %>%
         slice(tail(row_number(), 12))
-      
-      test_ratio <<- data
-      
+
       ratio_graph(data, site = site_option)
       
     } else {
@@ -1158,12 +1119,14 @@ server <- function(input, output, session) {
     
     hospital <- isolate(input$all_hospital)
     
-    #data <- metric_data() %>% 
-    data <- new_repo %>%
+    data <- metric_data() %>% 
       filter(Metrics == "Expense to Revenue Ratio", Site== hospital) %>%
-      select("month", "year", "Site", "Actual", "Metrics", "date")
+      select("month", "year", "Site", "Actual", "Metrics", "date", "sortedDate" )
 
-    history <- Exp_Rev_Ratio %>% filter(Site== hospital)
+    
+    history <- Exp_Rev_Ratio %>%
+      filter(Site== site_option,
+             sortedDate < min(data$sortedDate))
     
     
     data <- rbind(history, data) %>%
@@ -1694,11 +1657,15 @@ server <- function(input, output, session) {
   output$ratio_plot_var <- renderPlotly({
     data <- metric_data_var() %>% 
       filter(Metrics == "Expense to Revenue Ratio" ) %>%
-      select("month", "year", "Site", "Actual", "Metrics", "date")
+      select("month", "year", "Site", "Actual", "Metrics", "date", "sortedDate")
     
     hospital <- isolate(input$all_hospital_var)
     
-    history <- Exp_Rev_Ratio %>% filter(Site== hospital)
+   
+    
+    history <- Exp_Rev_Ratio %>%
+      filter(Site== hospital,
+             sortedDate < min(data$sortedDate))
     
     
     data <- rbind(history, data) %>%
@@ -2083,12 +2050,13 @@ server <- function(input, output, session) {
   output$ratio_plot_ytd <- renderPlotly({
     data <- metric_data_ytd() %>% 
       filter(Metrics == "Expense to Revenue Ratio" ) %>%
-      select("month", "year", "Site", "Actual", "Metrics", "date")
+      select("month", "year", "Site", "Actual", "Metrics", "date", "sortedDate")
     
     hospital <- isolate(input$all_hospital_ytd)
     
-    history <- Exp_Rev_Ratio %>% filter(Site == hospital)
-    
+    history <- Exp_Rev_Ratio %>%
+      filter(Site== hospital,
+             sortedDate < min(data$sortedDate))
     
     data <- rbind(history, data) %>%
       mutate(Actual = round(Actual, 2))%>%
@@ -2491,10 +2459,15 @@ server <- function(input, output, session) {
   
   # Ratio tab --------------------------------------
   
+  # Color Functions for Graphs =====================================
+
+  
+  
+  
   output$ratio_plot_all <- renderPlot({
     
     data <- ratio_data()
-
+    
     data <- data %>%
       mutate(Actual = round(Actual, 2))%>%
       arrange(year, month) %>% 
@@ -2504,9 +2477,9 @@ server <- function(input, output, session) {
     ggplot(data, 
            aes(x=month, y=Actual, fill= year, group = year))+
       geom_bar(position= position_dodge(),stat="identity", width=0.7)+
-      scale_fill_manual(values=c("#d80b8c",	"#00aeef","#863198", "#212070"))+
+      scale_fill_manual(values=c("#7f7f7f", "#d80b8c",	"#00aeef","#863198", "#212070"))+
       labs(x = "Date", y = "Expense to Revenue Ratio" , 
-          title = isolate(paste0(input$ratio_hospital, " Expense to Revenue Ratio" ))
+          #title = isolate(paste0(input$ratio_hospital, " Expense to Revenue Ratio" ))
       )+
       guides(fill=guide_legend(title="Year"))+
       theme_bw()+

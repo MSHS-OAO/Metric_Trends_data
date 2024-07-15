@@ -283,10 +283,17 @@ Exp_Rev_Ratio <- read_excel(paste0(dir,  "REPO/Exp_Rev_Ratio.xlsx"))
 Exp_Rev_Ratio <- Exp_Rev_Ratio %>%
   gather(-c("month", "year"), key = Site, value = Actual) %>%
   mutate(Metrics = "Expense to Revenue Ratio")%>%
-  # mutate(month= ifelse(nchar(month) < 2, paste0("0", month), month),
-  #        date = paste0(year, "-", month),
-  #        month= as.numeric(month)) %>%
-  mutate(date = paste0(month.abb[c(month)], "-", substr(year, 3, 4)))
+  mutate(month= ifelse(nchar(month) < 2, paste0("0", month), month),
+         date = paste0(year, "-", month),
+         sortedDate = as.Date(paste0(date,  "-01")))%>%
+        arrange(sortedDate) %>%
+mutate(date = paste0(month.abb[c(as.numeric(month))], "-", substr(year, 3, 4)))
+
+repo_exp_rev_ratio <- new_repo %>%
+  filter(Metrics %in% "Expense to Revenue Ratio")%>%
+  select("month", "year", "Site", "Actual", "Metrics", "date", "sortedDate")
+
+Exp_Rev_Ratio <- rbind(Exp_Rev_Ratio, repo_exp_rev_ratio)
 
 levels_options <- unique(Exp_Rev_Ratio$date)
 Exp_Rev_Ratio <- Exp_Rev_Ratio %>%
@@ -326,6 +333,92 @@ ratio_date_option <- c(rev(date_options), ratio_date_option)
 
 #options(ggrepel.max.overlaps = Inf)
 
+# Mount Sinai corporate colors 
+MountSinai_colors <- c(
+  `dark purple`  = "#212070",
+  `dark pink`    = "#d80b8c",
+  `dark blue`    = "#00aeef",
+  `dark grey`    = "#7f7f7f",
+  `yellow`       = "#ffc000",
+  `purple`       = "#7030a0",
+  `med purple`   = "#5753d0",
+  `med pink`     = "#f75dbe",
+  `med blue`     = "#5cd3ff",
+  `med grey`     = "#a5a7a5",
+  `light purple` = "#c7c6ef",
+  `light pink`   = "#fcc9e9",
+  `light blue`   = "#c9f0ff",
+  `light grey`   = "#dddedd",
+  `navy`         = "#00002D"
+)
+
+
+MountSinai_cols <- function(...) {
+  cols <- c(...)
+  
+  if (is.null(cols))
+    return (MountSinai_colors)
+  
+  MountSinai_colors[cols]
+}
+
+# Create palettes 
+MountSinai_palettes <- list(
+  `all`   = MountSinai_cols("dark purple","dark pink","dark blue","dark grey",
+                            "med purple","med pink","med blue","med grey", 
+                            "light purple","light pink","light blue","light grey"),
+  
+  `dark`  = MountSinai_cols("med purple","med grey","med blue", "navy",
+                            "med pink","dark purple","dark blue", "dark grey",                   
+                            "dark pink"),
+  
+  `main`  = MountSinai_cols("dark purple","dark grey","dark pink","dark blue",
+                            "med purple","med pink","med blue","med grey"),
+  
+  `purple`  = MountSinai_cols("dark purple","med purple","light purple"),
+  
+  `pink`  = MountSinai_cols("dark pink","med pink","light pink"),
+  
+  `blue`  = MountSinai_cols("dark blue", "med blue", "light blue"),
+  
+  `grey`  = MountSinai_cols("dark grey", "med grey", "light grey"),
+  
+  `purpleGrey` = MountSinai_cols("dark purple", "dark grey"),
+  
+  `pinkBlue` = MountSinai_cols("dark pink", "dark blue")
+  
+)
+
+
+MountSinai_pal <- function(palette = "all", reverse = FALSE, ...) {
+  pal <- MountSinai_palettes[[palette]]
+  
+  if (reverse) pal <- rev(pal)
+  
+  colorRampPalette(pal, ...)
+}
+
+# Scale Function for ggplot can be used instead of scale_color_manual
+scale_color_MountSinai <- function(palette = "all", discrete = TRUE, reverse = FALSE, ...) {
+  pal <- MountSinai_pal(palette = palette, reverse = reverse)
+  
+  if (discrete) {
+    discrete_scale("colour", paste0("MountSinai_", palette), palette = pal, ...)
+  } else {
+    scale_color_gradientn(colours = pal(256), ...)
+  }
+}
+
+# Scale Fill for ggplot insetead of scale_fill_manual 
+scale_fill_MountSinai <- function(palette = "all", discrete = TRUE, reverse = FALSE, ...) {
+  pal <- MountSinai_pal(palette = palette, reverse = reverse)
+  
+  if (discrete) {
+    discrete_scale("fill", paste0("MountSinai_", palette), palette = pal, ...)
+  } else {
+    scale_fill_gradientn(colours = pal(256), ...)
+  }
+}  
 
 # graph functions
 ratio_graph <- function(data, site) {
