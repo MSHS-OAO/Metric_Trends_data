@@ -421,10 +421,8 @@ scale_fill_MountSinai <- function(palette = "all", discrete = TRUE, reverse = FA
 }  
 
 # graph functions
-ratio_graph <- function(data, site) {
+ratio_graph <- function(data, site, min_ratio, max_ratio) {
   
-  max_ratio <- 1.9
-  min_ratio <- 0.7
  
   ggplotly(
   ggplot(data)  + 
