@@ -455,65 +455,6 @@ ratio_graph <- function(data, site, min_ratio, max_ratio) {
 
 graph_style_break <- function(data, site, metric, y_range, ratio_range){
   
-  # if(metric %in% c("Total Hospital Revenue")) {
-  #   y_range <- c(-30000, 20000) 	
-  #   breaks  <- 5000 
-  #   ratio_range <- c(-0.24, 0.16)
-  #   breaks_ratio <- 0.04
-  # } else if(metric %in% c("Outpatient Revenue")) {
-  #   y_range  <- c(-8000, 12000) 	
-  #   breaks  <- 2000 
-  #   ratio_range <- c(-0.12, 0.18)
-  #   breaks_ratio <- 0.03
-  # } else if(metric %in% c("340B/Other Operating Revenue")) {
-  #   y_range  <- c(-14000, 6000 )
-  #   breaks  <- 2000 
-  #   ratio_range <- c(-0.42, 0.18)
-  #   breaks_ratio <- 0.06
-  # } else if(metric %in% c("Total Hospital Expenses")) {
-  #   y_range  <- c(-40000, 10000) 	
-  #   breaks  <- 5000 
-  #   ratio_range <- c(-0.24, 0.06)
-  #   breaks_ratio <- 3
-  # } else if(metric %in% c("Salaries and Benefits")) {
-  #   y_range  <- c(-14000, 10000)	
-  #   breaks  <- 2000 
-  #   ratio_range <- c(-0.12, 0.10)
-  #   breaks_ratio <- 0.02
-  # } else if(metric %in% c("Supplies & Expenses")) {
-  #   y_range  <- c(-25000, 30000)	
-  #   breaks  <- 5000
-  #   ratio_range <- c(-0.25, 0.30)
-  #   breaks_ratio <- 0.05
-  # } else if(metric %in% c("CARTS")) {
-  #   y_range  <- c(-5000, 5000)	
-  #   breaks  <- 1000 
-  #   ratio_range <- c(-0.40, 0.40)
-  #   breaks_ratio <- 0.8
-  # } else if(metric %in% c("Nursing Agency Costs")) {
-  #   y_range <- c(-8000, 2000)
-  #   breaks  <- 2000 
-  #   ratio_range <- c(-8.00, 2.00)
-  #   breaks_ratio <- 2.00
-  # } else if(metric %in% c("Discharges")) {
-  #   y_range  <- c(-750, 750) 	
-  #   breaks  <- 150
-  #   ratio_range <- c(-0.75, 0.75)
-  #   breaks_ratio <- 0.5
-  # } else if(metric %in% c("CMI")) {
-  #   y_range  <- c(-0.25, 0.25)	
-  #   breaks  <- 0.05
-  #   ratio_range <- c(-0.10, 0.10)
-  #   breaks_ratio <- 0.02
-  # } else if(metric %in% c("ALOS")) {
-  #   y_range  <- c(-2.5, 2.5)	
-  #   breaks  <- 0.5
-  #   ratio_range <- c(-0.25, 0.25)
-  #   breaks_ratio <- 0.05
-  # }
-
- 
-  
   last_data_point <-  data %>% filter(year == max_year) %>% filter(month == max(month))
   text_color <- ifelse(last_data_point$Variance < 0, "red", "black")
   text_color_ratio <- ifelse(last_data_point$Variance.From.Budget.YTD < 0, "red", "black")
@@ -530,9 +471,9 @@ graph_style_break <- function(data, site, metric, y_range, ratio_range){
   }
   
   
-plot_ly(data, x = ~sortedDate, y = ~Variance, type = "bar", showlegend = F, 
+plot_ly(data, x = ~date, y = ~Variance, type = "bar", showlegend = F, 
           marker = list(color =  "#b2b3b2")) %>%
-    add_trace(data, x = ~sortedDate, y = ~Variance.From.Budget.YTD, type = "scatter", 
+    add_trace(data, x = ~date, y = ~Variance.From.Budget.YTD, type = "scatter", 
               mode = "lines+markers", yaxis = "y2", marker = list(color = "#212070"),
               line = list(color =  "#212070")) %>%
     layout(title= paste0("<b> ", site, " ", metric, "<b>"),
@@ -545,11 +486,11 @@ plot_ly(data, x = ~sortedDate, y = ~Variance, type = "bar", showlegend = F,
            yaxis = list(title= paste0("<b>", y_label,"<b>"), tickformat = y_tick, 
                         titlefont = list(size = 12), range = y_range, showline = TRUE,
                         mirror = "ticks", linewidth = 2))%>%
-    add_text(x = last_data_point$sortedDate, y = last_data_point$Variance, 
+    add_text(x = last_data_point$date, y = last_data_point$Variance, 
              text = paste0("<b>", text_label, "<b> "), 
              textposition = "outside center", 
              textfont = list(color = text_color, size = 10))%>%
-    add_text(x = last_data_point$sortedDate, y = last_data_point$Variance.From.Budget.YTD, 
+    add_text(x = last_data_point$date, y = last_data_point$Variance.From.Budget.YTD, 
              text = paste0("<b>", last_data_point$ratio_label,"%", "<b>"), 
              textposition = "top center", textfont = list(color = text_color_ratio, size = 10))%>%
     layout(margin = list(l = 50, r = 50, t = 50, b = 50),
@@ -1078,7 +1019,7 @@ var_graph <- function(data, site, metric) {
     
   
     
-  last_data_point <-  data %>% filter(month == max(month), year == max(year))
+  last_data_point <-  data %>% filter(year %in% max_year) %>% filter(month == max(month)) 
   text_color <- ifelse(last_data_point$Variance < 0, "red", "black")
   
   # Define different labels for metrics    
@@ -1137,7 +1078,7 @@ ytd_graph <- function(data, site, metric) {
     
   
   
-  last_data_point <-  data %>% filter(month == max(month), year == max(year))
+  last_data_point <-  data %>% filter(year == max(year))%>% filter(month == max(month))
   text_color_ratio <- ifelse(last_data_point$Variance.From.Budget.YTD < 0, "red", "black")
   
   plot_ly(data, x = ~date, y = ~Variance.From.Budget.YTD, type = "scatter", showlegend = F,
