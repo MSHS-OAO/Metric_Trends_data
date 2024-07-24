@@ -235,16 +235,20 @@ server <- function(input, output, session) {
         filter(!is.na(Variance)) %>%
         filter(!is.na(Variance.From.Budget.YTD))
       
-      y_range <- c(min(mshs_data()$Variance, na.rm = TRUE)*1.2, 
-                   max(mshs_data()$Variance, na.rm = TRUE)*1.2)
-      
-      ratio_range  <- c(min(mshs_data()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2, 
-                               max(mshs_data()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2)
+      max_range <- max(abs(min(mshs_data()$Variance, na.rm = TRUE))*1.2,
+                       max(mshs_data()$Variance, na.rm = TRUE)*1.2)
       
       
+      y_range <- c(-max_range, max_range)
       
       
+      max_ratio  <- max(abs(min(mshs_data()$Variance.From.Budget.YTD, na.rm = TRUE))*1.2, 
+                        max(mshs_data()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2)
       
+      ratio_range <- c(-max_ratio, max_ratio)
+      
+      
+
       validate(need(nrow(data) > 0, paste0(metric_option, " is not available for ", site_option)))
       graph_style_break(data = data, site = site_option, metric= metric_option, 
                         y_range = y_range, ratio_range = ratio_range)
@@ -282,12 +286,17 @@ server <- function(input, output, session) {
                                     Variance.From.Budget.YTD*100))%>%
                                      arrange(date)
       
-      y_range <- c(min(mshs_data()$Variance, na.rm = TRUE)*1.2, 
-                   max(mshs_data()$Variance, na.rm = TRUE)*1.2)
+      max_range <- max(abs(min(mshs_data()$Variance, na.rm = TRUE))*1.2,
+                       max(mshs_data()$Variance, na.rm = TRUE)*1.2)
       
-      ratio_range <- c(min(mshs_data()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2, 
-                               max(mshs_data()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2)
-     
+      
+      y_range <- c(-max_range, max_range)
+      
+      
+      max_ratio  <- max(abs(min(mshs_data()$Variance.From.Budget.YTD, na.rm = TRUE))*1.2, 
+                        max(mshs_data()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2)
+      
+      ratio_range <- c(-max_ratio, max_ratio)
       
       
       validate(need(nrow(data) > 0, paste0(metric_option, " is not available for ", site_option)))
@@ -329,12 +338,17 @@ server <- function(input, output, session) {
                                     Variance.From.Budget.YTD*100))%>%
         ungroup()%>% arrange(date)
       
-      y_range <- c(min(mshs_data()$Variance, na.rm = TRUE)*1.2, 
-                   max(mshs_data()$Variance, na.rm = TRUE)*1.2)
+      max_range <- max(abs(min(mshs_data()$Variance, na.rm = TRUE))*1.2,
+                       max(mshs_data()$Variance, na.rm = TRUE)*1.2)
       
       
-      ratio_range <- c(min(mshs_data()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2, 
-                       max(mshs_data()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2)
+      y_range <- c(-max_range, max_range)
+      
+      
+      max_ratio  <- max(abs(min(mshs_data()$Variance.From.Budget.YTD, na.rm = TRUE))*1.2, 
+                        max(mshs_data()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2)
+      
+      ratio_range <- c(-max_ratio, max_ratio)
       
       
       validate(need(nrow(data) > 0, paste0(metric_option, " is not available for ", site_option)))
@@ -374,12 +388,17 @@ server <- function(input, output, session) {
                                     Variance.From.Budget.YTD*100))%>%
                                        arrange(date)
       
-      y_range <- c(min(mshs_data()$Variance, na.rm = TRUE)*1.2, 
-                   max(mshs_data()$Variance, na.rm = TRUE)*1.2)
+      max_range <- max(abs(min(mshs_data()$Variance, na.rm = TRUE))*1.2,
+                       max(mshs_data()$Variance, na.rm = TRUE)*1.2)
       
       
-      ratio_range <- c(min(mshs_data()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2, 
-                       max(mshs_data()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2)
+      y_range <- c(-max_range, max_range)
+      
+      
+      max_ratio  <- max(abs(min(mshs_data()$Variance.From.Budget.YTD, na.rm = TRUE))*1.2, 
+                        max(mshs_data()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2)
+      
+      ratio_range <- c(-max_ratio, max_ratio)
       
       
       validate(need(nrow(data) > 0, paste0(metric_option, " is not available for ", site_option)))
@@ -419,12 +438,17 @@ server <- function(input, output, session) {
                                     Variance.From.Budget.YTD*100))%>%
                                       arrange(date)
       
-      y_range <- c(min(mshs_data()$Variance, na.rm = TRUE)*1.2, 
-                   max(mshs_data()$Variance, na.rm = TRUE)*1.2)
+      max_range <- max(abs(min(mshs_data()$Variance, na.rm = TRUE))*1.2,
+                       max(mshs_data()$Variance, na.rm = TRUE)*1.2)
       
       
-      ratio_range <- c(min(mshs_data()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2, 
-                       max(mshs_data()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2)
+      y_range <- c(-max_range, max_range)
+      
+      
+      max_ratio  <- max(abs(min(mshs_data()$Variance.From.Budget.YTD, na.rm = TRUE))*1.2, 
+                        max(mshs_data()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2)
+      
+      ratio_range <- c(-max_ratio, max_ratio)
       
       
       validate(need(nrow(data) > 0, paste0(metric_option, " is not available for ", site_option)))
@@ -464,12 +488,17 @@ server <- function(input, output, session) {
                                     Variance.From.Budget.YTD*100))%>%
                                      arrange(date)
       
-      y_range <- c(min(mshs_data()$Variance, na.rm = TRUE)*1.2, 
-                   max(mshs_data()$Variance, na.rm = TRUE)*1.2)
+      max_range <- max(abs(min(mshs_data()$Variance, na.rm = TRUE))*1.2,
+                       max(mshs_data()$Variance, na.rm = TRUE)*1.2)
       
       
-      ratio_range <- c(min(mshs_data()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2, 
-                       max(mshs_data()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2)
+      y_range <- c(-max_range, max_range)
+      
+      
+      max_ratio  <- max(abs(min(mshs_data()$Variance.From.Budget.YTD, na.rm = TRUE))*1.2, 
+                        max(mshs_data()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2)
+      
+      ratio_range <- c(-max_ratio, max_ratio)
       
       
       validate(need(nrow(data) > 0, paste0(metric_option, " is not available for ", site_option)))
@@ -509,12 +538,17 @@ server <- function(input, output, session) {
                                     Variance.From.Budget.YTD*100))%>%
                                          arrange(date)
       
-      y_range <- c(min(mshs_data()$Variance, na.rm = TRUE)*1.2, 
-                   max(mshs_data()$Variance, na.rm = TRUE)*1.2)
+      max_range <- max(abs(min(mshs_data()$Variance, na.rm = TRUE))*1.2,
+                       max(mshs_data()$Variance, na.rm = TRUE)*1.2)
       
       
-      ratio_range <- c(min(mshs_data()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2, 
-                       max(mshs_data()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2)
+      y_range <- c(-max_range, max_range)
+      
+      
+      max_ratio  <- max(abs(min(mshs_data()$Variance.From.Budget.YTD, na.rm = TRUE))*1.2, 
+                        max(mshs_data()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2)
+      
+      ratio_range <- c(-max_ratio, max_ratio)
       
       validate(need(nrow(data) > 0, paste0(metric_option, " is not available for ", site_option)))
       graph_style_break(data = data, site = site_option, metric= metric_option, 
@@ -553,12 +587,17 @@ server <- function(input, output, session) {
                                     Variance.From.Budget.YTD*100))%>%
                                       arrange(date)
       
-      y_range <- c(min(mshs_data()$Variance, na.rm = TRUE)*1.2, 
-                   max(mshs_data()$Variance, na.rm = TRUE)*1.2)
+      max_range <- max(abs(min(mshs_data()$Variance, na.rm = TRUE))*1.2,
+                       max(mshs_data()$Variance, na.rm = TRUE)*1.2)
       
-      ratio_value <- max(abs(c(min(mshs_data()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2, 
-                               max(mshs_data()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2)))
-      ratio_range <- c(-ratio_value, ratio_value)
+      
+      y_range <- c(-max_range, max_range)
+      
+      
+      max_ratio  <- max(abs(min(mshs_data()$Variance.From.Budget.YTD, na.rm = TRUE))*1.2, 
+                        max(mshs_data()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2)
+      
+      ratio_range <- c(-max_ratio, max_ratio)
       
       
       validate(need(nrow(data) > 0, paste0(metric_option, " is not available for ", site_option)))
@@ -609,11 +648,17 @@ server <- function(input, output, session) {
         filter(!is.na(Variance.From.Budget.YTD))
       
       validate(need(nrow(data) > 0, paste0(metric_option, " is not available for ", site_option)))
-      y_range <- c(min(mshs_data()$Variance, na.rm = TRUE)*1.2, 
-                   max(mshs_data()$Variance, na.rm = TRUE)*1.2)
+      max_range <- max(abs(min(mshs_data()$Variance, na.rm = TRUE))*1.2,
+                       max(mshs_data()$Variance, na.rm = TRUE)*1.2)
       
-      ratio_range <- c(min(mshs_data()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2, 
-                               max(mshs_data()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2)
+      
+      y_range <- c(-max_range, max_range)
+      
+      
+      max_ratio  <- max(abs(min(mshs_data()$Variance.From.Budget.YTD, na.rm = TRUE))*1.2, 
+                        max(mshs_data()$Variance.From.Budget.YTD, na.rm = TRUE)*1.2)
+      
+      ratio_range <- c(-max_ratio, max_ratio)
       
       
       
@@ -1164,52 +1209,20 @@ server <- function(input, output, session) {
     
     validate(need(nrow(data)>0, paste0(metric_choice, " is not available for ", isolate(input$all_hospital))))
     
-    #define a scale for second axis
-    # ratio <- max(abs(data$Variance), na.rm = TRUE)/ max(abs(data$Variance.From.Budget.YTD), na.rm = TRUE)
-    # 
-    # if (ratio %in% c("Inf", "-Inf", "NaN")) {
-    #   ratio <- 0
-    # }
-    # 
-    # data <- data %>% mutate(Variance_scaled = Variance.From.Budget.YTD * ratio)
-
-
-    if((max(data$Variance, na.rm = TRUE))*1.2 < 0){
-      max_value <- 0
-    } else {
-      max_value <- (max(data$Variance, na.rm = TRUE))*1.2
-    }
-
-    if((min(data$Variance, na.rm = TRUE))*1.2 > 0){
-      min_value <- 0
-    } else {
-      min_value <- (min(data$Variance, na.rm = TRUE))*1.2
-    }
+    max_range <- max(abs(min(data$Variance, na.rm = TRUE))*1.2,
+                     max(data$Variance, na.rm = TRUE)*1.2)
     
     
-    # Define the range for second axis
-    if((max(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.2 < 0){
-      max_ratio <- 0
-    } else {
-      max_ratio <- (max(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.2
-    }
+    y_range <- c(-max_range, max_range)
     
-    if((min(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.2 > 0){
-      min_ratio <- 0
-    } else {
-      min_ratio <- (min(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.2
-    }
     
-    ratio_range <- c(min_ratio, max_ratio)
-    # # Define labels for metrics    
-    # text_label <- paste0("$", data$text_label)
-    # y_label <- "Monthly Variance to Budget $"
-    # 
-    # graph_style(data, site = isolate(input$all_hospital), metric = metric_choice, min =  min_value,
-    #             max = max_value, text = text_label, y_label = y_label, ratio = ratio)
+    max_ratio  <- max(abs(min(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.2, 
+                      max(data$Variance.From.Budget.YTD, na.rm = TRUE)*1.2)
+    
+    ratio_range <- c(-max_ratio, max_ratio)
     
     graph_style_break(data, site = isolate(input$all_hospital), 
-                      metric = metric_choice, y_range = c(min_value, max_value), 
+                      metric = metric_choice, y_range = y_range, 
                       ratio_range = ratio_range)
   })
   
@@ -1230,50 +1243,20 @@ server <- function(input, output, session) {
     
     validate(need(nrow(data)>0, paste0( metric_choice, " is not available for ",  hospital)))
     
-    # #define a scale for second axis
-    # ratio <- max(abs(data$Variance), na.rm = TRUE)/ max(abs(data$Variance.From.Budget.YTD), na.rm = TRUE)
-    # 
-    # if (ratio %in% c("Inf", "-Inf", "NaN")) {
-    #   ratio <- 0
-    # }
-    # 
-    # data <- data %>% mutate(Variance_scaled = Variance.From.Budget.YTD * ratio)
-    if((max(data$Variance, na.rm = TRUE))*1.2 < 0){
-      max_value <- 0
-    } else {
-      max_value <- (max(data$Variance, na.rm = TRUE))*1.2
-    }
-    
-    if((min(data$Variance, na.rm = TRUE))*1.2 > 0){
-      min_value <- 0
-    } else {
-      min_value <- (min(data$Variance, na.rm = TRUE))*1.2
-    }
+    max_range <- max(abs(min(data$Variance, na.rm = TRUE))*1.2,
+                     max(data$Variance, na.rm = TRUE)*1.2)
     
     
-    # Define the range for second axis
-    if((max(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.2 < 0){
-      max_ratio <- 0
-    } else {
-      max_ratio <- (max(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.2
-    }
+    y_range <- c(-max_range, max_range)
     
-    if((min(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.2 > 0){
-      min_ratio <- 0
-    } else {
-      min_ratio <- (min(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.2
-    }
     
-    ratio_range <- c(min_ratio, max_ratio)
-    # # Define labels for metrics    
-    # text_label <- paste0("$", data$text_label)
-    # y_label <- "Monthly Variance to Budget $"
-    # 
-    # graph_style(data, site = isolate(input$all_hospital), metric = metric_choice, min =  min_value,
-    #             max = max_value, text = text_label, y_label = y_label, ratio = ratio)
+    max_ratio  <- max(abs(min(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.2, 
+                      max(data$Variance.From.Budget.YTD, na.rm = TRUE)*1.2)
     
-    graph_style_break(data, site =  hospital, 
-                      metric = metric_choice, y_range = c(min_value, max_value), 
+    ratio_range <- c(-max_ratio, max_ratio)
+    
+    graph_style_break(data, site = isolate(input$all_hospital), 
+                      metric = metric_choice, y_range = y_range, 
                       ratio_range = ratio_range)
   })
   
@@ -1293,51 +1276,20 @@ server <- function(input, output, session) {
     
     validate(need(nrow(data)>0, paste0(metric_choice, " is not available for ",  hospital)))
     
-    # #define a scale for second axis
-    # ratio <- max(abs(data$Variance), na.rm = TRUE)/ max(abs(data$Variance.From.Budget.YTD), na.rm = TRUE)
-    # 
-    # if (ratio %in% c("Inf", "-Inf", "NaN")) {
-    #   ratio <- 0
-    # }
-    # 
-    # data <- data %>% mutate(Variance_scaled = Variance.From.Budget.YTD * ratio)
-    # 
-    # 
-    if((max(data$Variance, na.rm = TRUE))*1.2 < 0){
-      max_value <- 0
-    } else {
-      max_value <- (max(data$Variance, na.rm = TRUE))*1.2
-    }
+    max_range <- max(abs(min(data$Variance, na.rm = TRUE))*1.2,
+                     max(data$Variance, na.rm = TRUE)*1.2)
     
-    if((min(data$Variance, na.rm = TRUE))*1.2 > 0){
-      min_value <- 0
-    } else {
-      min_value <- (min(data$Variance, na.rm = TRUE))*1.2
-    }
     
-    # Define the range for second axis
-    if((max(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.2 < 0){
-      max_ratio <- 0
-    } else {
-      max_ratio <- (max(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.2
-    }
+    y_range <- c(-max_range, max_range)
     
-    if((min(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.2 > 0){
-      min_ratio <- 0
-    } else {
-      min_ratio <- (min(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.2
-    }
     
-    ratio_range <- c(min_ratio, max_ratio)
-    # # Define labels for metrics    
-    # text_label <- paste0("$", data$text_label)
-    # y_label <- "Monthly Variance to Budget $"
-    # 
-    # graph_style(data, site = isolate(input$all_hospital), metric = metric_choice, min =  min_value,
-    #             max = max_value, text = text_label, y_label = y_label, ratio = ratio)
+    max_ratio  <- max(abs(min(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.2, 
+                      max(data$Variance.From.Budget.YTD, na.rm = TRUE)*1.2)
     
-    graph_style_break(data, site =  hospital, 
-                      metric = metric_choice, y_range = c(min_value, max_value), 
+    ratio_range <- c(-max_ratio, max_ratio)
+    
+    graph_style_break(data, site = isolate(input$all_hospital), 
+                      metric = metric_choice, y_range = y_range, 
                       ratio_range = ratio_range)
   })
   
@@ -1357,50 +1309,20 @@ server <- function(input, output, session) {
     
     validate(need(nrow(data)>0, paste0( metric_choice, " is not available for ",  hospital)))
     
-    # #define a scale for second axis
-    # ratio <- max(abs(data$Variance), na.rm = TRUE)/ max(abs(data$Variance.From.Budget.YTD), na.rm = TRUE)
-    # 
-    # if (ratio %in% c("Inf", "-Inf", "NaN")) {
-    #   ratio <- 0
-    # }
-    # 
-    # data <- data %>% mutate(Variance_scaled = Variance.From.Budget.YTD * ratio)
-    if((max(data$Variance, na.rm = TRUE))*1.2 < 0){
-      max_value <- 0
-    } else {
-      max_value <- (max(data$Variance, na.rm = TRUE))*1.2
-    }
-    
-    if((min(data$Variance, na.rm = TRUE))*1.2 > 0){
-      min_value <- 0
-    } else {
-      min_value <- (min(data$Variance, na.rm = TRUE))*1.2
-    }
+    max_range <- max(abs(min(data$Variance, na.rm = TRUE))*1.2,
+                     max(data$Variance, na.rm = TRUE)*1.2)
     
     
-    # Define the range for second axis
-    if((max(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.2 < 0){
-      max_ratio <- 0
-    } else {
-      max_ratio <- (max(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.2
-    }
+    y_range <- c(-max_range, max_range)
     
-    if((min(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.2 > 0){
-      min_ratio <- 0
-    } else {
-      min_ratio <- (min(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.2
-    }
     
-    ratio_range <- c(min_ratio, max_ratio)
-    # # Define labels for metrics    
-    # text_label <- paste0("$", data$text_label)
-    # y_label <- "Monthly Variance to Budget $"
-    # 
-    # graph_style(data, site = isolate(input$all_hospital), metric = metric_choice, min =  min_value,
-    #             max = max_value, text = text_label, y_label = y_label, ratio = ratio)
+    max_ratio  <- max(abs(min(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.2, 
+                      max(data$Variance.From.Budget.YTD, na.rm = TRUE)*1.2)
     
-    graph_style_break(data, site =  hospital, 
-                      metric = metric_choice, y_range = c(min_value, max_value), 
+    ratio_range <- c(-max_ratio, max_ratio)
+    
+    graph_style_break(data, site = isolate(input$all_hospital), 
+                      metric = metric_choice, y_range = y_range, 
                       ratio_range = ratio_range)
   })
   
@@ -1424,50 +1346,20 @@ server <- function(input, output, session) {
     
     validate(need(nrow(data)>0, paste0( metric_choice, " is not available for ",  hospital)))
     
-    # #define a scale for second axis
-    # ratio <- max(abs(data$Variance), na.rm = TRUE)/ max(abs(data$Variance.From.Budget.YTD), na.rm = TRUE)
-    # 
-    # if (ratio %in% c("Inf", "-Inf", "NaN")) {
-    #   ratio <- 0
-    # }
-    # 
-    # data <- data %>% mutate(Variance_scaled = Variance.From.Budget.YTD * ratio)
-    if((max(data$Variance, na.rm = TRUE))*1.2 < 0){
-      max_value <- 0
-    } else {
-      max_value <- (max(data$Variance, na.rm = TRUE))*1.2
-    }
-    
-    if((min(data$Variance, na.rm = TRUE))*1.2 > 0){
-      min_value <- 0
-    } else {
-      min_value <- (min(data$Variance, na.rm = TRUE))*1.2
-    }
+    max_range <- max(abs(min(data$Variance, na.rm = TRUE))*1.2,
+                     max(data$Variance, na.rm = TRUE)*1.2)
     
     
-    # Define the range for second axis
-    if((max(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.2 < 0){
-      max_ratio <- 0
-    } else {
-      max_ratio <- (max(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.2
-    }
+    y_range <- c(-max_range, max_range)
     
-    if((min(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.2 > 0){
-      min_ratio <- 0
-    } else {
-      min_ratio <- (min(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.2
-    }
     
-    ratio_range <- c(min_ratio, max_ratio)
-    # # Define labels for metrics    
-    # text_label <- paste0("$", data$text_label)
-    # y_label <- "Monthly Variance to Budget $"
-    # 
-    # graph_style(data, site = isolate(input$all_hospital), metric = metric_choice, min =  min_value,
-    #             max = max_value, text = text_label, y_label = y_label, ratio = ratio)
+    max_ratio  <- max(abs(min(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.2, 
+                      max(data$Variance.From.Budget.YTD, na.rm = TRUE)*1.2)
     
-    graph_style_break(data, site =  hospital, 
-                      metric = metric_choice, y_range = c(min_value, max_value), 
+    ratio_range <- c(-max_ratio, max_ratio)
+    
+    graph_style_break(data, site = isolate(input$all_hospital), 
+                      metric = metric_choice, y_range = y_range, 
                       ratio_range = ratio_range)
   })
   
@@ -1488,50 +1380,20 @@ server <- function(input, output, session) {
     
     validate(need(nrow(data)>0, paste0( metric_choice, " is not available for ",  hospital)))
     
-    # #define a scale for second axis
-    # ratio <- max(abs(data$Variance), na.rm = TRUE)/ max(abs(data$Variance.From.Budget.YTD), na.rm = TRUE)
-    # 
-    # if (ratio %in% c("Inf", "-Inf", "NaN")) {
-    #   ratio <- 0
-    # }
-    # 
-    # data <- data %>% mutate(Variance_scaled = Variance.From.Budget.YTD * ratio)
-    if((max(data$Variance, na.rm = TRUE))*1.2 < 0){
-      max_value <- 0
-    } else {
-      max_value <- (max(data$Variance, na.rm = TRUE))*1.2
-    }
-    
-    if((min(data$Variance, na.rm = TRUE))*1.2 > 0){
-      min_value <- 0
-    } else {
-      min_value <- (min(data$Variance, na.rm = TRUE))*1.2
-    }
+    max_range <- max(abs(min(data$Variance, na.rm = TRUE))*1.2,
+                     max(data$Variance, na.rm = TRUE)*1.2)
     
     
-    # Define the range for second axis
-    if((max(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.2 < 0){
-      max_ratio <- 0
-    } else {
-      max_ratio <- (max(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.2
-    }
+    y_range <- c(-max_range, max_range)
     
-    if((min(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.2 > 0){
-      min_ratio <- 0
-    } else {
-      min_ratio <- (min(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.2
-    }
     
-    ratio_range <- c(min_ratio, max_ratio)
-    # # Define labels for metrics    
-    # text_label <- paste0("$", data$text_label)
-    # y_label <- "Monthly Variance to Budget $"
-    # 
-    # graph_style(data, site = isolate(input$all_hospital), metric = metric_choice, min =  min_value,
-    #             max = max_value, text = text_label, y_label = y_label, ratio = ratio)
+    max_ratio  <- max(abs(min(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.2, 
+                      max(data$Variance.From.Budget.YTD, na.rm = TRUE)*1.2)
     
-    graph_style_break(data, site =  hospital, 
-                      metric = metric_choice, y_range = c(min_value, max_value), 
+    ratio_range <- c(-max_ratio, max_ratio)
+    
+    graph_style_break(data, site = isolate(input$all_hospital), 
+                      metric = metric_choice, y_range = y_range, 
                       ratio_range = ratio_range)
     
   })
@@ -1552,50 +1414,20 @@ server <- function(input, output, session) {
     
     validate(need(nrow(data)>0, paste0( metric_choice, " is not available for ",  hospital)))
     
-    # #define a scale for second axis
-    # ratio <- max(abs(data$Variance), na.rm = TRUE)/ max(abs(data$Variance.From.Budget.YTD), na.rm = TRUE)
-    # 
-    # if (ratio %in% c("Inf", "-Inf", "NaN")) {
-    #   ratio <- 0
-    # }
-    # 
-    # data <- data %>% mutate(Variance_scaled = Variance.From.Budget.YTD * ratio)
-    if((max(data$Variance, na.rm = TRUE))*1.2 < 0){
-      max_value <- 0
-    } else {
-      max_value <- (max(data$Variance, na.rm = TRUE))*1.2
-    }
-    
-    if((min(data$Variance, na.rm = TRUE))*1.2 > 0){
-      min_value <- 0
-    } else {
-      min_value <- (min(data$Variance, na.rm = TRUE))*1.2
-    }
+    max_range <- max(abs(min(data$Variance, na.rm = TRUE))*1.2,
+                     max(data$Variance, na.rm = TRUE)*1.2)
     
     
-    # Define the range for second axis
-    if((max(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.2 < 0){
-      max_ratio <- 0
-    } else {
-      max_ratio <- (max(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.2
-    }
+    y_range <- c(-max_range, max_range)
     
-    if((min(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.2 > 0){
-      min_ratio <- 0
-    } else {
-      min_ratio <- (min(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.2
-    }
     
-    ratio_range <- c(min_ratio, max_ratio)
-    # # Define labels for metrics    
-    # text_label <- paste0("$", data$text_label)
-    # y_label <- "Monthly Variance to Budget $"
-    # 
-    # graph_style(data, site = isolate(input$all_hospital), metric = metric_choice, min =  min_value,
-    #             max = max_value, text = text_label, y_label = y_label, ratio = ratio)
+    max_ratio  <- max(abs(min(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.2, 
+                      max(data$Variance.From.Budget.YTD, na.rm = TRUE)*1.2)
     
-    graph_style_break(data, site =  hospital, 
-                      metric = metric_choice, y_range = c(min_value, max_value), 
+    ratio_range <- c(-max_ratio, max_ratio)
+    
+    graph_style_break(data, site = isolate(input$all_hospital), 
+                      metric = metric_choice, y_range = y_range, 
                       ratio_range = ratio_range)
   })
   
@@ -1615,50 +1447,20 @@ server <- function(input, output, session) {
     
     validate(need(nrow(data)>0, paste0( metric_choice, " is not available for ",  hospital)))
     
-    # #define a scale for second axis
-    # ratio <- max(abs(data$Variance), na.rm = TRUE)/ max(abs(data$Variance.From.Budget.YTD), na.rm = TRUE)
-    # 
-    # if (ratio %in% c("Inf", "-Inf", "NaN")) {
-    #   ratio <- 0
-    # }
-    # 
-    # data <- data %>% mutate(Variance_scaled = Variance.From.Budget.YTD * ratio)
-    if((max(data$Variance, na.rm = TRUE))*1.2 < 0){
-      max_value <- 0
-    } else {
-      max_value <- (max(data$Variance, na.rm = TRUE))*1.2
-    }
-    
-    if((min(data$Variance, na.rm = TRUE))*1.2 > 0){
-      min_value <- 0
-    } else {
-      min_value <- (min(data$Variance, na.rm = TRUE))*1.2
-    }
+    max_range <- max(abs(min(data$Variance, na.rm = TRUE))*1.2,
+                     max(data$Variance, na.rm = TRUE)*1.2)
     
     
-    # Define the range for second axis
-    if((max(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.2 < 0){
-      max_ratio <- 0
-    } else {
-      max_ratio <- (max(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.2
-    }
+    y_range <- c(-max_range, max_range)
     
-    if((min(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.2 > 0){
-      min_ratio <- 0
-    } else {
-      min_ratio <- (min(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.2
-    }
     
-    ratio_range <- c(min_ratio, max_ratio)
-    # # Define labels for metrics    
-    # text_label <- paste0("$", data$text_label)
-    # y_label <- "Monthly Variance to Budget $"
-    # 
-    # graph_style(data, site = isolate(input$all_hospital), metric = metric_choice, min =  min_value,
-    #             max = max_value, text = text_label, y_label = y_label, ratio = ratio)
+    max_ratio  <- max(abs(min(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.2, 
+                      max(data$Variance.From.Budget.YTD, na.rm = TRUE)*1.2)
     
-    graph_style_break(data, site =  hospital, 
-                      metric = metric_choice, y_range = c(min_value, max_value), 
+    ratio_range <- c(-max_ratio, max_ratio)
+    
+    graph_style_break(data, site = isolate(input$all_hospital), 
+                      metric = metric_choice, y_range = y_range, 
                       ratio_range = ratio_range)
   })
   
@@ -1678,50 +1480,20 @@ server <- function(input, output, session) {
     
     validate(need(nrow(data)>0, paste0( metric_choice, " is not available for ",  hospital)))
     
-    # #define a scale for second axis
-    # ratio <- max(abs(data$Variance), na.rm = TRUE)/ max(abs(data$Variance.From.Budget.YTD), na.rm = TRUE)
-    # 
-    # if (ratio %in% c("Inf", "-Inf", "NaN")) {
-    #   ratio <- 0
-    # }
-    # 
-    # data <- data %>% mutate(Variance_scaled = Variance.From.Budget.YTD * ratio)
-    if((max(data$Variance, na.rm = TRUE))*1.2 < 0){
-      max_value <- 0
-    } else {
-      max_value <- (max(data$Variance, na.rm = TRUE))*1.2
-    }
-    
-    if((min(data$Variance, na.rm = TRUE))*1.2 > 0){
-      min_value <- 0
-    } else {
-      min_value <- (min(data$Variance, na.rm = TRUE))*1.2
-    }
+    max_range <- max(abs(min(data$Variance, na.rm = TRUE))*1.2,
+                     max(data$Variance, na.rm = TRUE)*1.2)
     
     
-    # Define the range for second axis
-    if((max(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.2 < 0){
-      max_ratio <- 0
-    } else {
-      max_ratio <- (max(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.2
-    }
+    y_range <- c(-max_range, max_range)
     
-    if((min(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.2 > 0){
-      min_ratio <- 0
-    } else {
-      min_ratio <- (min(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.2
-    }
     
-    ratio_range <- c(min_ratio, max_ratio)
-    # # Define labels for metrics    
-    # text_label <- paste0("$", data$text_label)
-    # y_label <- "Monthly Variance to Budget $"
-    # 
-    # graph_style(data, site = isolate(input$all_hospital), metric = metric_choice, min =  min_value,
-    #             max = max_value, text = text_label, y_label = y_label, ratio = ratio)
+    max_ratio  <- max(abs(min(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.2, 
+                      max(data$Variance.From.Budget.YTD, na.rm = TRUE)*1.2)
     
-    graph_style_break(data, site =  hospital, 
-                      metric = metric_choice, y_range = c(min_value, max_value), 
+    ratio_range <- c(-max_ratio, max_ratio)
+    
+    graph_style_break(data, site = isolate(input$all_hospital), 
+                      metric = metric_choice, y_range = y_range, 
                       ratio_range = ratio_range)
   })
   
@@ -1752,50 +1524,20 @@ server <- function(input, output, session) {
     
     validate(need(nrow(data)>0, paste0( metric_choice, " is not available for ",  hospital)))
     
-    # #define a scale for second axis
-    # ratio <- max(abs(data$Variance), na.rm = TRUE)/ max(abs(data$Variance.From.Budget.YTD), na.rm = TRUE)
-    # 
-    # if (ratio %in% c("Inf", "-Inf", "NaN")) {
-    #   ratio <- 0
-    # }
-    # 
-    # data <- data %>% mutate(Variance_scaled = Variance.From.Budget.YTD * ratio)
-    if((max(data$Variance, na.rm = TRUE))*1.2 < 0){
-      max_value <- 0
-    } else {
-      max_value <- (max(data$Variance, na.rm = TRUE))*1.2
-    }
-    
-    if((min(data$Variance, na.rm = TRUE))*1.2 > 0){
-      min_value <- 0
-    } else {
-      min_value <- (min(data$Variance, na.rm = TRUE))*1.2
-    }
+    max_range <- max(abs(min(data$Variance, na.rm = TRUE))*1.2,
+                     max(data$Variance, na.rm = TRUE)*1.2)
     
     
-    # Define the range for second axis
-    if((max(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.2 < 0){
-      max_ratio <- 0
-    } else {
-      max_ratio <- (max(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.2
-    }
+    y_range <- c(-max_range, max_range)
     
-    if((min(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.2 > 0){
-      min_ratio <- 0
-    } else {
-      min_ratio <- (min(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.2
-    }
     
-    ratio_range <- c(min_ratio, max_ratio)
-    # # Define labels for metrics    
-    # text_label <- paste0("$", data$text_label)
-    # y_label <- "Monthly Variance to Budget $"
-    # 
-    # graph_style(data, site = isolate(input$all_hospital), metric = metric_choice, min =  min_value,
-    #             max = max_value, text = text_label, y_label = y_label, ratio = ratio)
+    max_ratio  <- max(abs(min(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.2, 
+                      max(data$Variance.From.Budget.YTD, na.rm = TRUE)*1.2)
     
-    graph_style_break(data, site =  hospital, 
-                      metric = metric_choice, y_range = c(min_value, max_value), 
+    ratio_range <- c(-max_ratio, max_ratio)
+    
+    graph_style_break(data, site = isolate(input$all_hospital), 
+                      metric = metric_choice, y_range = y_range, 
                       ratio_range = ratio_range)
   })
   
@@ -1814,52 +1556,20 @@ server <- function(input, output, session) {
     
     validate(need(nrow(data)>0, paste0( metric_choice, " is not available for ",  hospital)))
     
-    # #define a scale for second axis
-    # ratio <- max(abs(data$Variance), na.rm = TRUE)/ max(abs(data$Variance.From.Budget.YTD), na.rm = TRUE)
-    # 
-    # if (ratio %in% c("Inf", "-Inf", "NaN")) {
-    #   ratio <- 0
-    # }
-    # 
-    # data <- data %>% mutate(Variance_scaled = Variance.From.Budget.YTD * ratio)
-    if((max(data$Variance, na.rm = TRUE))*1.2 < 0){
-      max_value <- 0
-    } else {
-      max_value <- (max(data$Variance, na.rm = TRUE))*1.2
-    }
-    
-    if((min(data$Variance, na.rm = TRUE))*1.2 > 0){
-      min_value <- 0
-    } else {
-      min_value <- (min(data$Variance, na.rm = TRUE))*1.2
-    }
+    max_range <- max(abs(min(data$Variance, na.rm = TRUE))*1.2,
+                     max(data$Variance, na.rm = TRUE)*1.2)
     
     
-    # Define the range for second axis
-    if((max(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.2 < 0){
-      max_ratio <- 0
-    } else {
-      max_ratio <- (max(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.2
-    }
+    y_range <- c(-max_range, max_range)
     
-    if((min(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.2 > 0){
-      min_ratio <- 0
-    } else {
-      min_ratio <- (min(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.2
-    }
     
-    ratio_range <- c(min_ratio, max_ratio)
-    # # Define labels for metrics    
-    # text_label <- paste0("$", data$text_label)
-    # y_label <- "Monthly Variance to Budget $"
-    # 
-    # graph_style(data, site = isolate(input$all_hospital), metric = metric_choice, min =  min_value,
-    #             max = max_value, text = text_label, y_label = y_label, ratio = ratio)
+    max_ratio  <- max(abs(min(data$Variance.From.Budget.YTD, na.rm = TRUE))*1.2, 
+                      max(data$Variance.From.Budget.YTD, na.rm = TRUE)*1.2)
     
-   data <- data %>% mutate()
+    ratio_range <- c(-max_ratio, max_ratio)
     
-    graph_style_break(data, site =  hospital, 
-                      metric = metric_choice, y_range = c(min_value, max_value), 
+    graph_style_break(data, site = isolate(input$all_hospital), 
+                      metric = metric_choice, y_range = y_range, 
                       ratio_range = ratio_range)
   })
   
