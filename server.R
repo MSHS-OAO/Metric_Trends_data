@@ -9,23 +9,30 @@ server <- function(input, output, session) {
   # Text output ---------------------------------
   ### Text output for Metrics tab -------------------------------
   system_text <- eventReactive(input$mshs_filters_update, {
-    end_date <- isolate(tail(input$mshs_date_range, 1))
-    start_date <- isolate(input$mshs_date_range[1])
+    end_date <- isolate(input$mshs_date_range[1])
+    
+    if (input$mshs_metrics == "Expense to Revenue Ratio"){
+      index <- which(date_options == end_date)
+      start_date <- date_options[index+11]
+    } else{
+      start_date <- isolate(tail(input$mshs_date_range, 1))
+    }
+    
     metric <- isolate(input$mshs_metrics)
    paste0("Based on data from ", start_date, " to ", end_date, " for ", metric)
   }, ignoreNULL = FALSE)
   
   var_text <- eventReactive(input$mshs_filters_update_var, {
-    end_date <- isolate(tail(input$var_date_range, 1))
-    start_date <- isolate(input$var_date_range[1])
+    start_date <- isolate(tail(input$var_date_range, 1))
+    end_date <- isolate(input$var_date_range[1])
     metric <- isolate(input$var_metrics)
     paste0("Based on data from ", start_date, " to ", end_date, " for ", metric)
   }, ignoreNULL = FALSE)
   
   
   ytd_text <- eventReactive(input$mshs_filters_update_ytd, {
-    end_date <- isolate(tail(input$mshs_date_range_ytd, 1))
-    start_date <- isolate(input$mshs_date_range_ytd[1])
+    start_date <- isolate(tail(input$mshs_date_range_ytd, 1))
+    end_date <- isolate(input$mshs_date_range_ytd[1])
     metric <- isolate(input$mshs_metrics_ytd)
     paste0("Based on data from ", start_date, " to ", end_date, " for ", metric)
   }, ignoreNULL = FALSE)
@@ -55,22 +62,22 @@ server <- function(input, output, session) {
 
   ### Text output for Hospital tab -------------------------------
   all_mshs_text <- eventReactive(input$all_filters_update, {
-    end_date <- isolate(tail(input$all_date_range, 1))
-    start_date <- isolate(input$all_date_range[1])
+    start_date <- isolate(tail(input$all_date_range, 1))
+    end_date <- isolate(input$all_date_range[1])
     hospitals <- isolate(input$all_hospital)
     paste0("Based on data from ", start_date, " to ", end_date, " for ", hospitals)
   }, ignoreNULL = FALSE)
   
   all_mshs_text_var <- eventReactive(input$all_filters_update_var, {
-    end_date <- isolate(tail(input$all_date_range_var, 1))
-    start_date <- isolate(input$all_date_range_var[1])
+    start_date <- isolate(tail(input$all_date_range_var, 1))
+    end_date <- isolate(input$all_date_range_var[1])
     hospitals <- isolate(input$all_hospital_var)
     paste0("Based on data from ", start_date, " to ", end_date, " for ", hospitals)
   }, ignoreNULL = FALSE)
   
   all_mshs_text_ytd <- eventReactive(input$all_filters_update_ytd, {
-    end_date <- isolate(tail(input$all_date_range_ytd, 1))
-    start_date <- isolate(input$all_date_range_ytd[1])
+    start_date <- isolate(tail(input$all_date_range_ytd, 1))
+    end_date <- isolate(input$all_date_range_ytd[1])
     hospitals <- isolate(input$all_hospital_ytd)
     paste0("Based on data from ", start_date, " to ", end_date, " for ", hospitals)
   }, ignoreNULL = FALSE)
@@ -537,6 +544,10 @@ server <- function(input, output, session) {
                ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)*100), ")"),
                                     Variance.From.Budget.YTD*100))%>%
                                          arrange(date)
+      
+      
+      
+      
       
       max_range <- max(abs(min(mshs_data()$Variance, na.rm = TRUE))*1.2,
                        max(mshs_data()$Variance, na.rm = TRUE)*1.2)
@@ -1504,14 +1515,14 @@ server <- function(input, output, session) {
     
     data <-  metric_data()
       
-    # remove NAs or fill them with zero  
-    if(all(is.na(data$Variance.From.Budget.YTD)) | all(is.na(data$Variance))){
-      data <- data %>%
-        filter(!is.na(Variance)) %>%
-        filter(!is.na(Variance.From.Budget.YTD))
-    } else{
-      data <- data %>% replace(is.na(.), 0)
-    }
+    # # remove NAs or fill them with zero  
+    # if(all(is.na(data$Variance.From.Budget.YTD)) | all(is.na(data$Variance))){
+    #   data <- data %>%
+    #     filter(!is.na(Variance)) %>%
+    #     filter(!is.na(Variance.From.Budget.YTD))
+    # } else{
+    #   data <- data %>% replace(is.na(.), 0)
+    # }
       
     data <- data %>%
       filter(Metrics %in%   metric_choice)%>% ungroup() %>%

@@ -226,6 +226,8 @@ new_repo <- new_repo %>%
 new_repo <- new_repo %>%
   mutate(date = paste0(month.abb[c(as.numeric(month))], "-", substr(year, 3, 4)))
 
+
+
 levels_options <- unique(new_repo$date)
 new_repo <- new_repo %>%
   mutate(date = factor(date, levels = levels_options))
@@ -306,7 +308,7 @@ Exp_Rev_Ratio <- Exp_Rev_Ratio %>%
 
 # Filter choices -----------------------------------------------
 hospital_choices <- sort(unique(new_repo$Site))
-date_options <- as.character(unique(new_repo$date))
+date_options <- rev(as.character(unique(new_repo$date)))
 mshs_metric_choices <- sort(unique(new_repo$Metrics))
 
 
@@ -464,10 +466,12 @@ graph_style_break <- function(data, site, metric, y_range, ratio_range){
     text_label <- last_data_point$text_label
     y_label <- "Monthly Variance to Budget"
     y_tick  <- ""
+    subtitle_option<- ""
   } else {
     text_label <- paste0("$", last_data_point$text_label)
     y_label <- "Monthly Variance to Budget $"
     y_tick  <- "$,.0f"
+    subtitle_option<- "($ in Million)"
   }
   
   
@@ -497,7 +501,7 @@ plot_ly(data, x = ~date, y = ~Variance, type = "bar", showlegend = F,
            annotations = list(
              list(x = 0.5,  
                   y = 1.09,   
-                  text = "($ in Million)",
+                  text = subtitle_option,
                   showarrow = FALSE,
                   xref='paper', yref='paper',
                   font = list(size = 12))))
