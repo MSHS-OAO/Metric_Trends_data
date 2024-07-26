@@ -489,8 +489,24 @@ server <- function(input, output, session) {
     } else {
       data <- mshs_data() %>%
         #filter(year %in% max(year)) %>%
-        filter(Site == site_option)%>% ungroup()%>%
-        mutate(text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)),
+        filter(Site == site_option)%>% ungroup()
+        
+        
+        # remove NAs or fill them with zero
+        if(all(is.na(data$Variance.From.Budget.YTD)) | all(is.na(data$Variance))){
+          data <- data %>%
+            filter(!is.na(Variance)) %>%
+            filter(!is.na(Variance.From.Budget.YTD))
+        } else{
+          data <- data %>% mutate(Variance = case_when(is.na(Variance) ~ 0,
+                                                       TRUE ~ Variance), 
+                                  Variance.From.Budget.YTD = case_when(is.na(Variance.From.Budget.YTD) ~ 0,
+                                                                       TRUE ~ Variance.From.Budget.YTD),  )
+        }
+      
+        
+       data<- data %>% 
+         mutate(text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)),
                ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)*100), ")"),
                                     Variance.From.Budget.YTD*100))%>%
                                      arrange(date)
@@ -539,14 +555,26 @@ server <- function(input, output, session) {
     } else {
       data <- mshs_data() %>%
         #filter(year %in% max(year)) %>%
-        filter(Site == site_option)%>% ungroup()%>%
+        filter(Site == site_option)%>% ungroup()
+      
+      # remove NAs or fill them with zero
+      if(all(is.na(data$Variance.From.Budget.YTD)) | all(is.na(data$Variance))){
+        data <- data %>%
+          filter(!is.na(Variance)) %>%
+          filter(!is.na(Variance.From.Budget.YTD))
+      } else{
+        data <- data %>% mutate(Variance = case_when(is.na(Variance) ~ 0,
+                                                     TRUE ~ Variance), 
+                                Variance.From.Budget.YTD = case_when(is.na(Variance.From.Budget.YTD) ~ 0,
+                                                                     TRUE ~ Variance.From.Budget.YTD),  )
+      }
+      
+      
+      data <- data %>% 
         mutate(text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)),
                ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)*100), ")"),
                                     Variance.From.Budget.YTD*100))%>%
-                                         arrange(date)
-      
-      
-      
+        arrange(date)
       
       
       max_range <- max(abs(min(mshs_data()$Variance, na.rm = TRUE))*1.2,
@@ -647,11 +675,25 @@ server <- function(input, output, session) {
     } else {
       data <- mshs_data() %>%
         #filter(year %in% max(year)) %>%
-        filter(Site == site_option)%>%  ungroup()%>%
+        filter(Site == site_option)%>%  ungroup()
+      
+      # remove NAs or fill them with zero
+      if(all(is.na(data$Variance.From.Budget.YTD)) | all(is.na(data$Variance))){
+        data <- data %>%
+          filter(!is.na(Variance)) %>%
+          filter(!is.na(Variance.From.Budget.YTD))
+      } else{
+        data <- data %>% mutate(Variance = case_when(is.na(Variance) ~ 0,
+                                                     TRUE ~ Variance), 
+                                Variance.From.Budget.YTD = case_when(is.na(Variance.From.Budget.YTD) ~ 0,
+                                                                     TRUE ~ Variance.From.Budget.YTD),  )
+      }
+
+      data <- data %>% 
         mutate(text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)),
                ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)*100), ")"),
                                     Variance.From.Budget.YTD*100))%>%
-                                       arrange(date)
+               arrange(date)
       
      
       data <- data %>%
