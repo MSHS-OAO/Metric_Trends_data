@@ -1251,6 +1251,7 @@ server <- function(input, output, session) {
   
   output$revenue_plot <- renderPlotly({
     metric_choice <-  "Total Hospital Revenue"
+    hospital <- isolate(input$all_hospital)
     
     data <-  metric_data() %>%
       filter(Metrics ==  metric_choice)%>% ungroup()%>%
