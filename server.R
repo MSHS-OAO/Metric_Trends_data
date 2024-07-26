@@ -1232,9 +1232,8 @@ server <- function(input, output, session) {
     
     ratio_range <- c(-max_ratio, max_ratio)
     
-    graph_style_break(data, site = isolate(input$all_hospital), 
-                      metric = metric_choice, y_range = y_range, 
-                      ratio_range = ratio_range)
+    graph_style_break(data, site = hospital, metric = metric_choice, 
+                      y_range = y_range, ratio_range = ratio_range)
   })
   
   
@@ -1266,9 +1265,8 @@ server <- function(input, output, session) {
     
     ratio_range <- c(-max_ratio, max_ratio)
     
-    graph_style_break(data, site = isolate(input$all_hospital), 
-                      metric = metric_choice, y_range = y_range, 
-                      ratio_range = ratio_range)
+    graph_style_break(data, site = hospital, metric = metric_choice, 
+                      y_range = y_range, ratio_range = ratio_range)
   })
   
   output$discharges_plot <- renderPlotly({
@@ -1299,9 +1297,8 @@ server <- function(input, output, session) {
     
     ratio_range <- c(-max_ratio, max_ratio)
     
-    graph_style_break(data, site = isolate(input$all_hospital), 
-                      metric = metric_choice, y_range = y_range, 
-                      ratio_range = ratio_range)
+    graph_style_break(data, site = hospital, metric = metric_choice, 
+                      y_range = y_range, ratio_range = ratio_range)
   })
   
   output$cmi_plot <- renderPlotly({
@@ -1332,9 +1329,8 @@ server <- function(input, output, session) {
     
     ratio_range <- c(-max_ratio, max_ratio)
     
-    graph_style_break(data, site = isolate(input$all_hospital), 
-                      metric = metric_choice, y_range = y_range, 
-                      ratio_range = ratio_range)
+    graph_style_break(data, site = hospital, metric = metric_choice, 
+                      y_range = y_range, ratio_range = ratio_range)
   })
   
   
@@ -1369,9 +1365,8 @@ server <- function(input, output, session) {
     
     ratio_range <- c(-max_ratio, max_ratio)
     
-    graph_style_break(data, site = isolate(input$all_hospital), 
-                      metric = metric_choice, y_range = y_range, 
-                      ratio_range = ratio_range)
+    graph_style_break(data, site = hospital, metric = metric_choice, 
+                      y_range = y_range, ratio_range = ratio_range)
   })
   
   
@@ -1403,9 +1398,8 @@ server <- function(input, output, session) {
     
     ratio_range <- c(-max_ratio, max_ratio)
     
-    graph_style_break(data, site = isolate(input$all_hospital), 
-                      metric = metric_choice, y_range = y_range, 
-                      ratio_range = ratio_range)
+    graph_style_break(data, site = hospital, metric = metric_choice, 
+                      y_range = y_range, ratio_range = ratio_range)
     
   })
   
@@ -1437,9 +1431,8 @@ server <- function(input, output, session) {
     
     ratio_range <- c(-max_ratio, max_ratio)
     
-    graph_style_break(data, site = isolate(input$all_hospital), 
-                      metric = metric_choice, y_range = y_range, 
-                      ratio_range = ratio_range)
+    graph_style_break(data, site = hospital, metric = metric_choice, 
+                      y_range = y_range, ratio_range = ratio_range)
   })
   
   output$salary_plot <- renderPlotly({
@@ -1470,9 +1463,8 @@ server <- function(input, output, session) {
     
     ratio_range <- c(-max_ratio, max_ratio)
     
-    graph_style_break(data, site = isolate(input$all_hospital), 
-                      metric = metric_choice, y_range = y_range, 
-                      ratio_range = ratio_range)
+    graph_style_break(data, site = hospital, metric = metric_choice, 
+                      y_range = y_range, ratio_range = ratio_range)
   })
   
   output$supply_plot <- renderPlotly({
@@ -1503,9 +1495,8 @@ server <- function(input, output, session) {
     
     ratio_range <- c(-max_ratio, max_ratio)
     
-    graph_style_break(data, site = isolate(input$all_hospital), 
-                      metric = metric_choice, y_range = y_range, 
-                      ratio_range = ratio_range)
+    graph_style_break(data, site = hospital, metric = metric_choice, 
+                      y_range = y_range, ratio_range = ratio_range)
   })
   
   output$nurse_plot <- renderPlotly({
@@ -1513,25 +1504,28 @@ server <- function(input, output, session) {
     metric_choice <- "Nursing Agency Costs" 
     hospital <- isolate(input$all_hospital)
     
-    data <-  metric_data()
-      
-    # # remove NAs or fill them with zero  
-    # if(all(is.na(data$Variance.From.Budget.YTD)) | all(is.na(data$Variance))){
-    #   data <- data %>%
-    #     filter(!is.na(Variance)) %>%
-    #     filter(!is.na(Variance.From.Budget.YTD))
-    # } else{
-    #   data <- data %>% replace(is.na(.), 0)
-    # }
-      
+    data <-  metric_data() %>%
+      filter(Metrics %in%   metric_choice)%>% ungroup() 
+    
+    # remove NAs or fill them with zero
+    if(all(is.na(data$Variance.From.Budget.YTD)) | all(is.na(data$Variance))){
+      data <- data %>%
+        filter(!is.na(Variance)) %>%
+        filter(!is.na(Variance.From.Budget.YTD))
+    } else{
+      data <- data %>% 
+        mutate(Variance = case_when(is.na(Variance) ~ 0,
+                                    TRUE ~ Variance), 
+               Variance.From.Budget.YTD = case_when(is.na(Variance.From.Budget.YTD) ~ 0,
+                                                    TRUE ~ Variance.From.Budget.YTD))
+    }
+    
     data <- data %>%
-      filter(Metrics %in%   metric_choice)%>% ungroup() %>%
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
              sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
              text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)),
              ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)*100), ")"),
                                   Variance.From.Budget.YTD*100))
-    
     
     validate(need(nrow(data)>0, paste0( metric_choice, " is not available for ",  hospital)))
     
@@ -1547,9 +1541,8 @@ server <- function(input, output, session) {
     
     ratio_range <- c(-max_ratio, max_ratio)
     
-    graph_style_break(data, site = isolate(input$all_hospital), 
-                      metric = metric_choice, y_range = y_range, 
-                      ratio_range = ratio_range)
+    graph_style_break(data, site = hospital, metric = metric_choice, 
+                      y_range = y_range, ratio_range = ratio_range)
   })
   
   output$carts_plot <- renderPlotly({
@@ -1557,14 +1550,27 @@ server <- function(input, output, session) {
     hospital <- isolate(input$all_hospital)
     
     data <-  metric_data() %>%
-      #filter(year %in% max(year)) %>%
-      filter(Metrics %in%   metric_choice)%>% ungroup() %>%
+      filter(Metrics %in%   metric_choice)%>% ungroup() 
+    
+    # remove NAs or fill them with zero
+    if(all(is.na(data$Variance.From.Budget.YTD)) | all(is.na(data$Variance))){
+      data <- data %>%
+        filter(!is.na(Variance)) %>%
+        filter(!is.na(Variance.From.Budget.YTD))
+    } else{
+      data <- data %>% 
+        mutate(Variance = case_when(is.na(Variance) ~ 0,
+                                    TRUE ~ Variance), 
+               Variance.From.Budget.YTD = case_when(is.na(Variance.From.Budget.YTD) ~ 0,
+                                                    TRUE ~ Variance.From.Budget.YTD))
+    }
+    
+    data <- data %>%
       mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
              sign.YTD = ifelse(Variance.From.Budget.YTD >= 0, "positive", "negative"),
              text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)),
              ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)*100), ")"),
                                   Variance.From.Budget.YTD*100))
-    
     validate(need(nrow(data)>0, paste0( metric_choice, " is not available for ",  hospital)))
     
     max_range <- max(abs(min(data$Variance, na.rm = TRUE))*1.2,
@@ -1579,9 +1585,8 @@ server <- function(input, output, session) {
     
     ratio_range <- c(-max_ratio, max_ratio)
     
-    graph_style_break(data, site = isolate(input$all_hospital), 
-                      metric = metric_choice, y_range = y_range, 
-                      ratio_range = ratio_range)
+    graph_style_break(data, site = hospital, metric = metric_choice, 
+                      y_range = y_range, ratio_range = ratio_range)
   })
   
   ## Monthly Variance tab ----------------------
