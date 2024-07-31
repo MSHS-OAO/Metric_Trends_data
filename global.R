@@ -455,7 +455,7 @@ graph_style_break <- function(data, site, metric, y_range, ratio_range){
   } else {
     text_label <- paste0("$", last_data_point$text_label)
     y_label <- "Monthly Variance to Budget $"
-    y_tick  <- "$,.0f"
+    y_tick  <- "$,.1f"
     subtitle_option<- "($ in Million)"
   }
   
@@ -506,7 +506,7 @@ var_graph_break <- function(data, site, metric, y_range) {
   } else {
     text_label <- paste0("$", last_data_point$text_label)
     y_label <- "Monthly Variance to Budget $"
-    y_tick  <- "$,.0f"
+    y_tick  <- "$,.1f"
   }
   
   
@@ -566,7 +566,7 @@ graph_style <- function(data,site, metric){
   } else {
     text_label <- paste0("$", last_data_point$text_label)
     y_label <- "Monthly Variance to Budget $"
-    y_tick  <- "$,.0f"
+    y_tick  <- "$,.1f"
   }
   
   
@@ -628,7 +628,7 @@ var_graph <- function(data, site, metric) {
   } else {
     text_label <- paste0("$", last_data_point$text_label)
     y_label <- "Monthly Variance to Budget $"
-    y_tick  <- "$,.0f"
+    y_tick  <- "$,.1f"
   }
   
   plot_ly(data, x = ~date, y = ~Variance, type = "bar", showlegend = F, 
@@ -679,7 +679,7 @@ ytd_graph <- function(data, site, metric) {
            xaxis = list(title="<b> Date <b>", titlefont = list(size = 12), 
                         showline = TRUE, mirror= "ticks", linewidth = 2, tickangle= -45),
            yaxis = list(title= paste0("<b> YTD Variance to Budget Ratio % <b>"), 
-                        titlefont = list(size = 12), tickformat= ',.0%',
+                        titlefont = list(size = 12), tickformat= ',.1%',
                         range = ratio_range, showline = TRUE, mirror = "ticks", linewidth = 2))%>%
     add_text(x = last_data_point$date, y = last_data_point$Variance.From.Budget.YTD, 
              text = paste0("<b>", last_data_point$ratio_label,"%", "<b>"),

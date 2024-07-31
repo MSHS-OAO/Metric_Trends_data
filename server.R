@@ -1898,7 +1898,22 @@ server <- function(input, output, session) {
       
       data <-  metric_data_var() %>%
         #filter(year %in% max(year)) %>%
-        filter(Metrics ==  metric_option)%>%
+        filter(Metrics ==  metric_option)
+      
+      
+      # remove NAs or fill them with zero
+      if(all(is.na(data$Variance)) | all(data$Variance== 0)){
+        data <- data %>%
+          filter(!is.na(Variance)) %>%
+          filter(Variance != 0)
+      } else{
+        data <- data %>% 
+          mutate(Variance = case_when(is.na(Variance) ~ 0,
+                                      TRUE ~ Variance))
+      }
+      
+      
+      data <- data %>%
         mutate(sign = ifelse(Variance >= 0, "positive", "negative"),
                text_label = ifelse(Variance <0 , paste0("(", comma(abs(Variance)), ")"), comma(Variance)))
       
@@ -2147,8 +2162,23 @@ server <- function(input, output, session) {
     data <- metric_data_ytd()%>%
       ungroup() %>%
       #filter(year %in% max(year)) %>%
-      filter(Metrics == Metric_option)%>%
-      mutate(ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)*100), ")"),
+      filter(Metrics == Metric_option)
+    
+    
+    
+    # remove NAs or fill them with zero
+    if(all(is.na(data$Variance.From.Budget.YTD)) | all(data$Variance.From.Budget.YTD == 0)){
+      data <- data %>%
+        filter(Variance.From.Budget.YTD !=0 ) %>%
+        filter(!is.na(Variance.From.Budget.YTD))
+    } else{
+      data <- data %>% 
+        mutate(Variance.From.Budget.YTD = case_when(is.na(Variance.From.Budget.YTD) ~ 0,
+                                                    TRUE ~ Variance.From.Budget.YTD))
+    }
+    
+    data <- data %>% 
+     mutate(ratio_label = ifelse(Variance.From.Budget.YTD < 0, paste0("(", abs(as.numeric(Variance.From.Budget.YTD)*100), ")"),
                                   Variance.From.Budget.YTD*100))
     
     
